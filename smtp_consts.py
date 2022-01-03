@@ -48,8 +48,10 @@ SMTP_ALLOW_SMTPUTF8 = "allow_smtputf8"
 SMTP_SENDING_TEST_MAIL = "Sending test mail"
 SMTP_DONE = "Done..."
 
-SMTP_ERR_SSL_CONFIG_SSL = "Possible misconfiguration. The current SSL configuration value requires the server to speak SSL from the beginning of the connection."
-SMTP_ERR_STARTTLS_CONFIG = "Possible misconfiguration. The current SSL configuration value requires the server to support the startTLS command issued after a connection is made."
+SMTP_ERR_SSL_CONFIG_SSL = "Possible misconfiguration. \
+The current SSL configuration value requires the server to speak SSL from the beginning of the connection."
+SMTP_ERR_STARTTLS_CONFIG = "Possible misconfiguration. \
+The current SSL configuration value requires the server to support the startTLS command issued after a connection is made."
 SMTP_ERR_SMTPUTF8_CONFIG = "Unable to encode the Unicode characters. Possible misconfiguration. \
 Either the server does not support SMTPUT8 or the 'Enable SMTPUTF8 support' asset configuration parameter is set to False"
 SMTP_ERR_TO_FROM_UNAVAILABLE = "Error: Failed to send the email. The {} is unavailable. Please check the action parameters"
