@@ -12,7 +12,7 @@
     "product_name": "SMTP",
     "product_version_regex": ".*",
     "min_phantom_version": "4.9.39220",
-    "license": "Copyright (c) 2014-2021 Splunk Inc.",
+    "license": "Copyright (c) 2014-2022 Splunk Inc.",
     "logo": "logo_splunk.svg",
     "logo_dark": "logo_splunk_dark.svg",
     "python_version": "3",
@@ -680,7 +680,7 @@
             },
             {
                 "module": "soupsieve",
-                "input_file": "wheels/soupsieve-2.3-py3-none-any.whl"
+                "input_file": "wheels/soupsieve-2.3.1-py3-none-any.whl"
             },
             {
                 "module": "urllib3",
