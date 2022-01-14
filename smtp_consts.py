@@ -20,7 +20,7 @@ SMTP_SUCC_CONNECTIVITY_TEST = "Test Connectivity Passed"
 SMTP_ERR_CONNECTIVITY_TEST = "Test Connectivity Failed"
 
 SMTP_PROG_UNABLE_TO_ATTACH_FILE = "Unable to attach file {}"
-SMTP_MSG_SKIP_AUTH_NO_USERNAME_PASSWORD = "Skipping authentication, since Username or Password not configured"
+SMTP_MSG_SKIP_AUTH_NO_USERNAME_PASSWORD = "Skipping authentication, since Username or Password not configured"  # pragma: allowlist secret
 SMTP_ERR_PARSE_HEADERS = 'Unable to parse headers as a dictionary: {}'
 SMTP_UNICODE_ERROR_MSG = "Error occurred while associating the email content in the email message object. If you are dealing with the Unicode characters, \
 please mark the asset configuration parameter 'Enable Unicode support' as true, if not done already and try again."
@@ -61,3 +61,5 @@ ERR_CODE_UNAVAILABLE = "Error code unavailable"
 ERR_MSG_UNAVAILABLE = "Error message unavailable. Please check the asset configuration and|or action parameters"
 TYPE_ERR_MSG = "Error occurred while connecting to the server. Please check the asset configuration and|or the action parameters"
 PARSE_ERR_MSG = "Unable to parse the error message. Please check the asset configuration and|or action parameters"
+
+DEFAULT_TIMEOUT = 30  # 30 seconds
