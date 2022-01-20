@@ -1,36 +1,41 @@
 # File: smtp_connector.py
-# Copyright (c) 2014-2021 Splunk Inc.
 #
-# Licensed under Apache 2.0 (https://www.apache.org/licenses/LICENSE-2.0.txt)
+# Copyright (c) 2014-2022 Splunk Inc.
 #
-# --
-
-# Phantom imports
-import phantom.app as phantom
-from phantom.base_connector import BaseConnector
-from phantom.action_result import ActionResult
-from phantom.vault import Vault
-import phantom.utils as ph_utils
-import phantom.rules as ph_rules
-
-# THIS Connector imports
-from smtp_consts import *
-
-import mimetypes
-import smtplib
-import os
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software distributed under
+# the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+# either express or implied. See the License for the specific language governing permissions
+# and limitations under the License.
+#
+#
 import json
-import sys
+import mimetypes
+import os
 import re
-from email import encoders
-from email import message_from_file
-from email import message_from_string
-from email.mime.text import MIMEText
+import smtplib
+import sys
+from email import encoders, message_from_file, message_from_string
 from email.mime.base import MIMEBase
 from email.mime.image import MIMEImage
 from email.mime.message import MIMEMessage
 from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+
+import phantom.app as phantom
+import phantom.rules as ph_rules
+import phantom.utils as ph_utils
 from bs4 import BeautifulSoup, UnicodeDammit
+from phantom.action_result import ActionResult
+from phantom.base_connector import BaseConnector
+from phantom.vault import Vault
+
+from smtp_consts import *
 
 
 class SmtpConnector(BaseConnector):
@@ -102,9 +107,11 @@ class SmtpConnector(BaseConnector):
 
     def _handle_py_ver_compat_for_sendemail(self, root_data_str):
         """
-        This method converts the provided email message's as_string() into Python v2 and v3 compatible string and bytes string version respectively.
+        This method converts the provided email message's as_string() into Python v2 and v3 compatible string
+        and bytes string version respectively.
         :param root_data_str: Input email message's as_string() to be processed
-        :return: root_data_str (Processed email message's as_string() based on following logic 'original root_data_str - Python 2; encoded bytes format root_data_str - Python 3')
+        :return: root_data_str (Processed email message's as_string() based on following logic 'original root_data_str - Python 2;
+                                encoded bytes format root_data_str - Python 3')
         """
 
         # UnicodeDammit(msg.as_string()).unicode_markup.encode("utf-8")
@@ -167,11 +174,13 @@ class SmtpConnector(BaseConnector):
             port_message = ' Please try without specifying the port. ' if (config.get(SMTP_JSON_PORT)) else ' '
 
             if (config[SMTP_JSON_SSL_CONFIG] == SSL_CONFIG_SSL) and ('ssl.c' in exception_message):
-                message = "{0}.\r\n{1}{2}Error Text: {3}".format(SMTP_ERR_SMTP_CONNECT_TO_SERVER, SMTP_ERR_SSL_CONFIG_SSL, port_message, exception_message)
+                message = "{0}.\r\n{1}{2}Error Text: {3}".format(
+                    SMTP_ERR_SMTP_CONNECT_TO_SERVER, SMTP_ERR_SSL_CONFIG_SSL, port_message, exception_message)
                 return self.set_status(phantom.APP_ERROR, message)
 
             if (config[SMTP_JSON_SSL_CONFIG] == SSL_CONFIG_STARTTLS) and ('unexpectedly close' in exception_message):
-                message = "{0}.\r\n{1}{2}Error Text:{3}".format(SMTP_ERR_SMTP_CONNECT_TO_SERVER, SMTP_ERR_STARTTLS_CONFIG, port_message, exception_message)
+                message = "{0}.\r\n{1}{2}Error Text:{3}".format(
+                    SMTP_ERR_SMTP_CONNECT_TO_SERVER, SMTP_ERR_STARTTLS_CONFIG, port_message, exception_message)
                 return self.set_status(phantom.APP_ERROR, message)
 
         except:
@@ -429,7 +438,8 @@ class SmtpConnector(BaseConnector):
             else:
                 outer = MIMEText(param[SMTP_JSON_BODY], 'plain', message_encoding)
         except Exception as e:
-            return action_result.set_status(phantom.APP_ERROR, "{0} Error message: {1}".format(SMTP_UNICODE_ERROR_MSG, self._get_error_message_from_exception(e)))
+            return action_result.set_status(phantom.APP_ERROR, "{0} Error message: {1}".format(
+                SMTP_UNICODE_ERROR_MSG, self._get_error_message_from_exception(e)))
 
         if SMTP_JSON_HEADERS in param:
             try:
@@ -446,7 +456,8 @@ class SmtpConnector(BaseConnector):
                         outer[header] = value
             except Exception:
                 # Break and return error if headers is not a correctly formatted dict.
-                return action_result.set_status(phantom.APP_ERROR, SMTP_ERR_PARSE_HEADERS.format(self._handle_py_ver_compat_for_input_str(param[SMTP_JSON_HEADERS])))
+                return action_result.set_status(phantom.APP_ERROR, SMTP_ERR_PARSE_HEADERS.format(
+                    self._handle_py_ver_compat_for_input_str(param[SMTP_JSON_HEADERS])))
 
         to_comma_sep_list = self._handle_py_ver_compat_for_input_str(param[SMTP_JSON_TO])
         cc_comma_sep_list = param.get(SMTP_JSON_CC, None)
@@ -486,9 +497,11 @@ class SmtpConnector(BaseConnector):
                 mail_options.append("SMTPUTF8")
             self._smtp_conn.sendmail(email_from, to_list, outer.as_string(), mail_options=mail_options)
         except UnicodeEncodeError:
-            return action_result.set_status(phantom.APP_ERROR, "{} {}".format(SMTP_ERR_SMTP_SEND_EMAIL, SMTP_ERR_SMTPUTF8_CONFIG))
+            return action_result.set_status(phantom.APP_ERROR, "{} {}".format(
+                SMTP_ERR_SMTP_SEND_EMAIL, SMTP_ERR_SMTPUTF8_CONFIG))
         except Exception as e:
-            return action_result.set_status(phantom.APP_ERROR, "{} {}".format(SMTP_ERR_SMTP_SEND_EMAIL, self._get_error_message_from_exception(e)))
+            return action_result.set_status(phantom.APP_ERROR, "{} {}".format(
+                SMTP_ERR_SMTP_SEND_EMAIL, self._get_error_message_from_exception(e)))
 
         if self.invalid_vault_ids:
             return action_result.set_status(phantom.APP_SUCCESS, "{}. The following attachments are invalid and were not sent: {}".format(
@@ -504,7 +517,8 @@ class SmtpConnector(BaseConnector):
         try:
             status_code = self._send_email(param, action_result)
         except Exception as e:
-            return action_result.set_status(phantom.APP_ERROR, "{} {}".format(SMTP_ERR_SMTP_SEND_EMAIL, self._get_error_message_from_exception(e)))
+            return action_result.set_status(phantom.APP_ERROR, "{} {}".format(
+                SMTP_ERR_SMTP_SEND_EMAIL, self._get_error_message_from_exception(e)))
 
         return status_code
 
@@ -627,7 +641,8 @@ class SmtpConnector(BaseConnector):
                     break
 
             if not has_dictionary:
-                return action_result.set_status(phantom.APP_ERROR, "Error: attachment json field does not contain any dictionaries with the \"vault_id\" key")
+                return action_result.set_status(phantom.APP_ERROR,
+                    "Error: attachment json field does not contain any dictionaries with the \"vault_id\" key")
 
             for attachment in attachment_json:
                 for key, value in list(attachment.items()):
@@ -679,7 +694,8 @@ class SmtpConnector(BaseConnector):
                 msg.attach(MIMEText(email_text, 'plain', 'ascii'))
                 msg.attach(MIMEText(email_html, 'html', 'ascii'))
         except Exception as e:
-            return action_result.set_status(phantom.APP_ERROR, "{0} Error message: {1}".format(SMTP_UNICODE_ERROR_MSG, self._get_error_message_from_exception(e)))
+            return action_result.set_status(phantom.APP_ERROR, "{0} Error message: {1}".format(
+                SMTP_UNICODE_ERROR_MSG, self._get_error_message_from_exception(e)))
         root.attach(msg)
 
         for x in attachment_json:
@@ -746,9 +762,11 @@ class SmtpConnector(BaseConnector):
             self._smtp_conn.sendmail(email_from, email_to, root.as_string(), mail_options=mail_options)
 
         except UnicodeEncodeError:
-            return action_result.set_status(phantom.APP_ERROR, "{} {}".format(SMTP_ERR_SMTP_SEND_EMAIL, SMTP_ERR_SMTPUTF8_CONFIG))
+            return action_result.set_status(phantom.APP_ERROR, "{} {}".format(
+                SMTP_ERR_SMTP_SEND_EMAIL, SMTP_ERR_SMTPUTF8_CONFIG))
         except Exception as e:
-            return action_result.set_status(phantom.APP_ERROR, "{} {}".format(SMTP_ERR_SMTP_SEND_EMAIL, self._get_error_message_from_exception(e)))
+            return action_result.set_status(phantom.APP_ERROR, "{} {}".format(
+                SMTP_ERR_SMTP_SEND_EMAIL, self._get_error_message_from_exception(e)))
 
         return action_result.set_status(phantom.APP_SUCCESS, SMTP_SUCC_SMTP_EMAIL_SENT)
 
@@ -797,9 +815,11 @@ class SmtpConnector(BaseConnector):
             self._smtp_conn.sendmail(email_from, email_to, msg.as_string(), mail_options=mail_options)
 
         except UnicodeEncodeError:
-            return action_result.set_status(phantom.APP_ERROR, "{} {}".format(SMTP_ERR_SMTP_SEND_EMAIL, SMTP_ERR_SMTPUTF8_CONFIG))
+            return action_result.set_status(phantom.APP_ERROR, "{} {}".format(
+                SMTP_ERR_SMTP_SEND_EMAIL, SMTP_ERR_SMTPUTF8_CONFIG))
         except Exception as e:
-            return action_result.set_status(phantom.APP_ERROR, "{} {}".format(SMTP_ERR_SMTP_SEND_EMAIL, self._get_error_message_from_exception(e)))
+            return action_result.set_status(phantom.APP_ERROR, "{} {}".format(
+                SMTP_ERR_SMTP_SEND_EMAIL, self._get_error_message_from_exception(e)))
 
         return action_result.set_status(phantom.APP_SUCCESS, SMTP_SUCC_SMTP_EMAIL_SENT)
 
@@ -833,6 +853,7 @@ class SmtpConnector(BaseConnector):
 if __name__ == '__main__':
 
     import argparse
+
     import requests
 
     # pudb.set_trace()
@@ -842,17 +863,19 @@ if __name__ == '__main__':
     argparser.add_argument('input_test_json', help='Input Test JSON file')
     argparser.add_argument('-u', '--username', help='username', required=False)
     argparser.add_argument('-p', '--password', help='password', required=False)
+    argparser.add_argument('-v', '--verify', action='store_true', help='verify', required=False, default=False)
 
     args = argparser.parse_args()
     session_id = None
 
     username = args.username
     password = args.password
+    verify = args.verify
 
     if (username is not None and password is None):
-
         # User specified a username but not a password, so ask
         import getpass
+
         password = getpass.getpass("Password: ")
 
     if (username and password):
@@ -860,7 +883,7 @@ if __name__ == '__main__':
             login_url = SmtpConnector._get_phantom_base_url() + '/login'
 
             print("Accessing the Login page")
-            r = requests.get(login_url, verify=False)
+            r = requests.get(login_url, verify=verify, timeout=DEFAULT_TIMEOUT)
             csrftoken = r.cookies['csrftoken']
 
             data = dict()
@@ -873,11 +896,11 @@ if __name__ == '__main__':
             headers['Referer'] = login_url
 
             print("Logging into Platform to get the session id")
-            r2 = requests.post(login_url, verify=False, data=data, headers=headers)
+            r2 = requests.post(login_url, verify=verify, data=data, headers=headers, timeout=DEFAULT_TIMEOUT)
             session_id = r2.cookies['sessionid']
         except Exception as e:
             print("Unable to get session id from the platform. Error: " + str(e))
-            exit(1)
+            sys.exit(1)
 
     with open(args.input_test_json) as f:
         in_json = f.read()
@@ -894,4 +917,4 @@ if __name__ == '__main__':
         ret_val = connector._handle_action(json.dumps(in_json), None)
         print(json.dumps(json.loads(ret_val), indent=4))
 
-    exit(0)
+    sys.exit(0)
