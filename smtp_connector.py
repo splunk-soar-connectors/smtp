@@ -14,15 +14,13 @@
 # and limitations under the License.
 #
 #
-import json
 import base64
+import json
 import mimetypes
 import os
 import re
 import smtplib
 import sys
-import requests
-import encryption_helper
 import time
 from email import encoders, message_from_file, message_from_string
 from email.mime.base import MIMEBase
@@ -31,16 +29,18 @@ from email.mime.message import MIMEMessage
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
+import encryption_helper
 import phantom.app as phantom
 import phantom.rules as ph_rules
 import phantom.utils as ph_utils
+import requests
 from bs4 import BeautifulSoup, UnicodeDammit
 from phantom.action_result import ActionResult
 from phantom.base_connector import BaseConnector
 from phantom.vault import Vault
 
-from smtp_consts import *
 from request_handler import RequestStateHandler, _get_dir_name_from_app_name
+from smtp_consts import *
 
 
 class SmtpConnector(BaseConnector):
@@ -386,7 +386,7 @@ class SmtpConnector(BaseConnector):
         try:
             if self._python_version != 2:
                 root_data_str = UnicodeDammit(root_data_str).unicode_markup.encode('utf-8')
-        except:
+        except Exception:
             self.debug_print("Error occurred while handling python 2to3 compatibility for the email message string")
 
         return root_data_str
@@ -439,7 +439,7 @@ class SmtpConnector(BaseConnector):
                     SMTP_ERROR_SMTP_CONNECT_TO_SERVER, SMTP_ERROR_STARTTLS_CONFIG, port_message, exception_message)
                 return action_result.set_status(phantom.APP_ERROR, message)
 
-        except:
+        except Exception:
             pass
 
         return action_result.set_status(phantom.APP_ERROR, "{}. {}".format(SMTP_ERROR_SMTP_CONNECT_TO_SERVER, exception_message))
@@ -520,7 +520,7 @@ class SmtpConnector(BaseConnector):
                 return self._connect_to_server(action_result, False)
             elif response_code != 235:
                 return action_result.set_status(phantom.APP_ERROR,
-                "Logging in error, response_code: {0} response: {1}".format(response_code, response_message))
+                                                "Logging in error, response_code: {0} response: {1}".format(response_code, response_message))
 
         self.save_progress(SMTP_SUCC_SMTP_CONNECTED_TO_SERVER)
 
@@ -728,7 +728,7 @@ class SmtpConnector(BaseConnector):
                 try:
                     for header, value in headers.iteritems():
                         outer[header] = value
-                except:
+                except Exception:
                     for header, value in headers.items():
                         outer[header] = value
             except Exception:
@@ -858,10 +858,10 @@ class SmtpConnector(BaseConnector):
             return action_result.get_status()
 
         param = {
-                SMTP_JSON_TO: (config.get('sender_address') or config[phantom.APP_JSON_USERNAME]),
-                SMTP_JSON_FROM: (config.get('sender_address') or config[phantom.APP_JSON_USERNAME]),
-                SMTP_JSON_SUBJECT: "Test SMTP config",
-                SMTP_JSON_BODY: "This is a test mail, sent by the Phantom device,\nto test connectivity to the SMTP Asset."}
+            SMTP_JSON_TO: (config.get('sender_address') or config[phantom.APP_JSON_USERNAME]),
+            SMTP_JSON_FROM: (config.get('sender_address') or config[phantom.APP_JSON_USERNAME]),
+            SMTP_JSON_SUBJECT: "Test SMTP config",
+            SMTP_JSON_BODY: "This is a test mail, sent by the Phantom device,\nto test connectivity to the SMTP Asset."}
 
         self.debug_print(param, param)
 
@@ -890,6 +890,7 @@ class SmtpConnector(BaseConnector):
         action_result = self.add_action_result(ActionResult(param))
 
         # Connect to the server
+        self.debug_print("Connecting to server")
         if phantom.is_fail(self._connect_to_server_helper(action_result)):
             return action_result.get_status()
 
@@ -939,7 +940,7 @@ class SmtpConnector(BaseConnector):
         if email_headers:
             try:
                 email_headers = json.loads(email_headers)
-            except:
+            except Exception:
                 return action_result.set_status(phantom.APP_ERROR, "Error: custom email headers field is not valid json")
 
             if not isinstance(email_headers, dict):
@@ -951,7 +952,7 @@ class SmtpConnector(BaseConnector):
         if attachment_json:
             try:
                 attachment_json = json.loads(attachment_json)
-            except:
+            except Exception:
                 return action_result.set_status(phantom.APP_ERROR, "Error: attachment json field is not valid json")
 
             if not isinstance(attachment_json, list):
@@ -965,7 +966,7 @@ class SmtpConnector(BaseConnector):
 
             if not has_dictionary:
                 return action_result.set_status(phantom.APP_ERROR,
-                    "Error: attachment json field does not contain any dictionaries with the \"vault_id\" key")
+                                                "Error: attachment json field does not contain any dictionaries with the \"vault_id\" key")
 
             for attachment in attachment_json:
                 for key, value in list(attachment.items()):
@@ -1028,7 +1029,7 @@ class SmtpConnector(BaseConnector):
                 if not data:
                     _, _, data = ph_rules.vault_info(vault_id=vault_id)
                 data = list(data)
-            except:
+            except Exception:
                 return action_result.set_status(phantom.APP_ERROR, "Error: failed to find vault ID: {}".format(vault_id))
 
             if data and len(data) > 0 and isinstance(data[0], dict) and data[0].get('path'):
@@ -1062,7 +1063,7 @@ class SmtpConnector(BaseConnector):
                             attachment.set_payload(rfp.read())
                             encoders.encode_base64(attachment)
 
-                except:
+                except Exception:
                     return action_result.set_status(phantom.APP_ERROR, "Error: failed to read the file for the vault ID: {}".format(vault_id))
 
                 attachment.add_header('Content-Disposition', 'attachment', filename=filename)
@@ -1137,6 +1138,7 @@ class SmtpConnector(BaseConnector):
             mail_options = list()
             if smtputf8:
                 mail_options.append("SMTPUTF8")
+            self.debug_print("Making SMTP call")
             self._smtp_conn.sendmail(email_from, email_to, msg.as_string(), mail_options=mail_options)
 
         except UnicodeEncodeError:

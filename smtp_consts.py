@@ -22,8 +22,9 @@ SMTP_ERROR_CONNECTIVITY_TEST = "Test Connectivity Failed"
 SMTP_PROG_UNABLE_TO_ATTACH_FILE = "Unable to attach file {}"
 SMTP_MSG_SKIP_AUTH_NO_USERNAME_PASSWORD = "Skipping authentication, since Username or Password not configured"  # pragma: allowlist secret
 SMTP_ERROR_PARSE_HEADERS = 'Unable to parse headers as a dictionary: {}'
-SMTP_UNICODE_ERROR_MSG = "Error occurred while associating the email content in the email message object. If you are dealing with the Unicode characters, \
-please mark the asset configuration parameter 'Enable Unicode support' as true, if not done already and try again."
+SMTP_UNICODE_ERROR_MSG = "Error occurred while associating the email content in the email message object. \
+If you are dealing with the Unicode characters,please mark the asset configuration parameter 'Enable Unicode \
+support' as true, if not done already and try again."
 SMTP_JSON_ATTACHMENTS = "attachments"
 SMTP_JSON_BODY = "body"
 SMTP_JSON_HEADERS = "headers"
