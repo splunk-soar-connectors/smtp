@@ -5,13 +5,14 @@
     "publisher": "Splunk",
     "type": "email",
     "main_module": "smtp_connector.py",
-    "app_version": "2.1.9",
+    "app_version": "2.2.0",
     "utctime_updated": "2022-01-14T21:35:06.000000Z",
     "package_name": "phantom_smtp",
     "product_vendor": "Generic",
     "product_name": "SMTP",
     "product_version_regex": ".*",
-    "min_phantom_version": "5.0.0",
+    "min_phantom_version": "5.1.0",
+    "rest_handler": "request_handler.handle_request",
     "license": "Copyright (c) 2014-2022 Splunk Inc.",
     "logo": "logo_splunk.svg",
     "logo_dark": "logo_splunk_dark.svg",
@@ -32,24 +33,63 @@
             "order": 1,
             "description": "Port"
         },
-        "username": {
+        "auth_type": {
             "data_type": "string",
             "order": 2,
+            "description": "Authentication Mechanism to Use",
+            "value_list": [
+                "Basic",
+                "OAuth"
+            ],
+            "default": "Basic"
+        },
+        "ph": {
+            "data_type": "ph",
+            "order": 3
+        },
+        "username": {
+            "data_type": "string",
+            "order": 4,
             "description": "Username (or email address)"
         },
         "password": {
             "data_type": "password",
-            "order": 3,
+            "order": 5,
             "description": "Password"
+        },
+        "client_id": {
+            "data_type": "string",
+            "description": "OAuth Client ID",
+            "order": 6
+        },
+        "client_secret": {
+            "data_type": "password",
+            "description": "OAuth Client Secret",
+            "order": 7
+        },
+        "auth_url": {
+            "data_type": "string",
+            "description": "OAuth Authorization URL",
+            "order": 8
+        },
+        "token_url": {
+            "data_type": "string",
+            "description": "OAuth Token URL",
+            "order": 9
+        },
+        "scopes": {
+            "description": "OAuth API Scope (space-separated)",
+            "data_type": "string",
+            "order": 10
         },
         "sender_address": {
             "data_type": "string",
-            "order": 4,
+            "order": 11,
             "description": "Sender Address"
         },
         "ssl_config": {
             "data_type": "string",
-            "order": 5,
+            "order": 12,
             "description": "SSL Method",
             "default": "StartTLS",
             "required": true,
@@ -61,13 +101,13 @@
         },
         "allow_smtputf8": {
             "data_type": "boolean",
-            "order": 6,
+            "order": 13,
             "description": "Enable SMTPUTF8 support (Check this only if the SMTP server supports SMTPUTF8 option)",
             "default": false
         },
         "encoding": {
             "data_type": "boolean",
-            "order": 7,
+            "order": 14,
             "description": "Enable Unicode support",
             "default": false
         }
