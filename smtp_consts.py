@@ -14,7 +14,7 @@
 # and limitations under the License.
 SMTP_SUCC_SMTP_CONNECTED_TO_SERVER = "Connected to server"
 SMTP_SUCC_SMTP_EMAIL_SENT = "Email sent"
-SMTP_ERROR_SMTP_CONNECT_TO_SERVER = "Connection to server failed"
+SMTP_ERROR_SMTP_CONNECTION_TO_SERVER = "Connection to server failed"
 SMTP_ERROR_SMTP_SEND_EMAIL = "Email send failed"
 SMTP_SUCC_CONNECTIVITY_TEST = "Test Connectivity Passed"
 SMTP_ERROR_CONNECTIVITY_TEST = "Test Connectivity Failed"
