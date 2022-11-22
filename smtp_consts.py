@@ -12,9 +12,9 @@
 # the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
 # either express or implied. See the License for the specific language governing permissions
 # and limitations under the License.
-SMTP_SUCC_SMTP_CONNECTED_TO_SERVER = "Connected to server"
+SMTP_SUCC_SMTP_CONNECTIVITY_TO_SERVER = "Connected to server"
 SMTP_SUCC_SMTP_EMAIL_SENT = "Email sent"
-SMTP_ERROR_SMTP_CONNECTION_TO_SERVER = "Connection to server failed"
+SMTP_ERROR_SMTP_CONNECTIVITY_TO_SERVER = "Connection to server failed"
 SMTP_ERROR_SMTP_SEND_EMAIL = "Email send failed"
 SMTP_SUCC_CONNECTIVITY_TEST = "Test Connectivity Passed"
 SMTP_ERROR_CONNECTIVITY_TEST = "Test Connectivity Failed"
@@ -56,7 +56,7 @@ The current SSL configuration value requires the server to support the startTLS 
 SMTP_ERROR_SMTPUTF8_CONFIG = "Unable to encode the Unicode characters. Possible misconfiguration. \
 Either the server does not support SMTPUT8 or the 'Enable SMTPUTF8 support' asset configuration parameter is set to False"
 SMTP_ERROR_TO_FROM_UNAVAILABLE = "Error: Failed to send the email. The {} is unavailable. Please check the action parameters"
-SMTP_ERROR_CONNECTING_TO_SERVER = "Error connecting to server"
+SMTP_ERROR_CONNECTIVITY_TO_SERVER = "Error connecting to server"
 SMTP_ERROR_LOGGING_IN_TO_SERVER = "Error logging in to server"
 SMTP_REQUIRED_PARAM_OAUTH = "ERROR: {0} is a required parameter for OAuth Authentication, please specify one."
 SMTP_REQUIRED_PARAM_BASIC = "ERROR: {0} is a required parameter for Basic Authentication, please specify one."

@@ -431,18 +431,18 @@ class SmtpConnector(BaseConnector):
 
             if (config[SMTP_JSON_SSL_CONFIG] == SSL_CONFIG_SSL) and ('ssl.c' in exception_message):
                 message = "{0}.\r\n{1}{2}Error Text: {3}".format(
-                    SMTP_ERROR_SMTP_CONNECT_TO_SERVER, SMTP_ERROR_SSL_CONFIG_SSL, port_message, exception_message)
+                    SMTP_ERROR_SMTP_CONNECTIVITY_TO_SERVER, SMTP_ERROR_SSL_CONFIG_SSL, port_message, exception_message)
                 return action_result.set_status(phantom.APP_ERROR, message)
 
             if (config[SMTP_JSON_SSL_CONFIG] == SSL_CONFIG_STARTTLS) and ('unexpectedly close' in exception_message):
                 message = "{0}.\r\n{1}{2}Error Text:{3}".format(
-                    SMTP_ERROR_SMTP_CONNECT_TO_SERVER, SMTP_ERROR_STARTTLS_CONFIG, port_message, exception_message)
+                    SMTP_ERROR_SMTP_CONNECTIVITY_TO_SERVER, SMTP_ERROR_STARTTLS_CONFIG, port_message, exception_message)
                 return action_result.set_status(phantom.APP_ERROR, message)
 
         except Exception:
             pass
 
-        return action_result.set_status(phantom.APP_ERROR, "{}. {}".format(SMTP_ERROR_SMTP_CONNECT_TO_SERVER, exception_message))
+        return action_result.set_status(phantom.APP_ERROR, "{}. {}".format(SMTP_ERROR_SMTP_CONNECTIVITY_TO_SERVER, exception_message))
 
     def _cleanup(self):
 
@@ -522,7 +522,7 @@ class SmtpConnector(BaseConnector):
                 return action_result.set_status(phantom.APP_ERROR,
                                                 "Logging in error, response_code: {0} response: {1}".format(response_code, response_message))
 
-        self.save_progress(SMTP_SUCC_SMTP_CONNECTED_TO_SERVER)
+        self.save_progress(SMTP_SUCC_SMTP_CONNECTIVITY_TO_SERVER)
 
         return phantom.APP_SUCCESS
 
