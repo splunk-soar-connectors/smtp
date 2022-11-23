@@ -1,6 +1,6 @@
 # File: smtp_connector.py
 #
-# Copyright (c) 2014-2022 Splunk Inc.
+# Copyright (c) 2016-2022 Splunk Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ import phantom.app as phantom
 import phantom.rules as ph_rules
 import phantom.utils as ph_utils
 import requests
-from bs4 import BeautifulSoup, UnicodeDammit
+from bs4 import BeautifulSoup
 from phantom.action_result import ActionResult
 from phantom.base_connector import BaseConnector
 from phantom.vault import Vault
@@ -367,29 +367,6 @@ class SmtpConnector(BaseConnector):
         """
         self.debug_print(SMTP_DECRYPT_TOKEN.format(token_name))    # nosemgrep
         return encryption_helper.decrypt(decrypt_var, self.get_asset_id())
-
-    def _handle_py_ver_compat_for_sendemail(self, root_data_str):
-        """
-        This method converts the provided email message's as_string() into Python v2 and v3 compatible string
-        and bytes string version respectively.
-        :param root_data_str: Input email message's as_string() to be processed
-        :return: root_data_str (Processed email message's as_string() based on following logic 'original root_data_str - Python 2;
-                                encoded bytes format root_data_str - Python 3')
-        """
-
-        # UnicodeDammit(msg.as_string()).unicode_markup.encode("utf-8")
-        # Above fix works for both Python v2 and Python v3 and should not be changed or
-        # changed only after thorough testing on both the Python v2 and v3 versions.
-        # This fix is based on solutions provided on the Python bug tracker portal issue
-        # raised by us for sendemail not working for Unicode Characters for Python v3
-        # Bug Link - https://bugs.python.org/issue41023
-        try:
-            if self._python_version != 2:
-                root_data_str = UnicodeDammit(root_data_str).unicode_markup.encode('utf-8')
-        except Exception:
-            self.debug_print("Error occurred while handling python 2to3 compatibility for the email message string")
-
-        return root_data_str
 
     def _get_error_message_from_exception(self, e):
         """
