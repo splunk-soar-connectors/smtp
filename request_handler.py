@@ -65,7 +65,7 @@ class SMTPRequestHandler:
         }
 
         try:
-            r = requests.post(token_url, data=body, proxies=proxy, timeout=DEFAULT_REQUEST_TIMEOUT)  # pragma: allowlist secret
+            r = requests.post(token_url, data=body, proxies=proxy, timeout=DEFAULT_REQUEST_TIMEOUT)  # nosemgrep
             r.raise_for_status()
             resp_json = r.json()
         except Exception as e:
