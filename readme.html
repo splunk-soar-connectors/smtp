@@ -39,6 +39,42 @@
   </tr>
 </table>
 
+<h2>App Configuration</h2>
+<p>There are following parameters in the app:</p>
+<ul>
+  <li>username</li>
+  <li>password</li>
+  <li>client-id</li>
+  <li>client-secret</li>
+  <li>Authorization URL</li>
+  <li>Token URL</li>
+  <li>OAuth API Scope</li>
+  <li>Sender Address</li>
+</ul>
+
+<div>
+  <b>NOTE : </b> While running the test connectivity with oAuth, username value is compulsory to pass. The username
+  value is required because its used to generate new token, every time test connectivity is run.
+</div>
+<div>
+  <div>To obtain the required parameters, please check the docs of the service provider</div>
+  <div>Here we have attached links for the most used mail services to find parameters values:</div>
+  <div>
+    <div>GOOGLE</div>
+    <div>
+      <a href="https://support.google.com/cloud/answer/6158849?hl=en">Setting up OAuth2.0</a>
+    </div>
+    <br>
+    <div>MICROSOFT</div>
+    <div>
+      <a
+        href="https://learn.microsoft.com/en-us/exchange/client-developer/legacy-protocols/how-to-authenticate-an-imap-pop-smtp-application-by-using-oauth">Authentication
+        for SMTP</a>
+    </div>
+  </div>
+</div>
+<br>
+
 <h2>Playbook Backward Compatibility</h2>
 <ul>
   <li> The behavior of the following action has been modified. Hence, it is requested to the end-user to please update
