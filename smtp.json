@@ -50,7 +50,8 @@
         "username": {
             "data_type": "string",
             "order": 4,
-            "description": "Username (or email address)"
+            "description": "Username (or email address)",
+            "required": true
         },
         "password": {
             "data_type": "password",
