@@ -846,7 +846,6 @@ class SmtpConnector(BaseConnector):
         if (phantom.is_fail(self._handle_send_email(param, action_result))):
             self.debug_print("connect failed")
             self.save_progress("Error message: {}".format(action_result.get_message()))
-            self.save_progress(SMTP_ERROR_CONNECTIVITY_TEST)
             return action_result.set_status(phantom.APP_ERROR, SMTP_ERROR_CONNECTIVITY_TEST)
 
         self.save_progress(SMTP_DONE)
