@@ -213,7 +213,12 @@ class SmtpConnector(BaseConnector):
             return phantom.APP_ERROR, app_rest_url
 
         config = self.get_config()
+
         request_url = config.get("auth_url")
+        if request_url.endswith("\\"):
+            request_url = request_url.strip("\\").strip('/')
+        elif request_url.endswith("/"):
+            request_url = request_url.strip('/').strip('\\')
 
         # set proxy if configured
         proxy = {}
@@ -226,7 +231,12 @@ class SmtpConnector(BaseConnector):
         state['client_id'] = client_id
         state['redirect_url'] = app_rest_url
         state['request_url'] = request_url
-        state['token_url'] = config.get("token_url")
+        token_url = config.get("token_url")
+        if token_url.endswith("\\"):
+            token_url = token_url.strip("\\").strip('/')
+        elif token_url.endswith("/"):
+            token_url = token_url.strip('/').strip('\\')
+        state['token_url'] = token_url
         state['client_secret'] = base64.b64encode(client_secret.encode()).decode()
 
         rsh.save_state(state)
@@ -243,8 +253,11 @@ class SmtpConnector(BaseConnector):
         if config.get('scopes'):
             params['scope'] = config['scopes']
 
-        url = requests.Request('GET', request_url, params=params).prepare().url
-        url = '{}&'.format(url)
+        try:
+            url = requests.Request('GET', request_url, params=params).prepare().url
+            url = '{}&'.format(url)
+        except Exception as e:
+            return phantom.APP_ERROR, "Message : {}".format(e)
 
         self.save_progress("To continue, open this link in a new tab in your browser")
         self.save_progress(url)
@@ -267,6 +280,7 @@ class SmtpConnector(BaseConnector):
             self._refresh_token = oauth_token.get('refresh_token')
 
         self._state['oauth_token'] = oauth_token
+
         return phantom.APP_SUCCESS, ""
 
     def _interactive_auth_refresh(self):
@@ -283,6 +297,7 @@ class SmtpConnector(BaseConnector):
             return phantom.APP_ERROR, "Client ID has been changed. Please run Test Connectivity again."
 
         request_url = config.get("token_url")
+
         body = {
             'grant_type': 'refresh_token',
             'client_id': client_id,
@@ -297,7 +312,6 @@ class SmtpConnector(BaseConnector):
 
         try:
             response_json = r.json()
-
             if response_json.get("error"):
                 return phantom.APP_ERROR, "Invalid refresh token. Please run the test connectivity again."
             oauth_token.update(r.json())
@@ -469,10 +483,8 @@ class SmtpConnector(BaseConnector):
             if self._smtp_conn.has_extn('AUTH'):
                 if is_oauth:
                     auth_string = self._generate_oauth_string(config[phantom.APP_JSON_USERNAME], self._access_token)
-
                     # self._smtp_conn.ehlo(config.get("client_id"))
                     response_code, response_message = self._smtp_conn.docmd('AUTH', 'XOAUTH2 {}'.format(auth_string))
-
                 else:
                     self.debug_print("username and password used")
                     response_code, response_message = self._smtp_conn.login(config[phantom.APP_JSON_USERNAME], config[phantom.APP_JSON_PASSWORD])
@@ -491,6 +503,11 @@ class SmtpConnector(BaseConnector):
 
         if response_code is not None:
             if response_code == 334:
+                decoded_bytes = base64.b64decode(response_message)
+                decoded_str = decoded_bytes.decode("ascii")
+                json_str = json.loads(decoded_str)
+                if json_str.get("status") == "400":
+                    return action_result.set_status(phantom.APP_ERROR, "Could not connect to server, please check your asset configuration")
                 ret_val, message = self._interactive_auth_refresh()
                 if not ret_val:
                     return action_result.set_status(phantom.APP_ERROR, message)
@@ -806,7 +823,7 @@ class SmtpConnector(BaseConnector):
 
             return status_code
         else:
-            if self._access_token == "":
+            if self._refresh_token and self._access_token == "":
                 self.debug_print("Try to generate token from refresh token")
                 ret_val, message = self._interactive_auth_refresh()
                 if not ret_val:
@@ -816,6 +833,7 @@ class SmtpConnector(BaseConnector):
             ret_val, message = self._set_interactive_auth(action_result)
             if not ret_val:
                 return action_result.set_status(phantom.APP_ERROR, message)
+
             return phantom.APP_SUCCESS
 
     def _test_asset_connectivity(self, param):
@@ -911,7 +929,7 @@ class SmtpConnector(BaseConnector):
             return action_result.set_status(phantom.APP_ERROR, "Error: failed to get email sender")
 
         if not len(email_to):
-            return action_result.set_status(phantom.APP_ERROR, "Error: failed to get email recipents")
+            return action_result.set_status(phantom.APP_ERROR, "Error: failed to get email recipients")
 
         if email_headers:
             try:

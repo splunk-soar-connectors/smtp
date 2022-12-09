@@ -68,6 +68,7 @@ class SMTPRequestHandler:
             r = requests.post(token_url, data=body, proxies=proxy, timeout=DEFAULT_REQUEST_TIMEOUT)  # nosemgrep
             r.raise_for_status()
             resp_json = r.json()
+
         except Exception as e:
             return False, self._return_error(
                 "Error retrieving OAuth Token: {}".format(str(e)),
@@ -85,6 +86,7 @@ class SMTPRequestHandler:
 
             asset_id = GET.get('state')
             self._rsh = RequestStateHandler(asset_id)
+
             error = GET.get('error')
             if error:
                 error_msg = GET.get('error_description')
