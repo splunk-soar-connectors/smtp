@@ -78,3 +78,8 @@ SMTP_ENCRYPT_TOKEN = "Encrypting the {} token"
 SMTP_DECRYPT_TOKEN = "Decrypting the {} token"
 SMTP_ENCRYPTION_ERROR = "Error occurred while encrypting the state file"
 SMTP_DECRYPTION_ERROR = "Error occurred while decrypting the state file"
+
+
+SMTP_VALID_INT_MESSAGE = "Please provide a valid integer value in the '{param}'"
+SMTP_NON_NEG_INT_MESSAGE = "Please provide a valid non-negative integer value in the '{param}'"
+SMTP_NON_NEG_NON_ZERO_INT_MESSAGE = "Please provide a valid non-zero positive integer value in '{param}'"

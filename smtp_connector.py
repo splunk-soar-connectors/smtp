@@ -118,8 +118,32 @@ class SmtpConnector(BaseConnector):
         self.save_state(self._state)
         return phantom.APP_SUCCESS
 
-    def _validate_email(self, input_data):
+    def _validate_integer(self, action_result, parameter, key, allow_zero=False):
+        """
+        Validate an integer.
+        :param action_result: Action result or BaseConnector object
+        :param parameter: input parameter
+        :param key: input parameter message key
+        :allow_zero: whether zero should be considered as valid value or not
+        :return: status phantom.APP_ERROR/phantom.APP_SUCCESS, integer value of the parameter or None in case of failure
+        """
+        if parameter is not None:
+            try:
+                if not float(parameter).is_integer():
+                    return phantom.APP_ERROR, SMTP_VALID_INT_MESSAGE.format(param=key)
 
+                parameter = int(parameter)
+            except Exception:
+                return phantom.APP_ERROR, SMTP_VALID_INT_MESSAGE.format(param=key)
+
+            if parameter < 0:
+                return phantom.APP_ERROR, SMTP_NON_NEG_INT_MESSAGE.format(param=key)
+            if not allow_zero and parameter == 0:
+                return phantom.APP_ERROR, SMTP_NON_NEG_NON_ZERO_INT_MESSAGE.format(param=key)
+
+        return phantom.APP_SUCCESS, parameter
+
+    def _validate_email(self, input_data):
         # validations are always tricky things, making it 100% foolproof, will take a
         # very complicated regex, even multiple regexes and each could lead to a bug that
         # will invalidate the input (at a customer site), leading to actions being stopped from carrying out.
@@ -467,7 +491,12 @@ class SmtpConnector(BaseConnector):
 
         # use the port if specified
         if (SMTP_JSON_PORT in config):
-            self._smtp_conn = func_to_use(server, str(config[SMTP_JSON_PORT]))
+
+            ret_val, port_data = self._validate_integer(action_result, config[SMTP_JSON_PORT], SMTP_JSON_PORT, True)
+            if phantom.is_fail(ret_val):
+                return action_result.set_status(phantom.APP_ERROR, port_data)
+
+            self._smtp_conn = func_to_use(server, str(port_data))
         else:
             self._smtp_conn = func_to_use(server)
 

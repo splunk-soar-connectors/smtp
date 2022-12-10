@@ -104,13 +104,13 @@
             "data_type": "boolean",
             "order": 13,
             "description": "Enable SMTPUTF8 support (Check this only if the SMTP server supports SMTPUTF8 option)",
-            "default": false
+            "default": true
         },
         "encoding": {
             "data_type": "boolean",
             "order": 14,
             "description": "Enable Unicode support",
-            "default": false
+            "default": true
         }
     },
     "actions": [
