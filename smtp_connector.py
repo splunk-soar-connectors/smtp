@@ -414,22 +414,22 @@ class SmtpConnector(BaseConnector):
         """
 
         error_code = None
-        error_msg = ERROR_MSG_UNAVAILABLE
+        error_message = ERROR_MESSAGE_UNAVAILABLE
 
         try:
             if hasattr(e, 'args'):
                 if len(e.args) > 1:
                     error_code = e.args[0]
-                    error_msg = e.args[1]
+                    error_message = e.args[1]
                 elif len(e.args) == 1:
-                    error_msg = e.args[0]
+                    error_message = e.args[0]
         except Exception as e:
             self.debug_print("Error occurred while fetching exception information. Details: {}".format(str(e)))
 
         if not error_code:
-            error_text = "Error Message: {}".format(error_msg)
+            error_text = "Error Message: {}".format(error_message)
         else:
-            error_text = "Error Code: {}. Error Message: {}".format(error_code, error_msg)
+            error_text = "Error Code: {}. Error Message: {}".format(error_code, error_message)
 
         return error_text
 
@@ -741,7 +741,7 @@ class SmtpConnector(BaseConnector):
                 outer = MIMEText(param[SMTP_JSON_BODY], 'plain', message_encoding)
         except Exception as e:
             return action_result.set_status(phantom.APP_ERROR, "{0}. {1}".format(
-                SMTP_UNICODE_ERROR_MSG, self._get_error_message_from_exception(e)))
+                SMTP_UNICODE_ERROR_MESSAGE, self._get_error_message_from_exception(e)))
 
         if SMTP_JSON_HEADERS in param:
             try:
@@ -1041,7 +1041,7 @@ class SmtpConnector(BaseConnector):
                 msg.attach(MIMEText(email_html, 'html', 'ascii'))
         except Exception as e:
             return action_result.set_status(phantom.APP_ERROR, "{0}. {1}".format(
-                SMTP_UNICODE_ERROR_MSG, self._get_error_message_from_exception(e)))
+                SMTP_UNICODE_ERROR_MESSAGE, self._get_error_message_from_exception(e)))
         root.attach(msg)
 
         for x in attachment_json:

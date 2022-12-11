@@ -20,9 +20,9 @@ SMTP_SUCC_CONNECTIVITY_TEST = "Test Connectivity Passed"
 SMTP_ERROR_CONNECTIVITY_TEST = "Test Connectivity Failed"
 
 SMTP_PROG_UNABLE_TO_ATTACH_FILE = "Unable to attach file {}"
-SMTP_MSG_SKIP_AUTH_NO_USERNAME_PASSWORD = "Skipping authentication, since Username or Password not configured"  # pragma: allowlist secret
+SMTP_MESSAGE_SKIP_AUTH_NO_USERNAME_PASSWORD = "Skipping authentication, since Username or Password not configured"  # pragma: allowlist secret
 SMTP_ERROR_PARSE_HEADERS = 'Unable to parse headers as a dictionary: {}'
-SMTP_UNICODE_ERROR_MSG = "Error occurred while associating the email content in the email message object. \
+SMTP_UNICODE_ERROR_MESSAGE = "Error occurred while associating the email content in the email message object. \
 If you are dealing with the Unicode characters,please mark the asset configuration parameter 'Enable Unicode \
 support' as true, if not done already and try again."
 SMTP_JSON_ATTACHMENTS = "attachments"
@@ -64,9 +64,9 @@ SMTP_STATE_FILE_CORRUPT_ERROR = "Error occurred while loading the state file due
     "Resetting the state file with the default format. Please try again."
 
 # Constants relating to '_get_error_message_from_exception'
-ERROR_MSG_UNAVAILABLE = "Error message unavailable. Please check the asset configuration and|or action parameters"
-TYPE_ERROR_MSG = "Error occurred while connecting to the server. Please check the asset configuration and|or the action parameters"
-PARSE_ERROR_MSG = "Unable to parse the error message. Please check the asset configuration and|or action parameters"
+ERROR_MESSAGE_UNAVAILABLE = "Error message unavailable. Please check the asset configuration and|or action parameters"
+TYPE_ERROR_MESSAGE = "Error occurred while connecting to the server. Please check the asset configuration and|or the action parameters"
+PARSE_ERROR_MESSAGE = "Unable to parse the error message. Please check the asset configuration and|or action parameters"
 
 DEFAULT_REQUEST_TIMEOUT = 30  # 30 seconds
 
