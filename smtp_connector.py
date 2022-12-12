@@ -192,7 +192,7 @@ class SmtpConnector(BaseConnector):
         phantom_base_url = resp_json.get('base_url')
         if not phantom_base_url:
             return action_result.set_status(
-                phantom.APP_ERROR, "Phantom Base URL is not configured, please configure it in System Settings"), None
+                phantom.APP_ERROR, "SOAR Base URL is not configured, please configure it in System Settings"), None
 
         phantom_base_url = phantom_base_url.strip("/")
 
@@ -223,7 +223,7 @@ class SmtpConnector(BaseConnector):
         ret_val, asset_name = self._get_asset_name(action_result)
         if phantom.is_fail(ret_val):
             return action_result.get_status(), action_result.get_message()
-        self.save_progress('Using Phantom base URL as: {0}'.format(phantom_base_url))
+        self.save_progress('Using SOAR base URL as: {0}'.format(phantom_base_url))
         app_json = self.get_app_json()
         app_name = app_json['name']
         app_dir_name = _get_dir_name_from_app_name(app_name)
@@ -418,7 +418,7 @@ class SmtpConnector(BaseConnector):
 
         error_code = None
         error_message = ERROR_MESSAGE_UNAVAILABLE
-
+        self.error_print("Error occurred : ", e)
         try:
             if hasattr(e, 'args'):
                 if len(e.args) > 1:
@@ -888,7 +888,7 @@ class SmtpConnector(BaseConnector):
             SMTP_JSON_TO: (config.get('sender_address') or config[phantom.APP_JSON_USERNAME]),
             SMTP_JSON_FROM: (config.get('sender_address') or config[phantom.APP_JSON_USERNAME]),
             SMTP_JSON_SUBJECT: "Test SMTP config",
-            SMTP_JSON_BODY: "This is a test mail, sent by the Phantom device,\nto test connectivity to the SMTP Asset."}
+            SMTP_JSON_BODY: "This is a test mail, sent by the SOAR device,\nto test connectivity to the SMTP Asset."}
 
         self.debug_print(param, param)
 
