@@ -165,12 +165,15 @@ class SmtpConnector(BaseConnector):
 
     def make_rest_call(self, action_result, url, verify=False):
 
-        r = requests.get(url, verify=verify, timeout=DEFAULT_REQUEST_TIMEOUT)
-        if not r:
-            message = 'Status Code: {0}'.format(r.status_code)
-            if r.text:
-                message = "{} Error from Server: {}".format(message, r.text.replace('{', '{{').replace('}', '}}'))
-            return action_result.set_status(phantom.APP_ERROR, "Error retrieving system info, {0}".format(message)), None
+        try:
+            r = requests.get(url, verify=verify, timeout=DEFAULT_REQUEST_TIMEOUT)
+            if not r:
+                message = 'Status Code: {0}'.format(r.status_code)
+                if r.text:
+                    message = "{} Error from Server: {}".format(message, r.text.replace('{', '{{').replace('}', '}}'))
+                return action_result.set_status(phantom.APP_ERROR, "Error retrieving system info, {0}".format(message)), None
+        except Exception as e:
+            return action_result.set_status(phantom.APP_ERROR, "Error : {0}".format(e)), None
 
         try:
             resp_json = r.json()
