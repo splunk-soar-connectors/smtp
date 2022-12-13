@@ -1,2 +1,2 @@
 **Unreleased**
-* Added interactive authentication. [PAPP-26698]
+* Added interactive authentication [PAPP-26698]

@@ -47,6 +47,8 @@ class SmtpConnector(BaseConnector):
 
     # actions supported by this script
     ACTION_ID_SEND_EMAIL = "send_email"
+    ACTION_ID_SEND_RAW_EMAIL = "send_rawemail"
+    ACTION_ID_SEND_HTML_EMAIL = "send_htmlemail"
 
     def __init__(self):
 
@@ -241,28 +243,22 @@ class SmtpConnector(BaseConnector):
 
         config = self.get_config()
 
-        request_url = config.get("auth_url")
-        if request_url.endswith("\\"):
-            request_url = request_url.strip("\\").strip('/')
-        elif request_url.endswith("/"):
-            request_url = request_url.strip('/').strip('\\')
-
+        request_url = config.get("auth_url", "").strip("\\/")
+        token_url = config.get("token_url", "").strip('\\/')
         # set proxy if configured
         proxy = {}
         if 'HTTP_PROXY' in os.environ:
             proxy['http'] = os.environ.get('HTTP_PROXY')
         if 'HTTPS_PROXY' in os.environ:
             proxy['https'] = os.environ.get('HTTPS_PROXY')
+        if 'NO_PROXY' in os.environ:
+            proxy['no_proxy'] = os.environ.get('NO_PROXY')
+
         state['proxy'] = proxy
 
         state['client_id'] = client_id
         state['redirect_url'] = app_rest_url
         state['request_url'] = request_url
-        token_url = config.get("token_url")
-        if token_url.endswith("\\"):
-            token_url = token_url.strip("\\").strip('/')
-        elif token_url.endswith("/"):
-            token_url = token_url.strip('/').strip('\\')
         state['token_url'] = token_url
         state['client_secret'] = base64.b64encode(client_secret.encode()).decode()
 
@@ -292,7 +288,14 @@ class SmtpConnector(BaseConnector):
         for i in range(0, 60):
             time.sleep(5)
             self.save_progress("." * i)
-            state = rsh.load_state()
+
+            # load_state also decrypts tokens, there if there is a error decrypting tokens raise an error
+            try:
+                state = rsh.load_state()
+            except Exception:
+                self._state.pop('oauth_token', None)
+                return phantom.APP_ERROR, SMTP_ASSET_CORRUPTED
+
             oauth_token = state.get('oauth_token')
             if oauth_token:
                 break
@@ -346,6 +349,7 @@ class SmtpConnector(BaseConnector):
             return phantom.APP_ERROR, "Error retrieving OAuth Token"
 
         self._access_token = oauth_token.get('access_token')
+        self._refresh_token = oauth_token.get('refresh_token')
 
         self._state['oauth_token'] = oauth_token
         return phantom.APP_SUCCESS, ""
@@ -534,6 +538,7 @@ class SmtpConnector(BaseConnector):
             raise e
 
         if response_code is not None:
+            # 334 status code for smtp signifies that the requested security mechanism is accepted
             if response_code == 334:
                 decoded_bytes = base64.b64decode(response_message)
                 decoded_str = decoded_bytes.decode("ascii")
@@ -639,7 +644,7 @@ class SmtpConnector(BaseConnector):
                             self.invalid_vault_ids.append(attachment_vault_id)
                             continue
                     vault_meta_info = list(vault_meta_info)
-                except:
+                except Exception:
                     self.invalid_vault_ids.append(attachment_vault_id)
                     continue
 
@@ -905,7 +910,6 @@ class SmtpConnector(BaseConnector):
         return action_result.set_status(phantom.APP_SUCCESS, SMTP_SUCC_CONNECTIVITY_TEST)
 
     def html_to_text(self, html):
-        from bs4 import BeautifulSoup
         soup = BeautifulSoup(html, "html.parser")
         text = soup.get_text(separator=" ")
         return text
@@ -1189,15 +1193,15 @@ class SmtpConnector(BaseConnector):
         action = self.get_action_identifier()
         ret_val = phantom.APP_ERROR
 
-        if (action == self.ACTION_ID_SEND_EMAIL):
+        if action == self.ACTION_ID_SEND_EMAIL:
             ret_val = self._handle_send_email(param)
-        elif (action == phantom.ACTION_ID_TEST_ASSET_CONNECTIVITY):
+        elif action == phantom.ACTION_ID_TEST_ASSET_CONNECTIVITY:
             ret_val = self._test_asset_connectivity(param)
 
-        elif action == "send_rawemail":
+        elif action == self.ACTION_ID_SEND_RAW_EMAIL:
             ret_val = self._handle_send_rawemail(param)
 
-        elif action == "send_htmlemail":
+        elif action == self.ACTION_ID_SEND_HTML_EMAIL:
             ret_val = self._handle_send_htmlemail(param)
 
         return ret_val

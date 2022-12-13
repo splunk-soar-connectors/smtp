@@ -17,6 +17,7 @@ import base64
 import json
 import os
 
+import encryption_helper
 import requests
 from django.http import HttpResponse
 
@@ -55,6 +56,9 @@ class SMTPRequestHandler:
         client_secret = base64.b64decode(state['client_secret']).decode()
         proxy = state['proxy']
         token_url = state['token_url']
+        os.environ['HTTP_PROXY'] = proxy.get('http')
+        os.environ['HTTPS_PROXY'] = proxy.get('https')
+        os.environ['NO_PROXY'] = proxy.get('no_proxy')
 
         body = {
             'grant_type': 'authorization_code',
@@ -65,7 +69,7 @@ class SMTPRequestHandler:
         }
 
         try:
-            r = requests.post(token_url, data=body, proxies=proxy, timeout=DEFAULT_REQUEST_TIMEOUT)  # nosemgrep
+            r = requests.post(token_url, data=body, timeout=DEFAULT_REQUEST_TIMEOUT)  # nosemgrep
             r.raise_for_status()
             resp_json = r.json()
 
@@ -112,6 +116,24 @@ class RequestStateHandler:
         else:
             raise AttributeError("RequestStateHandler got invalid asset_id")
 
+    def _encrypt_state(self, state):
+        if 'oauth_token' in state:
+            oauth_token = state['oauth_token']
+            state['oauth_token'] = encryption_helper.encrypt(  # pylint: disable=E1101
+                json.dumps(oauth_token),
+                self._asset_id
+            )
+        return state
+
+    def _decrypt_state(self, state):
+        if 'oauth_token' in state:
+            oauth_token = encryption_helper.decrypt(  # pylint: disable=E1101
+                state['oauth_token'],
+                self._asset_id
+            )
+            state['oauth_token'] = json.loads(oauth_token)
+        return state
+
     def _get_state_file(self):
         dirpath = os.path.split(__file__)[0]
         state_file = "{0}/{1}_state.json".format(dirpath, self._asset_id)
@@ -127,6 +149,7 @@ class RequestStateHandler:
         return True
 
     def save_state(self, state):
+        state = self._encrypt_state(state)
         state_file = self._get_state_file()
         try:
             with open(state_file, 'w+') as fp:
@@ -146,4 +169,5 @@ class RequestStateHandler:
         except Exception:
             pass
 
+        state = self._decrypt_state(state)
         return state
