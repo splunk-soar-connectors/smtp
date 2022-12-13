@@ -56,9 +56,13 @@ class SMTPRequestHandler:
         client_secret = base64.b64decode(state['client_secret']).decode()
         proxy = state['proxy']
         token_url = state['token_url']
-        os.environ['HTTP_PROXY'] = proxy.get('http')
-        os.environ['HTTPS_PROXY'] = proxy.get('https')
-        os.environ['NO_PROXY'] = proxy.get('no_proxy')
+
+        if proxy.get('http'):
+            os.environ['HTTP_PROXY'] = proxy.get('http')
+        if proxy.get('https'):
+            os.environ['HTTPS_PROXY'] = proxy.get('https')
+        if proxy.get('no_proxy'):
+            os.environ['NO_PROXY'] = proxy.get('no_proxy')
 
         body = {
             'grant_type': 'authorization_code',

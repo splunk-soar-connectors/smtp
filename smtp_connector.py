@@ -544,7 +544,10 @@ class SmtpConnector(BaseConnector):
                 decoded_str = decoded_bytes.decode("ascii")
                 json_str = json.loads(decoded_str)
                 if json_str.get("status") == "400":
-                    return action_result.set_status(phantom.APP_ERROR, "Could not connect to server, please check your asset configuration")
+                    return action_result.set_status(
+                        phantom.APP_ERROR,
+                        "Could not connect to server, please check your asset configuration and re-run test connectivity"
+                    )
                 ret_val, message = self._interactive_auth_refresh()
                 if not ret_val:
                     return action_result.set_status(phantom.APP_ERROR, message)
