@@ -270,8 +270,7 @@ class SmtpConnector(BaseConnector):
             'client_id': client_id,
             'state': asset_id,
             'redirect_uri': app_rest_url,
-            "access_type": "offline",
-            "prompt": "consent"
+            "access_type": "offline"
         }
         if config.get('scopes'):
             params['scope'] = config['scopes']
