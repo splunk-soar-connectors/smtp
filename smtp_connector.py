@@ -155,13 +155,13 @@ class SmtpConnector(BaseConnector):
         emails = []
 
         # First work on the comma as the separator
-        if (',' in input_data):
+        if ',' in input_data:
             emails = input_data.split(',')
-        elif (';' in input_data):
+        elif ';' in input_data:
             emails = input_data.split(';')
 
         for email in emails:
-            if (not ph_utils.is_email(email.strip())):
+            if not ph_utils.is_email(email.strip()):
                 return False
         return True
 
@@ -467,7 +467,7 @@ class SmtpConnector(BaseConnector):
 
     def _cleanup(self):
 
-        if (self._smtp_conn):
+        if self._smtp_conn:
             self._smtp_conn.quit()
             self._smtp_conn = None
 
@@ -492,11 +492,11 @@ class SmtpConnector(BaseConnector):
         ssl_config = config.get(SMTP_JSON_SSL_CONFIG, SSL_CONFIG_STARTTLS)
 
         # if it is SSL, (not None or StartTLS) then the function to call is different
-        if (ssl_config == SSL_CONFIG_SSL):
+        if ssl_config == SSL_CONFIG_SSL:
             func_to_use = getattr(smtplib, 'SMTP_SSL')
 
         # use the port if specified
-        if (SMTP_JSON_PORT in config):
+        if SMTP_JSON_PORT in config:
 
             ret_val, port_data = self._validate_integer(action_result, config[SMTP_JSON_PORT], SMTP_JSON_PORT, True)
             if phantom.is_fail(ret_val):
@@ -592,7 +592,7 @@ class SmtpConnector(BaseConnector):
 
     def _add_attachments(self, outer, attachments, action_result, message_encoding):
 
-        if (not attachments):
+        if not attachments:
             return phantom.APP_SUCCESS
 
         for attachment_vault_id in attachments:
@@ -651,7 +651,7 @@ class SmtpConnector(BaseConnector):
                     continue
 
                 # Check if we have any results
-                if (len(vault_meta_info) == 0):
+                if len(vault_meta_info) == 0:
                     continue
 
                 # pick up the first one, they all point to the same file
@@ -733,16 +733,16 @@ class SmtpConnector(BaseConnector):
         outer = None
         attachments = None
 
-        if (SMTP_JSON_ATTACHMENTS in param):
+        if SMTP_JSON_ATTACHMENTS in param:
             attachments = param[SMTP_JSON_ATTACHMENTS]
             attachments = [x.strip() for x in attachments.split(",")]
             attachments = list(filter(None, attachments))
 
         try:
-            if (self._is_html(body)):
+            if self._is_html(body):
                 outer = MIMEMultipart('alternative')
                 self._attach_bodies(outer, body, action_result, message_encoding)
-            elif (attachments):
+            elif attachments:
                 # it is not html, but has attachments
                 outer = MIMEMultipart()
                 msg = MIMEText(param[SMTP_JSON_BODY], 'plain', message_encoding)
@@ -772,7 +772,7 @@ class SmtpConnector(BaseConnector):
         cc_comma_sep_list = param.get(SMTP_JSON_CC, None)
         bcc_comma_sep_list = param.get(SMTP_JSON_BCC, None)
 
-        if (SMTP_JSON_SUBJECT in param):
+        if SMTP_JSON_SUBJECT in param:
             outer['Subject'] = param[SMTP_JSON_SUBJECT]
             action_result.update_param({SMTP_JSON_SUBJECT: param[SMTP_JSON_SUBJECT]})
 
@@ -820,7 +820,7 @@ class SmtpConnector(BaseConnector):
 
         action_id = self.get_action_identifier()
 
-        if (action_result is None):
+        if action_result is None:
             action_result = self.add_action_result(ActionResult(dict(param)))
 
         # Connect to the server
@@ -1229,13 +1229,13 @@ if __name__ == '__main__':
     password = args.password
     verify = args.verify
 
-    if (username is not None and password is None):
+    if username is not None and password is None:
         # User specified a username but not a password, so ask
         import getpass
 
         password = getpass.getpass("Password: ")
 
-    if (username and password):
+    if username and password:
         try:
             login_url = SmtpConnector._get_phantom_base_url() + '/login'
 
@@ -1267,7 +1267,7 @@ if __name__ == '__main__':
         connector = SmtpConnector()
         connector.print_progress_message = True
 
-        if (session_id is not None):
+        if session_id is not None:
             in_json['user_session_token'] = session_id
             connector._set_csrf_info(csrftoken, headers['Referer'])
 
