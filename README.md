@@ -11,7 +11,7 @@ Minimum Product Version: 5\.0\.0
 This app provides the ability to send email using SMTP
 
 [comment]: # " File: README.md"
-[comment]: # "  Copyright (c) 2014-2022 Splunk Inc."
+[comment]: # "  Copyright (c) 2016-2022 Splunk Inc."
 [comment]: # ""
 [comment]: # "  Licensed under Apache 2.0 (https://www.apache.org/licenses/LICENSE-2.0.txt)"
 [comment]: # ""

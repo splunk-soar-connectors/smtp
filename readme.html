@@ -1,5 +1,5 @@
 <!-- File: readme.html
-  Copyright (c) 2014-2022 Splunk Inc.
+  Copyright (c) 2016-2022 Splunk Inc.
 
   Licensed under Apache 2.0 (https://www.apache.org/licenses/LICENSE-2.0.txt)
 -->
@@ -7,8 +7,17 @@
 <h2>General Points</h2>
 <ul>
   <li>Attachments and HTML formatting are supported</li>
-  <li>The asset configuration parameter <b>Enable SMTPUTF8 support (Check this only if the SMTP server supports SMTPUTF8 option)</b> should be disabled if the SMTP server does not support the SMTPUTF8 configuration option. For the SMTP servers supporting SMTPUTF8, please enable this parameter. If this parameter is kept disabled for the SMTP servers supporting SMTPUTF8, all the actions having Unicode characters in TO, CC or BCC attributes will fail due to encoding issues in Python 3 installation of the app due to a known SDK behavior.</li>
-  <li>The <b>username</b> and <b>password</b> fields for an SMTP Asset are optional because some SMTP servers do not require any authentication to accept mail. The <b>ssl_config</b> and <b>port</b> fields are related, but only the field <b>port</b> is optional. This is because each of the ssl_config options has an associated default port number, and you only have to specify the port if you want to override that default. For example, the default SMTP port for StartTLS-style encryption is 587, but it's also possible to do start TLS on port 25. So in that case, you may want to select StartTLS and specify port 25. The default port numbers are listed in this table:</li>
+  <li>The asset configuration parameter <b>Enable SMTPUTF8 support (Check this only if the SMTP server supports SMTPUTF8
+      option)</b> should be disabled if the SMTP server does not support the SMTPUTF8 configuration option. For the SMTP
+    servers supporting SMTPUTF8, please enable this parameter. If this parameter is kept disabled for the SMTP servers
+    supporting SMTPUTF8, all the actions having Unicode characters in TO, CC or BCC attributes will fail due to encoding
+    issues in Python 3 installation of the app due to a known SDK behavior.</li>
+  <li>The <b>username</b> and <b>password</b> fields for an SMTP Asset are optional because some SMTP servers do not
+    require any authentication to accept mail. The <b>ssl_config</b> and <b>port</b> fields are related, but only the
+    field <b>port</b> is optional. This is because each of the ssl_config options has an associated default port number,
+    and you only have to specify the port if you want to override that default. For example, the default SMTP port for
+    StartTLS-style encryption is 587, but it's also possible to do start TLS on port 25. So in that case, you may want
+    to select StartTLS and specify port 25. The default port numbers are listed in this table:</li>
 </ul>
 
 <table>
@@ -30,11 +39,49 @@
   </tr>
 </table>
 
+<div>
+  <b>NOTE : </b> While running the test connectivity with OAuth, username value is compulsory to pass. The username
+  value is required because its used to generate new token, every time test connectivity is run.
+</div>
+<br>
+<div>
+  <div>To obtain the required parameters, please check the docs of the service provider</div>
+  <div>Here we have attached links for the most used mail services to find parameters values:</div>
+  <div>
+    <br>
+    <div>GOOGLE</div>
+    <div>
+      <a href="https://support.google.com/cloud/answer/6158849?hl=en">Setting up OAuth2.0</a>
+      <a
+        href="https://developers.google.com/identity/protocols/oauth2#1.-obtain-oauth-2.0-credentials-from-the-dynamic_data.setvar.console_name-.">Using
+        OAuth2.0 to access google API's</a>
+    </div>
+    <br>
+    <div>MICROSOFT</div>
+    <div>
+      <a
+        href="https://learn.microsoft.com/en-us/exchange/client-developer/legacy-protocols/how-to-authenticate-an-imap-pop-smtp-application-by-using-oauth">Authentication
+        for SMTP</a>
+      <a href="https://learn.microsoft.com/en-us/azure/active-directory/develop/v2-oauth2-auth-code-flow">Authorization
+        code flow for OAuth2.0</a>
+    </div>
+  </div>
+</div>
+<br>
+
 <h2>Playbook Backward Compatibility</h2>
 <ul>
-  <li> The behavior of the following action has been modified. Hence, it is requested to the end-user to please update their existing playbooks by re-inserting the corresponding action blocks or by providing appropriate values to these action parameters to ensure the correct functioning of the playbooks created on the earlier versions of the app.</li>
+  <li> The behavior of the following action has been modified. Hence, it is requested to the end-user to please update
+    their existing playbooks by re-inserting the corresponding action blocks or by providing appropriate values to these
+    action parameters to ensure the correct functioning of the playbooks created on the earlier versions of the app.
+  </li>
   <ul>
-    <li> Send RawEmail - To run this action, provide the <b>raw_email</b> parameter as a string separated using the new line character ('\n' between headers like to, from, cc, bcc, subject) ('\n\n' before providing the body text or HTML after the headers). The example value for the same has been provided in the <b>Examples for Send RawEmail</b> section below. The action can also be executed using the playbook.<br>To run the action using playbook, the user can also provide the <b>raw_email</b> parameter as a multi-line string, i.e., any string enclosed within three double-quotes ("""some-string""") or three single-quotes ('''some-string''')</li>
+    <li> Send RawEmail - To run this action, provide the <b>raw_email</b> parameter as a string separated using the new
+      line character ('\n' between headers like to, from, cc, bcc, subject) ('\n\n' before providing the body text or
+      HTML after the headers). The example value for the same has been provided in the <b>Examples for Send RawEmail</b>
+      section below. The action can also be executed using the playbook.<br>To run the action using playbook, the user
+      can also provide the <b>raw_email</b> parameter as a multi-line string, i.e., any string enclosed within three
+      double-quotes ("""some-string""") or three single-quotes ('''some-string''')</li>
   </ul>
 </ul>
 
@@ -42,7 +89,8 @@
 <ul>
   <li>Send Email</li>
   <ul>
-    <li>For email consisting of HTML body to be processed correctly as HTML, it must start with either "&lt!DOCTYPE html" declaration or "&lthtml" and the tag should end with "&gt"</li>
+    <li>For email consisting of HTML body to be processed correctly as HTML, it must start with either "&lt!DOCTYPE
+      html" declaration or "&lthtml" and the tag should end with "&gt"</li>
   </ul>
   <li>Send Email and Send HTMLEmail</li>
   <ul>
@@ -58,8 +106,14 @@
 <ul>
   <li>The <b>raw_email</b> action parameter can be provided in the following ways.</li>
   <ul>
-    <li>Example 1 <br><b>raw_email</b> = to:receiver@testdomain.com\nfrom:sender@testdomain.com\nsubject:Test\n\nThis is body text</li>
-    <li>Example 2:<br><b>raw_email</b> = to:receiver@testdomain.com\nfrom:sender@testdomain.com\nContent-type:text/html\nsubject:HTML Test\n\n&lt;html&gt;&lt;body&gt;&lt;h2&gt;This is test&lt;/h2&gt;&lt;br&gt;This is some üñîçøðé data.&lt;/body&gt;&lt;/html&gt;</li>
-    <li>Example 3:<br><b>raw_email</b> = to:receiver1@testdomain.com,receiver2@testdomain.com\nfrom:sender@testdomain.com\nsubject:CommaSeparated Recipients Test\n\nThis is test data.</li>
+    <li>Example 1 <br><b>raw_email</b> = to:receiver@testdomain.com\nfrom:sender@testdomain.com\nsubject:Test\n\nThis is
+      body text</li>
+    <li>Example 2:<br><b>raw_email</b> =
+      to:receiver@testdomain.com\nfrom:sender@testdomain.com\nContent-type:text/html\nsubject:HTML
+      Test\n\n&lt;html&gt;&lt;body&gt;&lt;h2&gt;This is test&lt;/h2&gt;&lt;br&gt;This is some üñîçøðé
+      data.&lt;/body&gt;&lt;/html&gt;</li>
+    <li>Example 3:<br><b>raw_email</b> =
+      to:receiver1@testdomain.com,receiver2@testdomain.com\nfrom:sender@testdomain.com\nsubject:CommaSeparated
+      Recipients Test\n\nThis is test data.</li>
   </ul>
 </ul>

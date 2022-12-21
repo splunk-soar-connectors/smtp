@@ -5,20 +5,21 @@
     "publisher": "Splunk",
     "type": "email",
     "main_module": "smtp_connector.py",
-    "app_version": "2.1.9",
+    "app_version": "2.2.0",
     "utctime_updated": "2022-01-14T21:35:06.000000Z",
     "package_name": "phantom_smtp",
     "product_vendor": "Generic",
     "product_name": "SMTP",
     "product_version_regex": ".*",
-    "min_phantom_version": "5.0.0",
-    "license": "Copyright (c) 2014-2022 Splunk Inc.",
+    "min_phantom_version": "5.3.5",
+    "rest_handler": "request_handler.handle_request",
+    "license": "Copyright (c) 2016-2022 Splunk Inc.",
     "logo": "logo_splunk.svg",
     "logo_dark": "logo_splunk_dark.svg",
     "python_version": "3",
     "fips_compliant": true,
     "latest_tested_versions": [
-        "smtp.gmail.com, June 30, 2021"
+        "smtp.gmail.com, smtp.office365.com Dec 11, 2022"
     ],
     "configuration": {
         "server": {
@@ -32,24 +33,64 @@
             "order": 1,
             "description": "Port"
         },
-        "username": {
+        "auth_type": {
             "data_type": "string",
             "order": 2,
-            "description": "Username (or email address)"
+            "description": "Authentication Mechanism to Use",
+            "value_list": [
+                "Basic",
+                "OAuth"
+            ],
+            "default": "Basic"
+        },
+        "ph": {
+            "data_type": "ph",
+            "order": 3
+        },
+        "username": {
+            "data_type": "string",
+            "order": 4,
+            "description": "Username (or email address)",
+            "required": true
         },
         "password": {
             "data_type": "password",
-            "order": 3,
+            "order": 5,
             "description": "Password"
+        },
+        "client_id": {
+            "data_type": "string",
+            "description": "OAuth Client ID",
+            "order": 6
+        },
+        "client_secret": {
+            "data_type": "password",
+            "description": "OAuth Client Secret",
+            "order": 7
+        },
+        "auth_url": {
+            "data_type": "string",
+            "description": "OAuth Authorization URL",
+            "order": 8
+        },
+        "token_url": {
+            "data_type": "string",
+            "description": "OAuth Token URL",
+            "order": 9
+        },
+        "scopes": {
+            "description": "OAuth API Scope (space-separated)",
+            "data_type": "string",
+            "order": 10
         },
         "sender_address": {
             "data_type": "string",
-            "order": 4,
+            "order": 11,
             "description": "Sender Address"
         },
         "ssl_config": {
             "data_type": "string",
-            "order": 5,
+            "order": 12,
             "description": "SSL Method",
             "default": "StartTLS",
             "required": true,
@@ -61,15 +102,15 @@
         },
         "allow_smtputf8": {
             "data_type": "boolean",
-            "order": 6,
+            "order": 13,
             "description": "Enable SMTPUTF8 support (Check this only if the SMTP server supports SMTPUTF8 option)",
-            "default": false
+            "default": true
         },
         "encoding": {
             "data_type": "boolean",
-            "order": 7,
+            "order": 14,
             "description": "Enable Unicode support",
-            "default": false
+            "default": true
         }
     },
     "actions": [
@@ -86,7 +127,7 @@
         {
             "action": "send email",
             "description": "Sends an email",
-            "verbose": "Some points to note:<ul><li>Only files present in the <b>vault</b> can be attached to the email.</li><li>To send HTML emails, specify a HTML formatted text (i.e. &lt;html&gt;....&lt;/html&gt;) in the <b>body</b> parameter. The app sends a multipart email containing plain and html <i>Content-Type</i>.</li><li>The <b>to</b> parameter supports comma separated email addresses.</li><li>If the \"Subject\" is provided in the <b>subject</b> and the <b>headers</b> parameter, then the \"Subject\" provided in the <b>headers</b> parameter will be preferred and the action will run accordingly.</li></ul>",
+            "verbose": "Some points to note: <ul> <li>Only files present in the <b>vault</b> can be attached to the email.</li> <li>To send HTML emails, specify a HTML formatted text (i.e. <html>....</html>) in the <b>body</b> parameter. The app sends a multipart email containing plain and html <i>Content-Type</i>.</li> <li>The <b>to</b> parameter supports comma separated email addresses.</li> <li>If the \"Subject\" is provided in the <b>subject</b> and the <b>headers</b> parameter, then the \"Subject\" provided in the <b>headers</b> parameter will be preferred and the action will run accordingly.</li> <li> In the playbooks, if you don't provide any value for 'from' field in actions, it will take value from the platform email setting. If in the email settings also it is empty, it will consider the username parameter provided in the asset configuration as the sender's email address</li> </ul>.",
             "type": "generic",
             "identifier": "send_email",
             "read_only": false,
@@ -660,31 +701,31 @@
         "wheel": [
             {
                 "module": "beautifulsoup4",
-                "input_file": "wheels/beautifulsoup4-4.9.1-py3-none-any.whl"
+                "input_file": "wheels/py3/beautifulsoup4-4.9.1-py3-none-any.whl"
             },
             {
                 "module": "certifi",
-                "input_file": "wheels/certifi-2021.10.8-py2.py3-none-any.whl"
+                "input_file": "wheels/py3/certifi-2022.12.7-py3-none-any.whl"
             },
             {
                 "module": "chardet",
-                "input_file": "wheels/chardet-3.0.4-py2.py3-none-any.whl"
+                "input_file": "wheels/shared/chardet-3.0.4-py2.py3-none-any.whl"
             },
             {
                 "module": "idna",
-                "input_file": "wheels/idna-2.10-py2.py3-none-any.whl"
+                "input_file": "wheels/shared/idna-2.10-py2.py3-none-any.whl"
             },
             {
                 "module": "requests",
-                "input_file": "wheels/requests-2.25.0-py2.py3-none-any.whl"
+                "input_file": "wheels/shared/requests-2.25.0-py2.py3-none-any.whl"
             },
             {
                 "module": "soupsieve",
-                "input_file": "wheels/soupsieve-2.3.1-py3-none-any.whl"
+                "input_file": "wheels/py3/soupsieve-2.3.2.post1-py3-none-any.whl"
             },
             {
                 "module": "urllib3",
-                "input_file": "wheels/urllib3-1.26.7-py2.py3-none-any.whl"
+                "input_file": "wheels/shared/urllib3-1.26.13-py2.py3-none-any.whl"
             }
         ]
     }
