@@ -2,11 +2,11 @@
 # SMTP
 
 Publisher: Splunk  
-Connector Version: 2\.1\.9  
+Connector Version: 2\.2\.0  
 Product Vendor: Generic  
 Product Name: SMTP  
 Product Version Supported (regex): "\.\*"  
-Minimum Product Version: 5\.0\.0  
+Minimum Product Version: 5\.3\.5  
 
 This app provides the ability to send email using SMTP
 
@@ -37,6 +37,71 @@ This app provides the ability to send email using SMTP
 |          **None**     | 25   |
 |          **SSL**      | 465  |
 |          **StartTLS** | 587  |
+
+<div>
+
+**NOTE :** While running the test connectivity with OAuth, username value is compulsory to pass. The
+username value is required because its used to generate new token, every time test connectivity is
+run.
+
+</div>
+
+  
+
+<div>
+
+<div>
+
+To obtain the required parameters, please check the docs of the service provider
+
+</div>
+
+<div>
+
+Here we have attached links for the most used mail services to find parameters values:
+
+</div>
+
+<div>
+
+  
+
+<div>
+
+GOOGLE
+
+</div>
+
+<div>
+
+[Setting up OAuth2.0](https://support.google.com/cloud/answer/6158849?hl=en) [Using OAuth2.0 to
+access google
+API's](https://developers.google.com/identity/protocols/oauth2#1.-obtain-oauth-2.0-credentials-from-the-dynamic_data.setvar.console_name-.)
+
+</div>
+
+  
+
+<div>
+
+MICROSOFT
+
+</div>
+
+<div>
+
+[Authentication for
+SMTP](https://learn.microsoft.com/en-us/exchange/client-developer/legacy-protocols/how-to-authenticate-an-imap-pop-smtp-application-by-using-oauth)
+[Authorization code flow for
+OAuth2.0](https://learn.microsoft.com/en-us/azure/active-directory/develop/v2-oauth2-auth-code-flow)
+
+</div>
+
+</div>
+
+</div>
+
+  
 
 ## Playbook Backward Compatibility
 
@@ -106,8 +171,14 @@ VARIABLE | REQUIRED | TYPE | DESCRIPTION
 -------- | -------- | ---- | -----------
 **server** |  required  | string | Server IP/Hostname
 **port** |  optional  | numeric | Port
-**username** |  optional  | string | Username \(or email address\)
+**auth\_type** |  optional  | string | Authentication Mechanism to Use
+**username** |  required  | string | Username \(or email address\)
 **password** |  optional  | password | Password
+**client\_id** |  optional  | string | OAuth Client ID
+**client\_secret** |  optional  | password | OAuth Client Secret
+**auth\_url** |  optional  | string | OAuth Authorization URL
+**token\_url** |  optional  | string | OAuth Token URL
+**scopes** |  optional  | string | OAuth API Scope \(space\-separated\)
 **sender\_address** |  optional  | string | Sender Address
 **ssl\_config** |  required  | string | SSL Method
 **allow\_smtputf8** |  optional  | boolean | Enable SMTPUTF8 support \(Check this only if the SMTP server supports SMTPUTF8 option\)
@@ -137,7 +208,7 @@ Sends an email
 Type: **generic**  
 Read only: **False**
 
-Some points to note\:<ul><li>Only files present in the <b>vault</b> can be attached to the email\.</li><li>To send HTML emails, specify a HTML formatted text \(i\.e\. &lt;html&gt;\.\.\.\.&lt;/html&gt;\) in the <b>body</b> parameter\. The app sends a multipart email containing plain and html <i>Content\-Type</i>\.</li><li>The <b>to</b> parameter supports comma separated email addresses\.</li><li>If the "Subject" is provided in the <b>subject</b> and the <b>headers</b> parameter, then the "Subject" provided in the <b>headers</b> parameter will be preferred and the action will run accordingly\.</li></ul>
+Some points to note\: <ul> <li>Only files present in the <b>vault</b> can be attached to the email\.</li> <li>To send HTML emails, specify a HTML formatted text \(i\.e\. <html>\.\.\.\.</html>\) in the <b>body</b> parameter\. The app sends a multipart email containing plain and html <i>Content\-Type</i>\.</li> <li>The <b>to</b> parameter supports comma separated email addresses\.</li> <li>If the "Subject" is provided in the <b>subject</b> and the <b>headers</b> parameter, then the "Subject" provided in the <b>headers</b> parameter will be preferred and the action will run accordingly\.</li> <li> In the playbooks, if you don't provide any value for 'from' field in actions, it will take value from the platform email setting\. If in the email settings also it is empty, it will consider the username parameter provided in the asset configuration as the sender's email address</li> </ul>\.
 
 #### Action Parameters
 PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
