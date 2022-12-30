@@ -857,7 +857,7 @@ class SmtpConnector(BaseConnector):
     def _connect_to_server_helper(self, action_result):
         """Redirect the flow based on auth type"""
 
-        if self.auth_mechanism == "Basic":
+        if self.auth_mechanism == "Basic" or self.auth_mechanism == "Authless":
             try:
                 status_code = self._connect_to_server(action_result)
             except Exception as e:
