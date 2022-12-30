@@ -83,7 +83,7 @@ class SmtpConnector(BaseConnector):
             for key in required_params:
                 if not config.get(key):
                     return self.set_status(phantom.APP_ERROR, SMTP_REQUIRED_PARAM_OAUTH.format(key))
-        elif  self.auth_mechanism != "Authless":
+        elif self.auth_mechanism != "Authless":
             return self.set_status(phantom.APP_ERROR, "Please provide a valid authentication mechanism to use")
 
         self.set_validator('email', self._validate_email)
