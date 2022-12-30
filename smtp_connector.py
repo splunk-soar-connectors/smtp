@@ -58,6 +58,7 @@ class SmtpConnector(BaseConnector):
         self.invalid_vault_ids = list()
         self._access_token = None
         self._refresh_token = None
+        self._is_basic = None
 
     def initialize(self):
 
@@ -70,13 +71,12 @@ class SmtpConnector(BaseConnector):
 
         self._access_token = self._state.get("oauth_token", {}).get("access_token")
         self._refresh_token = self._state.get("oauth_token", {}).get("refresh_token")
+        self._is_basic = (phantom.APP_JSON_PASSWORD in config) and (phantom.APP_JSON_USERNAME in config)
 
         self.auth_mechanism = config.get("auth_type", "Basic")
         if self.auth_mechanism == "Basic":
-            required_params = ["username", "password"]
-            for key in required_params:
-                if not config.get(key):
-                    return self.set_status(phantom.APP_ERROR, SMTP_REQUIRED_PARAM_BASIC.format(key))
+            if (bool(config.get("username")) ^ bool(config.get("password"))):
+                return self.set_status(phantom.APP_ERROR, SMTP_REQUIRED_PARAM_BASIC)
 
         elif self.auth_mechanism == "OAuth":
             required_params = ["client_id", "client_secret", "auth_url", "token_url"]
@@ -520,9 +520,11 @@ class SmtpConnector(BaseConnector):
                     auth_string = self._generate_oauth_string(config[phantom.APP_JSON_USERNAME], self._access_token)
                     # self._smtp_conn.ehlo(config.get("client_id"))
                     response_code, response_message = self._smtp_conn.docmd('AUTH', 'XOAUTH2 {}'.format(auth_string))
-                else:
+                elif self._is_basic:
                     self.debug_print("username and password used")
                     response_code, response_message = self._smtp_conn.login(config[phantom.APP_JSON_USERNAME], config[phantom.APP_JSON_PASSWORD])
+                else:
+                    self.save_progress(SMTP_MESSAGE_SKIP_AUTH_NO_USERNAME_PASSWORD)
             else:
                 response_code, response_message = (None, None)
         except Exception as e:
@@ -884,6 +886,12 @@ class SmtpConnector(BaseConnector):
         action_result = self.add_action_result(ActionResult(dict(param)))
 
         config = self.get_config()
+
+        if self.auth_mechanism == "Basic" and ((phantom.APP_JSON_USERNAME not in config) or (phantom.APP_JSON_PASSWORD not in config)):
+            # There is nothing else that we do here. If initialize(...) has succeeded (it must have, else we wont get called)
+            # then the connection is fine
+            self.save_progress(SMTP_SUCC_CONNECTIVITY_TEST)
+            return action_result.set_status(phantom.APP_SUCCESS, SMTP_SUCC_CONNECTIVITY_TEST)
 
         # Connect to the server
         if phantom.is_fail(self._connect_to_server_helper(action_result)):
