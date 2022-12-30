@@ -39,7 +39,8 @@
             "description": "Authentication Mechanism to Use",
             "value_list": [
                 "Basic",
-                "OAuth"
+                "OAuth",
+                "Authless"
             ],
             "default": "Basic"
         },
