@@ -13,7 +13,7 @@
     "product_version_regex": ".*",
     "min_phantom_version": "5.3.5",
     "rest_handler": "request_handler.handle_request",
-    "license": "Copyright (c) 2016-2022 Splunk Inc.",
+    "license": "Copyright (c) 2016-2023 Splunk Inc.",
     "logo": "logo_splunk.svg",
     "logo_dark": "logo_splunk_dark.svg",
     "python_version": "3",
@@ -50,8 +50,7 @@
         "username": {
             "data_type": "string",
             "order": 4,
-            "description": "Username (or email address)",
-            "required": true
+            "description": "Username (or email address)"
         },
         "password": {
             "data_type": "password",
