@@ -520,7 +520,7 @@ class SmtpConnector(BaseConnector):
                     if config.get(phantom.APP_JSON_USERNAME) is None:
                         return action_result.set_status(
                             phantom.APP_ERROR,
-                            'A username must be specified to run test connectiving using OAuth. '
+                            'A username must be specified to run test connectivity using OAuth. '
                             'Please check your asset configuration.'
                         )
                     auth_string = self._generate_oauth_string(config[phantom.APP_JSON_USERNAME], self._access_token)
