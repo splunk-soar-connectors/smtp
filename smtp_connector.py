@@ -518,6 +518,12 @@ class SmtpConnector(BaseConnector):
         try:
             if self._smtp_conn.has_extn('AUTH'):
                 if is_oauth:
+                    if config.get(phantom.APP_JSON_USERNAME) is None:
+                        return action_result.set_status(
+                            phantom.APP_ERROR,
+                            'A username must be specified to run test connectiving using OAuth. '
+                            'Please check your asset configuration.'
+                        )
                     auth_string = self._generate_oauth_string(config[phantom.APP_JSON_USERNAME], self._access_token)
                     # self._smtp_conn.ehlo(config.get("client_id"))
                     response_code, response_message = self._smtp_conn.docmd('AUTH', 'XOAUTH2 {}'.format(auth_string))
