@@ -28,6 +28,8 @@ from email.mime.image import MIMEImage
 from email.mime.message import MIMEMessage
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+import bleach
+from bleach_allowlist import all_tags, generally_xss_unsafe
 
 import encryption_helper
 import phantom.app as phantom
@@ -49,6 +51,8 @@ class SmtpConnector(BaseConnector):
     ACTION_ID_SEND_EMAIL = "send_email"
     ACTION_ID_SEND_RAW_EMAIL = "send_rawemail"
     ACTION_ID_SEND_HTML_EMAIL = "send_htmlemail"
+
+    SAFE_HTML_TAGS = list(set(all_tags) - set(generally_xss_unsafe))
 
     def __init__(self):
 
@@ -959,6 +963,8 @@ class SmtpConnector(BaseConnector):
         email_html = param['html_body']
         email_text = param.get('text_body')
         attachment_json = param.get('attachment_json')
+
+        email_html = bleach.clean(email_html, self.SAFE_HTML_TAGS)
 
         encoding = config.get(SMTP_ENCODING, False)
         smtputf8 = config.get(SMTP_ALLOW_SMTPUTF8, False)
