@@ -1,1 +1,1 @@
-* [PAPP-28993] Remove requirement to specify username in an asset.
+* Added support for password less authentication [PAPP-28928]
