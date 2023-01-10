@@ -6,7 +6,14 @@
 
 <h2>General Points</h2>
 <ul>
-  <li>Use Authless auth type to authenticate SMTP server without username and password</li>
+  <li>
+    The priority of authentication flow is in decreasing order as follows
+    <ul>
+      <li>OAuth</li>
+      <li>Basic</li>
+      <li>Authless</li>
+    </ul>
+  </li>
   <li>Attachments and HTML formatting are supported</li>
   <li>The asset configuration parameter <b>Enable SMTPUTF8 support (Check this only if the SMTP server supports SMTPUTF8
       option)</b> should be disabled if the SMTP server does not support the SMTPUTF8 configuration option. For the SMTP
