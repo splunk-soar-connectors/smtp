@@ -72,7 +72,7 @@ class SmtpConnector(BaseConnector):
         self._refresh_token = self._state.get("oauth_token", {}).get("refresh_token")
 
         self.auth_mechanism = self._get_auth_type()
-        
+
         if self.auth_mechanism == "OAuth":
             required_params = ["client_id", "client_secret", "auth_url", "token_url"]
             for key in required_params:
@@ -95,13 +95,13 @@ class SmtpConnector(BaseConnector):
                 return self.set_status(phantom.APP_ERROR, SMTP_DECRYPTION_ERROR)
 
         return phantom.APP_SUCCESS
-    
+
     def _get_auth_type(self):
 
         config = self.get_config()
         username = config.get('username')
-        client_id = config.get('client_id','')
-        client_secret = config.get('client_secret','')
+        client_id = config.get('client_id', '')
+        client_secret = config.get('client_secret', '')
 
         password = config.get('password')
 
@@ -112,7 +112,6 @@ class SmtpConnector(BaseConnector):
                 return "Basic"
         else:
             return "Basic"
-        
 
     def finalize(self):
 
@@ -543,7 +542,7 @@ class SmtpConnector(BaseConnector):
             else:
                 self.save_progress(SMTP_MESSAGE_SKIP_AUTH_NO_USERNAME_PASSWORD)
                 response_code, response_message = (None, None)
-                
+
         except Exception as e:
             # If token is expired, use the refresh token to re-new the access token
             error_text = self._get_error_message_from_exception(e)
@@ -873,7 +872,6 @@ class SmtpConnector(BaseConnector):
     def _connect_to_server_helper(self, action_result):
         """Redirect the flow based on auth type"""
 
-        
         if self.auth_mechanism == "Basic":
             try:
                 status_code = self._connect_to_server(action_result)
@@ -905,14 +903,11 @@ class SmtpConnector(BaseConnector):
 
         config = self.get_config()
 
-        
-
         # Connect to the server
         if phantom.is_fail(self._connect_to_server_helper(action_result)):
-
             action_result.append_to_message(SMTP_ERROR_CONNECTIVITY_TEST)
             return action_result.get_status()
-        
+
         if (phantom.APP_JSON_USERNAME not in config) or (phantom.APP_JSON_PASSWORD not in config):
             self.save_progress(SMTP_SUCC_CONNECTIVITY_TEST)
             return action_result.set_status(phantom.APP_SUCCESS, SMTP_SUCC_CONNECTIVITY_TEST)

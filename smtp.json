@@ -33,7 +33,6 @@
             "order": 1,
             "description": "Port"
         },
-
         "username": {
             "data_type": "string",
             "order": 2,
