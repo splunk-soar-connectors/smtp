@@ -106,10 +106,13 @@ class SmtpConnector(BaseConnector):
         self.debug_print("Determining oauth type from the inputs")
         auth_type = "Basic"
 
-        if username and client_id and client_secret:
-            auth_type = "OAuth"
+        if username:
+            if client_id and client_secret:
+                auth_type = "OAuth"
+            self.save_progress("Using {} Authentication".format(auth_type))
+        else:
+            self.save_progress("Using Password Less Authentication")
 
-        self.save_progress("Using {} Authentication".format(auth_type))
         return auth_type
 
     def finalize(self):
@@ -539,7 +542,8 @@ class SmtpConnector(BaseConnector):
                     self.debug_print("username and password used")
                     response_code, response_message = self._smtp_conn.login(config[phantom.APP_JSON_USERNAME], config[phantom.APP_JSON_PASSWORD])
             else:
-                self.save_progress(SMTP_MESSAGE_SKIP_AUTH_NO_USERNAME_PASSWORD)
+                if self.auth_mechanism == "Basic" and ((phantom.APP_JSON_USERNAME not in config) or (phantom.APP_JSON_PASSWORD not in config)):
+                    self.save_progress(SMTP_MESSAGE_SKIP_AUTH_NO_USERNAME_PASSWORD)
                 response_code, response_message = (None, None)
 
         except Exception as e:
@@ -573,7 +577,6 @@ class SmtpConnector(BaseConnector):
                                                 "Logging in error, response_code: {0} response: {1}".format(response_code, response_message))
 
         self.save_progress(SMTP_SUCC_SMTP_CONNECTIVITY_TO_SERVER)
-
         return phantom.APP_SUCCESS
 
     def _attach_bodies(self, outer, body, action_result, message_encoding):
