@@ -99,19 +99,18 @@ class SmtpConnector(BaseConnector):
     def _get_auth_type(self):
 
         config = self.get_config()
-        username = config.get('username')
+        username = config.get('username', '')
         client_id = config.get('client_id', '')
         client_secret = config.get('client_secret', '')
 
-        password = config.get('password')
+        self.debug_print("Determining oauth type from the inputs")
+        auth_type = "Basic"
 
-        if username:
-            if client_id and client_secret:
-                return "OAuth"
-            elif password:
-                return "Basic"
-        else:
-            return "Basic"
+        if username and client_id and client_secret:
+            auth_type = "OAuth"
+
+        self.save_progress("Using {} Authentication".format(auth_type))
+        return auth_type
 
     def finalize(self):
 
@@ -908,7 +907,8 @@ class SmtpConnector(BaseConnector):
             action_result.append_to_message(SMTP_ERROR_CONNECTIVITY_TEST)
             return action_result.get_status()
 
-        if (phantom.APP_JSON_USERNAME not in config) or (phantom.APP_JSON_PASSWORD not in config):
+        if self.auth_mechanism == "Basic" and ((phantom.APP_JSON_USERNAME not in config) or (phantom.APP_JSON_PASSWORD not in config)):
+
             self.save_progress(SMTP_SUCC_CONNECTIVITY_TEST)
             return action_result.set_status(phantom.APP_SUCCESS, SMTP_SUCC_CONNECTIVITY_TEST)
 
