@@ -111,7 +111,7 @@ class SmtpConnector(BaseConnector):
                 auth_type = "OAuth"
             self.save_progress("Using {} Authentication".format(auth_type))
         else:
-            self.save_progress("Using Password Less Authentication")
+            self.save_progress("Using Passwordless Authentication")
 
         return auth_type
 
