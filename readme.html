@@ -6,14 +6,21 @@
 
 <h2>General Points</h2>
 <ul>
-  <li>
-    The priority of authentication flow is in decreasing order as follows
+    <li>Points to consider while configuring the asset</li>
     <ul>
-      <li>OAuth</li>
-      <li>Basic</li>
-      <li>Authless</li>
+      <li>Passwordless authentication: When username and password or client id and client secret is not provided, app will use the passwordless authentication</li>
+      <li>Basic authentication: If username and password are provided the app will use basic authentication</li>
+      <li>OAuth authentication: To use the OAuth mechanism, following parameters are required
+        <ul>
+          <li>Username</li>
+          <li>Client ID</li>
+          <li>Client Secret</li>
+          <li>OAuth Authorization URL</li>
+          <li>OAuth Token URL</li>
+        </ul>
+      </li>
     </ul>
-  </li>
+  <li>If the value is provided in all the configuration parameters, then OAuth authentication will be given priority above Basic authentication</li>
   <li>Attachments and HTML formatting are supported</li>
   <li>The asset configuration parameter <b>Enable SMTPUTF8 support (Check this only if the SMTP server supports SMTPUTF8
       option)</b> should be disabled if the SMTP server does not support the SMTPUTF8 configuration option. For the SMTP
@@ -53,7 +60,7 @@
 </div>
 <br>
 <div>
-  <div>To obtain the required parameters, please check the docs of the service provider</div>
+  <div>To obtain the required parameters, please check the  document of the service provider</div>
   <div>Here we have attached links for the most used mail services to find parameters values:</div>
   <div>
     <br>

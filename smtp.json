@@ -36,7 +36,7 @@
         "username": {
             "data_type": "string",
             "order": 2,
-            "description": "Username (or email address) (For Basic Auth)"
+            "description": "Username (or email address)"
         },
         "password": {
             "data_type": "password",
