@@ -1,2 +1,3 @@
 **Unreleased**
-* Added support for passwordless authentication [PAPP-28928]
+* Fixed passwordless authentication [PAPP-28928]
+* Added interactive authentication [PAPP-26698]
