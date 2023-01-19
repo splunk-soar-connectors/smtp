@@ -5,13 +5,13 @@
     "publisher": "Splunk",
     "type": "email",
     "main_module": "smtp_connector.py",
-    "app_version": "2.2.1",
-    "utctime_updated": "2023-01-04T18:33:10.000000Z",
+    "app_version": "2.3.0",
+    "utctime_updated": "2022-01-14T21:35:06.000000Z",
     "package_name": "phantom_smtp",
     "product_vendor": "Generic",
     "product_name": "SMTP",
     "product_version_regex": ".*",
-    "min_phantom_version": "5.3.5",
+    "min_phantom_version": "5.4.0",
     "rest_handler": "request_handler.handle_request",
     "license": "Copyright (c) 2016-2023 Splunk Inc.",
     "logo": "logo_splunk.svg",
@@ -19,7 +19,7 @@
     "python_version": "3",
     "fips_compliant": true,
     "latest_tested_versions": [
-        "smtp.gmail.com, smtp.office365.com Dec 11, 2022"
+        "smtp.gmail.com, smtp.office365.com Jan 18, 2023"
     ],
     "configuration": {
         "server": {
@@ -33,63 +33,49 @@
             "order": 1,
             "description": "Port"
         },
-        "auth_type": {
-            "data_type": "string",
-            "order": 2,
-            "description": "Authentication Mechanism to Use",
-            "value_list": [
-                "Basic",
-                "OAuth"
-            ],
-            "default": "Basic"
-        },
-        "ph": {
-            "data_type": "ph",
-            "order": 3
-        },
         "username": {
             "data_type": "string",
-            "order": 4,
+            "order": 2,
             "description": "Username (or email address)"
         },
         "password": {
             "data_type": "password",
-            "order": 5,
-            "description": "Password"
+            "order": 3,
+            "description": "Password (For Basic Auth)"
         },
         "client_id": {
             "data_type": "string",
-            "description": "OAuth Client ID",
-            "order": 6
+            "description": "OAuth Client ID (For OAuth)",
+            "order": 4
         },
         "client_secret": {
             "data_type": "password",
-            "description": "OAuth Client Secret",
-            "order": 7
+            "description": "OAuth Client Secret (For OAuth)",
+            "order": 5
         },
         "auth_url": {
             "data_type": "string",
             "description": "OAuth Authorization URL",
-            "order": 8
+            "order": 6
         },
         "token_url": {
             "data_type": "string",
             "description": "OAuth Token URL",
-            "order": 9
+            "order": 7
         },
         "scopes": {
             "description": "OAuth API Scope (space-separated)",
             "data_type": "string",
-            "order": 10
+            "order": 8
         },
         "sender_address": {
             "data_type": "string",
-            "order": 11,
+            "order": 9,
             "description": "Sender Address"
         },
         "ssl_config": {
             "data_type": "string",
-            "order": 12,
+            "order": 10,
             "description": "SSL Method",
             "default": "StartTLS",
             "required": true,
@@ -101,13 +87,13 @@
         },
         "allow_smtputf8": {
             "data_type": "boolean",
-            "order": 13,
+            "order": 11,
             "description": "Enable SMTPUTF8 support (Check this only if the SMTP server supports SMTPUTF8 option)",
             "default": true
         },
         "encoding": {
             "data_type": "boolean",
-            "order": 14,
+            "order": 12,
             "description": "Enable Unicode support",
             "default": true
         }
@@ -724,7 +710,7 @@
             },
             {
                 "module": "urllib3",
-                "input_file": "wheels/shared/urllib3-1.26.13-py2.py3-none-any.whl"
+                "input_file": "wheels/shared/urllib3-1.26.14-py2.py3-none-any.whl"
             }
         ]
     }

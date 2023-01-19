@@ -1,11 +1,36 @@
 <!-- File: readme.html
-  Copyright (c) 2016-2022 Splunk Inc.
+  Copyright (c) 2016-2023 Splunk Inc.
 
   Licensed under Apache 2.0 (https://www.apache.org/licenses/LICENSE-2.0.txt)
 -->
 
 <h2>General Points</h2>
 <ul>
+  <li>Points to consider while configuring the asset</li>
+  <ul>
+    <li>OAuth authentication: To use the OAuth mechanism, following parameters are required
+      <ul>
+        <li>Username</li>
+        <li>Client ID</li>
+        <li>Client Secret</li>
+        <li>OAuth Authorization URL</li>
+        <li>OAuth Token URL</li>
+      </ul>
+    </li>
+    <li>
+      Basic authentication: If only username and password are provided the app will use basic authentication
+    </li>
+    <li>
+      Passwordless authentication: If the SMTP sever supports passwordless authentication and the user doesn't provide required parameters for Oauth and Basic authentication, it will go for Passwordless authentication
+  </ul>
+  <li>
+    The priority of authentication flow is in decreasing order as follows
+    <ul>
+      <li>OAuth</li>
+      <li>Basic</li>
+      <li>Passwordless</li>
+    </ul>
+  </li>
   <li>Attachments and HTML formatting are supported</li>
   <li>The asset configuration parameter <b>Enable SMTPUTF8 support (Check this only if the SMTP server supports SMTPUTF8
       option)</b> should be disabled if the SMTP server does not support the SMTPUTF8 configuration option. For the SMTP
@@ -45,7 +70,7 @@
 </div>
 <br>
 <div>
-  <div>To obtain the required parameters, please check the docs of the service provider</div>
+  <div>To obtain the required parameters, please check the document of the service provider</div>
   <div>Here we have attached links for the most used mail services to find parameters values:</div>
   <div>
     <br>
