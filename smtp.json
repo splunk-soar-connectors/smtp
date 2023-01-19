@@ -689,6 +689,10 @@
                 "input_file": "wheels/py3/beautifulsoup4-4.9.1-py3-none-any.whl"
             },
             {
+                "module": "bleach_allowlist",
+                "input_file": "wheels/shared/bleach_allowlist-1.0.3-py2.py3-none-any.whl"
+            },
+            {
                 "module": "certifi",
                 "input_file": "wheels/py3/certifi-2022.12.7-py3-none-any.whl"
             },
