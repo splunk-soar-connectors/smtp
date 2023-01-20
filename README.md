@@ -2,28 +2,51 @@
 # SMTP
 
 Publisher: Splunk  
-Connector Version: 2\.2\.0  
+Connector Version: 2\.3\.0  
 Product Vendor: Generic  
 Product Name: SMTP  
 Product Version Supported (regex): "\.\*"  
-Minimum Product Version: 5\.3\.5  
+Minimum Product Version: 5\.4\.0  
 
 This app provides the ability to send email using SMTP
 
 [comment]: # " File: README.md"
-[comment]: # "  Copyright (c) 2016-2022 Splunk Inc."
+[comment]: # "  Copyright (c) 2016-2023 Splunk Inc."
 [comment]: # ""
 [comment]: # "  Licensed under Apache 2.0 (https://www.apache.org/licenses/LICENSE-2.0.txt)"
 [comment]: # ""
 ## General Points
 
+-   Points to consider while configuring the asset
+
+      
+
+    -   OAuth authentication: To use the OAuth mechanism, following parameters are required
+        -   Username
+        -   Client ID
+        -   Client Secret
+        -   OAuth Authorization URL
+        -   OAuth Token URL
+    -   Basic authentication: If only username and password are provided the app will use basic
+        authentication
+    -   Passwordless authentication: If the SMTP sever supports passwordless authentication and the
+        user doesn't provide required parameters for Oauth and Basic authentication, it will go for
+        Passwordless authentication
+
+-   The priority of authentication flow is in decreasing order as follows
+    -   OAuth
+    -   Basic
+    -   Passwordless
+
 -   Attachments and HTML formatting are supported
+
 -   The asset configuration parameter **Enable SMTPUTF8 support (Check this only if the SMTP server
     supports SMTPUTF8 option)** should be disabled if the SMTP server does not support the SMTPUTF8
     configuration option. For the SMTP servers supporting SMTPUTF8, please enable this parameter. If
     this parameter is kept disabled for the SMTP servers supporting SMTPUTF8, all the actions having
     Unicode characters in TO, CC or BCC attributes will fail due to encoding issues in Python 3
     installation of the app due to a known SDK behavior.
+
 -   The **username** and **password** fields for an SMTP Asset are optional because some SMTP
     servers do not require any authentication to accept mail. The **ssl_config** and **port** fields
     are related, but only the field **port** is optional. This is because each of the ssl_config
@@ -52,7 +75,7 @@ run.
 
 <div>
 
-To obtain the required parameters, please check the docs of the service provider
+To obtain the required parameters, please check the document of the service provider
 
 </div>
 
@@ -171,11 +194,10 @@ VARIABLE | REQUIRED | TYPE | DESCRIPTION
 -------- | -------- | ---- | -----------
 **server** |  required  | string | Server IP/Hostname
 **port** |  optional  | numeric | Port
-**auth\_type** |  optional  | string | Authentication Mechanism to Use
-**username** |  required  | string | Username \(or email address\)
-**password** |  optional  | password | Password
-**client\_id** |  optional  | string | OAuth Client ID
-**client\_secret** |  optional  | password | OAuth Client Secret
+**username** |  optional  | string | Username \(or email address\)
+**password** |  optional  | password | Password \(For Basic Auth\)
+**client\_id** |  optional  | string | OAuth Client ID \(For OAuth\)
+**client\_secret** |  optional  | password | OAuth Client Secret \(For OAuth\)
 **auth\_url** |  optional  | string | OAuth Authorization URL
 **token\_url** |  optional  | string | OAuth Token URL
 **scopes** |  optional  | string | OAuth API Scope \(space\-separated\)
