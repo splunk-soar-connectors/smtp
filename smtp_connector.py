@@ -28,14 +28,14 @@ from email.mime.image import MIMEImage
 from email.mime.message import MIMEMessage
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-import bleach
-from bleach_allowlist import all_tags, generally_xss_unsafe
 
+import bleach
 import encryption_helper
 import phantom.app as phantom
 import phantom.rules as ph_rules
 import phantom.utils as ph_utils
 import requests
+from bleach_allowlist import all_tags, generally_xss_unsafe
 from bs4 import BeautifulSoup
 from phantom.action_result import ActionResult
 from phantom.base_connector import BaseConnector
