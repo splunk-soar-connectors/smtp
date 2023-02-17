@@ -5,7 +5,7 @@
     "publisher": "Splunk",
     "type": "email",
     "main_module": "smtp_connector.py",
-    "app_version": "2.3.2",
+    "app_version": "2.3.1",
     "utctime_updated": "2023-01-23T18:26:04.000000Z",
     "package_name": "phantom_smtp",
     "product_vendor": "Generic",
@@ -17,7 +17,8 @@
     "logo": "logo_splunk.svg",
     "logo_dark": "logo_splunk_dark.svg",
     "python_version": "3",
-    "fips_compliant": true,
+    "fips_compliant": false,
+    "mary_test": true,
     "latest_tested_versions": [
         "smtp.gmail.com, smtp.office365.com Jan 18, 2023"
     ],
