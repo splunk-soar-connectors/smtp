@@ -15,7 +15,7 @@ This app provides the ability to send email using SMTP
 [comment]: # ""
 [comment]: # "  Licensed under Apache 2.0 (https://www.apache.org/licenses/LICENSE-2.0.txt)"
 [comment]: # ""
-## General Points
+## General Point
 
 -   Points to consider while configuring the asset
 
