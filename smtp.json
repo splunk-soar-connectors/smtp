@@ -18,6 +18,7 @@
     "logo_dark": "logo_splunk_dark.svg",
     "python_version": "3",
     "fips_compliant": true,
+    "mpan_test": true,
     "latest_tested_versions": [
         "smtp.gmail.com, smtp.office365.com Jan 18, 2023"
     ],
