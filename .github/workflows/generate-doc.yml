@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - '*.json'
+      - 'readme.html'
 jobs:
   generate-doc:
     runs-on: ubuntu-latest
