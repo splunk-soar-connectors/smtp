@@ -2,7 +2,7 @@
 # SMTP
 
 Publisher: Splunk  
-Connector Version: 2\.3\.2  
+Connector Version: 2\.3\.1  
 Product Vendor: Generic  
 Product Name: SMTP  
 Product Version Supported (regex): "\.\*"  
@@ -15,7 +15,7 @@ This app provides the ability to send email using SMTP
 [comment]: # ""
 [comment]: # "  Licensed under Apache 2.0 (https://www.apache.org/licenses/LICENSE-2.0.txt)"
 [comment]: # ""
-## General Point
+## General Points
 
 -   Points to consider while configuring the asset
 
