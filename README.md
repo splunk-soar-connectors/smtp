@@ -1,5 +1,5 @@
 [comment]: # "Auto-generated SOAR connector documentation"
-# SMTP
+# SMP
 
 Publisher: Splunk  
 Connector Version: 2\.3\.1  
