@@ -35,7 +35,7 @@ import phantom.app as phantom
 import phantom.rules as ph_rules
 import phantom.utils as ph_utils
 import requests
-from bleach_allowlist import all_tags, generally_xss_unsafe, all_styles
+from bleach_allowlist import all_styles, all_tags, generally_xss_unsafe
 from bs4 import BeautifulSoup
 from phantom.action_result import ActionResult
 from phantom.base_connector import BaseConnector
