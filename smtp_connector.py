@@ -536,15 +536,19 @@ class SmtpConnector(BaseConnector):
                     if config.get(phantom.APP_JSON_USERNAME) is None:
                         return action_result.set_status(
                             phantom.APP_ERROR,
-                            'A username must be specified to run test connectivity using OAuth. '
-                            'Please check your asset configuration.'
+                            "A username must be specified to run test connectivity using OAuth. \
+                            Please check your asset configuration."
                         )
                     auth_string = self._generate_oauth_string(config[phantom.APP_JSON_USERNAME], self._access_token)
                     # self._smtp_conn.ehlo(config.get("client_id"))
                     response_code, response_message = self._smtp_conn.docmd('AUTH', 'XOAUTH2 {}'.format(auth_string))
-                else:
+                elif self.auth_mechanism == "Basic" and ((phantom.APP_JSON_USERNAME in config) and (phantom.APP_JSON_PASSWORD in config)):
                     self.debug_print("username and password used")
                     response_code, response_message = self._smtp_conn.login(config[phantom.APP_JSON_USERNAME], config[phantom.APP_JSON_PASSWORD])
+                elif self.auth_mechanism == "Basic" and ((phantom.APP_JSON_USERNAME not in config) or (phantom.APP_JSON_PASSWORD not in config)):
+                    self.save_progress(SMTP_MESSAGE_SKIP_AUTH_NO_USERNAME_PASSWORD)
+                    response_code, response_message = (None, None)
+
             else:
                 if self.auth_mechanism == "Basic" and ((phantom.APP_JSON_USERNAME not in config) or (phantom.APP_JSON_PASSWORD not in config)):
                     self.save_progress(SMTP_MESSAGE_SKIP_AUTH_NO_USERNAME_PASSWORD)
