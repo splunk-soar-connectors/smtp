@@ -35,7 +35,7 @@ import phantom.app as phantom
 import phantom.rules as ph_rules
 import phantom.utils as ph_utils
 import requests
-from bleach_allowlist import all_tags, generally_xss_unsafe
+from bleach_allowlist import all_tags, generally_xss_unsafe, all_styles
 from bs4 import BeautifulSoup
 from phantom.action_result import ActionResult
 from phantom.base_connector import BaseConnector
@@ -53,6 +53,7 @@ class SmtpConnector(BaseConnector):
     ACTION_ID_SEND_HTML_EMAIL = "send_htmlemail"
 
     SAFE_HTML_TAGS = list(set(all_tags) - set(generally_xss_unsafe))
+    SAFE_HTML_ATTRIBUTES = BLEACH_SAFE_HTML_ATTRIBUTES
 
     def __init__(self):
 
@@ -982,7 +983,12 @@ class SmtpConnector(BaseConnector):
         email_text = param.get('text_body')
         attachment_json = param.get('attachment_json')
 
-        email_html = bleach.clean(email_html, self.SAFE_HTML_TAGS)
+        email_html = bleach.clean(
+            text=email_html,
+            tags=self.SAFE_HTML_TAGS,
+            attributes=self.SAFE_HTML_ATTRIBUTES,
+            css_sanitizer=bleach.CSSSanitizer(allowed_css_properties=all_styles)
+        )
 
         encoding = config.get(SMTP_ENCODING, False)
         smtputf8 = config.get(SMTP_ALLOW_SMTPUTF8, False)
