@@ -28,6 +28,7 @@ from email.mime.image import MIMEImage
 from email.mime.message import MIMEMessage
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from html import unescape
 
 import bleach
 import encryption_helper
@@ -35,6 +36,7 @@ import phantom.app as phantom
 import phantom.rules as ph_rules
 import phantom.utils as ph_utils
 import requests
+from bleach.css_sanitizer import CSSSanitizer
 from bleach_allowlist import all_styles, all_tags, generally_xss_unsafe
 from bs4 import BeautifulSoup
 from phantom.action_result import ActionResult
@@ -987,8 +989,9 @@ class SmtpConnector(BaseConnector):
             text=email_html,
             tags=self.SAFE_HTML_TAGS,
             attributes=self.SAFE_HTML_ATTRIBUTES,
-            css_sanitizer=bleach.CSSSanitizer(allowed_css_properties=all_styles)
+            css_sanitizer=CSSSanitizer(allowed_css_properties=all_styles)
         )
+        email_html = unescape(email_html)
 
         encoding = config.get(SMTP_ENCODING, False)
         smtputf8 = config.get(SMTP_ALLOW_SMTPUTF8, False)

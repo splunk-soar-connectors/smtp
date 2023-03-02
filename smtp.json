@@ -746,7 +746,7 @@
             },
             {
                 "module": "bleach",
-                "input_file": "wheels/shared/bleach-3.3.1-py2.py3-none-any.whl"
+                "input_file": "wheels/py3/bleach-6.0.0-py3-none-any.whl"
             },
             {
                 "module": "bleach_allowlist",
@@ -765,10 +765,6 @@
                 "input_file": "wheels/shared/idna-2.10-py2.py3-none-any.whl"
             },
             {
-                "module": "packaging",
-                "input_file": "wheels/py3/packaging-22.0-py3-none-any.whl"
-            },
-            {
                 "module": "requests",
                 "input_file": "wheels/shared/requests-2.25.0-py2.py3-none-any.whl"
             },
@@ -778,7 +774,11 @@
             },
             {
                 "module": "soupsieve",
-                "input_file": "wheels/py3/soupsieve-2.3.2.post1-py3-none-any.whl"
+                "input_file": "wheels/py3/soupsieve-2.4-py3-none-any.whl"
+            },
+            {
+                "module": "tinycss2",
+                "input_file": "wheels/py3/tinycss2-1.1.1-py3-none-any.whl"
             },
             {
                 "module": "urllib3",
