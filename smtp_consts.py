@@ -94,11 +94,16 @@ BLEACH_SAFE_HTML_ATTRIBUTES = {
         "lang",
         "style",
         "title",
+        "width",
+        "height",
+        "name",
+        "placeholder",
+        "required",
+        "value"
     ],
     "table": [
         "summary",
         "align",
-        "width",
         "frame",
         "rules",
         "border",
@@ -108,13 +113,11 @@ BLEACH_SAFE_HTML_ATTRIBUTES = {
     ],
     "col": [
         "span",
-        "width",
         "align",
         "valign",
     ],
     "colgroup": [
         "span",
-        "width",
         "align",
         "valign",
     ],
@@ -143,8 +146,6 @@ BLEACH_SAFE_HTML_ATTRIBUTES = {
         "rowspan",
         "colspan",
         "nowrap",
-        "width",
-        "height",
         "align",
         "valign",
         "bgcolor",
@@ -157,19 +158,21 @@ BLEACH_SAFE_HTML_ATTRIBUTES = {
         "rowspan",
         "colspan",
         "nowrap",
-        "width",
-        "height",
         "align",
         "valign",
         "bgcolor",
     ],
     "img": [
         "src",
+        "ismap",
+        "loading",
         "longdesc",
         "alt",
+        "referrerpolicy",
+        "srcset",
+        "usemap"
+        "sizes",
         "align",
-        "width",
-        "height",
         "border",
         "hspace",
         "vspace",
@@ -177,5 +180,167 @@ BLEACH_SAFE_HTML_ATTRIBUTES = {
     "a": [
         "href",
         "alt",
+        "download",
+        "hreflang",
+        "media",
+        "referrerpolicy",
+        "rel",
+        "target",
+        "type"
     ],
+    "area": [
+        "alt",
+        "coords",
+        "download",
+        "href",
+        "hreflang",
+        "media",
+        "referrerpolicy",
+        "rel",
+        "shape",
+        "target",
+        "type"
+    ],
+    "textarea": [
+        "rows",
+        "cols",
+        "disabled",
+        "autofocus",
+        "form",
+        "maxlength",
+        "readonly",
+        "wrap"
+    ],
+    "input": [
+        "type",
+        "accept",
+        "alt",
+        "autocomplete",
+        "autofocus",
+        "checked",
+        "dirname",
+        "disabled",
+        "form",
+        "formaction",
+        "formenctype",
+        "formmethod",
+        "formnovalidate",
+        "formtarget",
+        "type",
+        "list",
+        "max",
+        "maxlength",
+        "min",
+        "minlength",
+        "multiple",
+        "pattern",
+        "readonly",
+        "size",
+        "src",
+        "step"
+    ],
+    "button": [
+        "autofocus",
+        "disabled",
+        "form",
+        "formaction",
+        "formenctype",
+        "formmethod",
+        "formnovalidate",
+        "formtarget",
+        "type"
+    ],
+    "bdo": [
+        "dir"
+    ],
+    "optgroup": [
+        "disable",
+        "label"
+    ],
+    "meter": [
+        "form",
+        "high",
+        "low",
+        "max",
+        "min",
+        "optimum"
+    ],
+    "base": [
+        "href",
+        "target"
+    ],
+    "del": [
+        "cite",
+        "datetime"
+    ],
+    "details": [
+        "open"
+    ],
+    "dialog": [
+        "open"
+    ],
+    "fieldset": [
+        "disabled",
+        "form"
+    ],
+    "form": [
+        "accept-charset",
+        "action",
+        "autocomplete",
+        "enctype",
+        "method",
+        "novalidate",
+        "rel",
+        "target"
+    ],
+    "ins": [
+        "cite",
+        "datetime"
+    ],
+    "label": [
+        "for",
+        "form"
+    ],
+    "ol": [
+        "reversed",
+        "start",
+        "type"
+    ],
+    "outgroup": [
+        "disabled",
+        "label"
+    ],
+    "option": [
+        "disabled",
+        "label",
+        "selected"
+    ],
+    "output": [
+        "for",
+        "form"
+    ],
+    "progress": [
+        "max"
+    ],
+    "q": [
+        "cite"
+    ],
+    "select": [
+        "autofocus",
+        "disabled",
+        "form",
+        "multiple",
+        "size"
+    ],
+    "source": [
+        "media",
+        "sizes",
+        "src",
+        "srcset",
+        "type"
+    ],
+    "style": [
+        "media",
+        "type"
+    ]
 }
