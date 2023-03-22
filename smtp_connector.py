@@ -55,7 +55,6 @@ class SmtpConnector(BaseConnector):
     ACTION_ID_SEND_HTML_EMAIL = "send_htmlemail"
 
     SAFE_HTML_TAGS = list(set(all_tags) - set(generally_xss_unsafe))
-    SAFE_HTML_ATTRIBUTES = BLEACH_SAFE_HTML_ATTRIBUTES
 
     def __init__(self):
 
@@ -988,7 +987,7 @@ class SmtpConnector(BaseConnector):
         email_html = bleach.clean(
             text=email_html,
             tags=self.SAFE_HTML_TAGS,
-            attributes=self.SAFE_HTML_ATTRIBUTES,
+            attributes=BLEACH_SAFE_HTML_ATTRIBUTES,
             css_sanitizer=CSSSanitizer(allowed_css_properties=all_styles)
         )
         email_html = unescape(email_html)
