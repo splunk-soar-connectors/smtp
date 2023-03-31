@@ -86,3 +86,261 @@ SMTP_DECRYPTION_ERROR = "Error occurred while decrypting the state file"
 SMTP_VALID_INT_MESSAGE = "Please provide a valid integer value in the '{param}'"
 SMTP_NON_NEG_INT_MESSAGE = "Please provide a valid non-negative integer value in the '{param}'"
 SMTP_NON_NEG_NON_ZERO_INT_MESSAGE = "Please provide a valid non-zero positive integer value in '{param}'"
+
+BLEACH_SAFE_HTML_ATTRIBUTES = {
+    "*": [
+        "id",
+        "class",
+        "lang",
+        "style",
+        "title",
+        "width",
+        "height",
+        "name",
+        "placeholder",
+        "required",
+        "value"
+    ],
+    "table": [
+        "summary",
+        "align",
+        "frame",
+        "rules",
+        "border",
+        "bgcolor",
+        "cellspacing",
+        "cellpadding",
+    ],
+    "col": [
+        "span",
+        "align",
+        "valign",
+    ],
+    "colgroup": [
+        "span",
+        "align",
+        "valign",
+    ],
+    "thead": [
+        "align",
+        "valign",
+    ],
+    "tbody": [
+        "align",
+        "valign",
+    ],
+    "tfoot": [
+        "align",
+        "valign",
+    ],
+    "tr": [
+        "align",
+        "valign",
+        "bgcolor",
+    ],
+    "th": [
+        "headers",
+        "scope",
+        "abbr",
+        "axis",
+        "rowspan",
+        "colspan",
+        "nowrap",
+        "align",
+        "valign",
+        "bgcolor",
+    ],
+    "td": [
+        "headers",
+        "scope",
+        "abbr",
+        "axis",
+        "rowspan",
+        "colspan",
+        "nowrap",
+        "align",
+        "valign",
+        "bgcolor",
+    ],
+    "img": [
+        "src",
+        "ismap",
+        "loading",
+        "longdesc",
+        "alt",
+        "referrerpolicy",
+        "srcset",
+        "usemap"
+        "sizes",
+        "align",
+        "border",
+        "hspace",
+        "vspace",
+    ],
+    "a": [
+        "href",
+        "alt",
+        "download",
+        "hreflang",
+        "media",
+        "referrerpolicy",
+        "rel",
+        "target",
+        "type"
+    ],
+    "area": [
+        "alt",
+        "coords",
+        "download",
+        "href",
+        "hreflang",
+        "media",
+        "referrerpolicy",
+        "rel",
+        "shape",
+        "target",
+        "type"
+    ],
+    "textarea": [
+        "rows",
+        "cols",
+        "disabled",
+        "autofocus",
+        "form",
+        "maxlength",
+        "readonly",
+        "wrap"
+    ],
+    "input": [
+        "type",
+        "accept",
+        "alt",
+        "autocomplete",
+        "autofocus",
+        "checked",
+        "dirname",
+        "disabled",
+        "form",
+        "formaction",
+        "formenctype",
+        "formmethod",
+        "formnovalidate",
+        "formtarget",
+        "type",
+        "list",
+        "max",
+        "maxlength",
+        "min",
+        "minlength",
+        "multiple",
+        "pattern",
+        "readonly",
+        "size",
+        "src",
+        "step"
+    ],
+    "button": [
+        "autofocus",
+        "disabled",
+        "form",
+        "formaction",
+        "formenctype",
+        "formmethod",
+        "formnovalidate",
+        "formtarget",
+        "type"
+    ],
+    "bdo": [
+        "dir"
+    ],
+    "optgroup": [
+        "disable",
+        "label"
+    ],
+    "meter": [
+        "form",
+        "high",
+        "low",
+        "max",
+        "min",
+        "optimum"
+    ],
+    "base": [
+        "href",
+        "target"
+    ],
+    "del": [
+        "cite",
+        "datetime"
+    ],
+    "details": [
+        "open"
+    ],
+    "dialog": [
+        "open"
+    ],
+    "fieldset": [
+        "disabled",
+        "form"
+    ],
+    "form": [
+        "accept-charset",
+        "action",
+        "autocomplete",
+        "enctype",
+        "method",
+        "novalidate",
+        "rel",
+        "target"
+    ],
+    "ins": [
+        "cite",
+        "datetime"
+    ],
+    "label": [
+        "for",
+        "form"
+    ],
+    "ol": [
+        "reversed",
+        "start",
+        "type"
+    ],
+    "outgroup": [
+        "disabled",
+        "label"
+    ],
+    "option": [
+        "disabled",
+        "label",
+        "selected"
+    ],
+    "output": [
+        "for",
+        "form"
+    ],
+    "progress": [
+        "max"
+    ],
+    "q": [
+        "cite"
+    ],
+    "select": [
+        "autofocus",
+        "disabled",
+        "form",
+        "multiple",
+        "size"
+    ],
+    "source": [
+        "media",
+        "sizes",
+        "src",
+        "srcset",
+        "type"
+    ],
+    "style": [
+        "media",
+        "type"
+    ]
+}

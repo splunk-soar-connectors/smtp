@@ -2,11 +2,11 @@
 # SMTP
 
 Publisher: Splunk  
-Connector Version: 2\.3\.0  
+Connector Version: 2.4.0  
 Product Vendor: Generic  
 Product Name: SMTP  
-Product Version Supported (regex): "\.\*"  
-Minimum Product Version: 5\.4\.0  
+Product Version Supported (regex): ".\*"  
+Minimum Product Version: 5.5.0  
 
 This app provides the ability to send email using SMTP
 
@@ -61,68 +61,70 @@ This app provides the ability to send email using SMTP
 |          **SSL**      | 465  |
 |          **StartTLS** | 587  |
 
-<div>
+
 
 **NOTE :** While running the test connectivity with OAuth, username value is compulsory to pass. The
 username value is required because its used to generate new token, every time test connectivity is
 run.
 
-</div>
+
 
   
 
-<div>
 
-<div>
+
+
 
 To obtain the required parameters, please check the document of the service provider
 
-</div>
 
-<div>
+
+
 
 Here we have attached links for the most used mail services to find parameters values:
 
-</div>
 
-<div>
+
+
 
   
 
-<div>
+
 
 GOOGLE
 
-</div>
 
-<div>
+
+
 
 [Setting up OAuth2.0](https://support.google.com/cloud/answer/6158849?hl=en) [Using OAuth2.0 to
 access google
 API's](https://developers.google.com/identity/protocols/oauth2#1.-obtain-oauth-2.0-credentials-from-the-dynamic_data.setvar.console_name-.)
 
-</div>
+
 
   
 
-<div>
+
 
 MICROSOFT
 
-</div>
 
-<div>
+
+
 
 [Authentication for
 SMTP](https://learn.microsoft.com/en-us/exchange/client-developer/legacy-protocols/how-to-authenticate-an-imap-pop-smtp-application-by-using-oauth)
 [Authorization code flow for
 OAuth2.0](https://learn.microsoft.com/en-us/azure/active-directory/develop/v2-oauth2-auth-code-flow)
 
-</div>
 
-</div>
 
-</div>
+Note: Service providers might have html/css rendering issues.
+
+
+
+
 
   
 
@@ -194,26 +196,26 @@ VARIABLE | REQUIRED | TYPE | DESCRIPTION
 -------- | -------- | ---- | -----------
 **server** |  required  | string | Server IP/Hostname
 **port** |  optional  | numeric | Port
-**username** |  optional  | string | Username \(or email address\)
-**password** |  optional  | password | Password \(For Basic Auth\)
-**client\_id** |  optional  | string | OAuth Client ID \(For OAuth\)
-**client\_secret** |  optional  | password | OAuth Client Secret \(For OAuth\)
-**auth\_url** |  optional  | string | OAuth Authorization URL
-**token\_url** |  optional  | string | OAuth Token URL
-**scopes** |  optional  | string | OAuth API Scope \(space\-separated\)
-**sender\_address** |  optional  | string | Sender Address
-**ssl\_config** |  required  | string | SSL Method
-**allow\_smtputf8** |  optional  | boolean | Enable SMTPUTF8 support \(Check this only if the SMTP server supports SMTPUTF8 option\)
+**username** |  optional  | string | Username (or email address)
+**password** |  optional  | password | Password (For Basic Auth)
+**client_id** |  optional  | string | OAuth Client ID (For OAuth)
+**client_secret** |  optional  | password | OAuth Client Secret (For OAuth)
+**auth_url** |  optional  | string | OAuth Authorization URL
+**token_url** |  optional  | string | OAuth Token URL
+**scopes** |  optional  | string | OAuth API Scope (space-separated)
+**sender_address** |  optional  | string | Sender Address
+**ssl_config** |  required  | string | SSL Method
+**allow_smtputf8** |  optional  | boolean | Enable SMTPUTF8 support (Check this only if the SMTP server supports SMTPUTF8 option)
 **encoding** |  optional  | boolean | Enable Unicode support
 
 ### Supported Actions  
-[test connectivity](#action-test-connectivity) - Validate the asset configuration for connectivity\. This action logs into the device and sends a test email to check the connection and credentials  
+[test connectivity](#action-test-connectivity) - Validate the asset configuration for connectivity. This action logs into the device and sends a test email to check the connection and credentials  
 [send email](#action-send-email) - Sends an email  
-[send rawemail](#action-send-rawemail) - Takes a fully specified email and sends it unmodified to the smtp server\. Sender and Recipient\(s\) will be extracted from message headers; Suggest using the standard email package to build message and export with the \.as\_string\(\) method  
-[send htmlemail](#action-send-htmlemail) - Sends a html email with optional text rendering\. Attachments are allowed a Content\-ID tag for reference within the html  
+[send rawemail](#action-send-rawemail) - Takes a fully specified email and sends it unmodified to the smtp server. Sender and Recipient(s) will be extracted from message headers; Suggest using the standard email package to build message and export with the .as_string() method  
+[send htmlemail](#action-send-htmlemail) - Sends a html email with optional text rendering. Attachments are allowed a Content-ID tag for reference within the html  
 
 ## action: 'test connectivity'
-Validate the asset configuration for connectivity\. This action logs into the device and sends a test email to check the connection and credentials
+Validate the asset configuration for connectivity. This action logs into the device and sends a test email to check the connection and credentials
 
 Type: **test**  
 Read only: **True**
@@ -230,7 +232,7 @@ Sends an email
 Type: **generic**  
 Read only: **False**
 
-Some points to note\: <ul> <li>Only files present in the <b>vault</b> can be attached to the email\.</li> <li>To send HTML emails, specify a HTML formatted text \(i\.e\. <html>\.\.\.\.</html>\) in the <b>body</b> parameter\. The app sends a multipart email containing plain and html <i>Content\-Type</i>\.</li> <li>The <b>to</b> parameter supports comma separated email addresses\.</li> <li>If the "Subject" is provided in the <b>subject</b> and the <b>headers</b> parameter, then the "Subject" provided in the <b>headers</b> parameter will be preferred and the action will run accordingly\.</li> <li> In the playbooks, if you don't provide any value for 'from' field in actions, it will take value from the platform email setting\. If in the email settings also it is empty, it will consider the username parameter provided in the asset configuration as the sender's email address</li> </ul>\.
+Some points to note: <ul> <li>Only files present in the <b>vault</b> can be attached to the email.</li> <li>To send HTML emails, specify a HTML formatted text (i.e. <html>....</html>) in the <b>body</b> parameter. The app sends a multipart email containing plain and html <i>Content-Type</i>.</li> <li>The <b>to</b> parameter supports comma separated email addresses.</li> <li>If the "Subject" is provided in the <b>subject</b> and the <b>headers</b> parameter, then the "Subject" provided in the <b>headers</b> parameter will be preferred and the action will run accordingly.</li> <li> In the playbooks, if you don't provide any value for 'from' field in actions, it will take value from the platform email setting. If in the email settings also it is empty, it will consider the username parameter provided in the asset configuration as the sender's email address</li> </ul>.
 
 #### Action Parameters
 PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
@@ -242,28 +244,28 @@ PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
 **subject** |  optional  | Message Subject | string | 
 **body** |  required  | Message body | string | 
 **attachments** |  optional  | Vault IDs of files to attach | string |  `vault id` 
-**headers** |  optional  | Custom email headers \(formatted as JSON\) | string | 
+**headers** |  optional  | Custom email headers (formatted as JSON) | string | 
 
 #### Action Output
-DATA PATH | TYPE | CONTAINS
---------- | ---- | --------
-action\_result\.status | string | 
-action\_result\.parameter\.attachments | string |  `vault id` 
-action\_result\.parameter\.bcc | string |  `email` 
-action\_result\.parameter\.body | string | 
-action\_result\.parameter\.cc | string |  `email` 
-action\_result\.parameter\.from | string |  `email` 
-action\_result\.parameter\.headers | string | 
-action\_result\.parameter\.subject | string | 
-action\_result\.parameter\.to | string |  `email` 
-action\_result\.data | string | 
-action\_result\.summary | string | 
-action\_result\.message | string | 
-summary\.total\_objects | numeric | 
-summary\.total\_objects\_successful | numeric |   
+DATA PATH | TYPE | CONTAINS | EXAMPLE VALUES
+--------- | ---- | -------- | --------------
+action_result.status | string |  |   success  failed 
+action_result.parameter.attachments | string |  `vault id`  |   ab2b2ccfba08ea538ef22f521caa01c3c2b17ccf 
+action_result.parameter.bcc | string |  `email`  |   test1@testdomain.com 
+action_result.parameter.body | string |  |   Test body 
+action_result.parameter.cc | string |  `email`  |   test2@testdomain.com 
+action_result.parameter.from | string |  `email`  |   sender@testdomain.com 
+action_result.parameter.headers | string |  |   {"Subject": "Test1", "To": "test3@testdomain.com"} 
+action_result.parameter.subject | string |  |   Test 
+action_result.parameter.to | string |  `email`  |   receiver@testdomain.com 
+action_result.data | string |  |  
+action_result.summary | string |  |  
+action_result.message | string |  |   Email sent 
+summary.total_objects | numeric |  |   1 
+summary.total_objects_successful | numeric |  |   1   
 
 ## action: 'send rawemail'
-Takes a fully specified email and sends it unmodified to the smtp server\. Sender and Recipient\(s\) will be extracted from message headers; Suggest using the standard email package to build message and export with the \.as\_string\(\) method
+Takes a fully specified email and sends it unmodified to the smtp server. Sender and Recipient(s) will be extracted from message headers; Suggest using the standard email package to build message and export with the .as_string() method
 
 Type: **generic**  
 Read only: **False**
@@ -271,26 +273,26 @@ Read only: **False**
 #### Action Parameters
 PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
 --------- | -------- | ----------- | ---- | --------
-**raw\_email** |  required  | Fully specified email message including all headers | string | 
+**raw_email** |  required  | Fully specified email message including all headers | string | 
 
 #### Action Output
-DATA PATH | TYPE | CONTAINS
---------- | ---- | --------
-action\_result\.status | string | 
-action\_result\.parameter\.raw\_email | string | 
-action\_result\.data | string | 
-action\_result\.summary | string | 
-action\_result\.message | string | 
-summary\.total\_objects | numeric | 
-summary\.total\_objects\_successful | numeric |   
+DATA PATH | TYPE | CONTAINS | EXAMPLE VALUES
+--------- | ---- | -------- | --------------
+action_result.status | string |  |   success  failed 
+action_result.parameter.raw_email | string |  |   to: receiver@testdomain.com\\n from:sender@testdomain.com\\n subject: Test\\n\\nBody Text  to: receiver@testdomain.com\\n from:sender@testdomain.com\\n Content-type: text/html\\nsubject: HTML Test\\n<html><body><h2>This is test</h2><br>This is unicode data.</body></html>  to: receiver1@testdomain.com,receiver2@testdomain.com\\nfrom: sender@testdomain.com\\nsubject: CommaSeparated Recipients Test\\n\\nThis is test data. 
+action_result.data | string |  |  
+action_result.summary | string |  |  
+action_result.message | string |  |   Email sent 
+summary.total_objects | numeric |  |   1 
+summary.total_objects_successful | numeric |  |   1   
 
 ## action: 'send htmlemail'
-Sends a html email with optional text rendering\. Attachments are allowed a Content\-ID tag for reference within the html
+Sends a html email with optional text rendering. Attachments are allowed a Content-ID tag for reference within the html
 
 Type: **generic**  
 Read only: **False**
 
-If the <b>from</b> parameter is not provided, then the action will consider the <b>username</b> parameter provided in the asset configuration as the sender's email address\.<br><br>If the "Subject" is provided in the <b>subject</b> and the <b>headers</b> parameter, then the "Subject" provided in the <b>headers</b> parameter will be preferred and the action will run accordingly\.
+If the <b>from</b> parameter is not provided, then the action will consider the <b>username</b> parameter provided in the asset configuration as the sender's email address.<br><br>If the "Subject" is provided in the <b>subject</b> and the <b>headers</b> parameter, then the "Subject" provided in the <b>headers</b> parameter will be preferred and the action will run accordingly.
 
 #### Action Parameters
 PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
@@ -300,46 +302,46 @@ PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
 **cc** |  optional  | List of recipients email addresses to include on cc line | string |  `email` 
 **bcc** |  optional  | List of recipients email addresses to include on bcc line | string |  `email` 
 **subject** |  optional  | Message Subject | string | 
-**headers** |  optional  | Serialized json dictionary\. Additional email headers to be added to the message | string | 
-**html\_body** |  required  | Html rendering of message | string | 
-**text\_body** |  optional  | Text rendering of message | string | 
-**attachment\_json** |  optional  | Serialized json list of attachments, including images\. Any additional attachments specified will be update this list\. Each attachment requires a vault id and an optional unique content\-id\. The content\-id is required if the html refers to the attachment\. The format of the json is a list of dictionaries\. Each dictionary will contain a vault\_id key and optionally a content\_id key\. ie\. \[\{"vault\_id"\: "first\_vault id", "content\_id"\: "a\_unique\_content\_id"\}, \{"vault\_id"\: "second\_vault\_id"\}\] | string | 
+**headers** |  optional  | Serialized json dictionary. Additional email headers to be added to the message | string | 
+**html_body** |  required  | Html rendering of message | string | 
+**text_body** |  optional  | Text rendering of message | string | 
+**attachment_json** |  optional  | Serialized json list of attachments, including images. Any additional attachments specified will be update this list. Each attachment requires a vault id and an optional unique content-id. The content-id is required if the html refers to the attachment. The format of the json is a list of dictionaries. Each dictionary will contain a vault_id key and optionally a content_id key. ie. [{"vault_id": "first_vault id", "content_id": "a_unique_content_id"}, {"vault_id": "second_vault_id"}] | string | 
 **attachment1** |  optional  | Vault id for attachment | string | 
-**content\_id1** |  optional  | Optional content\-id for attachment, typically used in image link referrals | string | 
+**content_id1** |  optional  | Optional content-id for attachment, typically used in image link referrals | string | 
 **attachment2** |  optional  | Vault id for attachment | string | 
-**content\_id2** |  optional  | Optional content\-id for attachment, typically used in image link referrals | string | 
+**content_id2** |  optional  | Optional content-id for attachment, typically used in image link referrals | string | 
 **attachment3** |  optional  | Vault id for attachment | string | 
-**content\_id3** |  optional  | Optional content\-id for attachment, typically used in image link referrals | string | 
+**content_id3** |  optional  | Optional content-id for attachment, typically used in image link referrals | string | 
 **attachment4** |  optional  | Vault id for attachment | string | 
-**content\_id4** |  optional  | Optional content\-id for attachment, typically used in image link referrals | string | 
+**content_id4** |  optional  | Optional content-id for attachment, typically used in image link referrals | string | 
 **attachment5** |  optional  | Vault id for attachment | string | 
-**content\_id5** |  optional  | Optional content\-id for attachment, typically used in image link referrals | string | 
+**content_id5** |  optional  | Optional content-id for attachment, typically used in image link referrals | string | 
 
 #### Action Output
-DATA PATH | TYPE | CONTAINS
---------- | ---- | --------
-action\_result\.status | string | 
-action\_result\.parameter\.attachment1 | string | 
-action\_result\.parameter\.attachment2 | string | 
-action\_result\.parameter\.attachment3 | string | 
-action\_result\.parameter\.attachment4 | string | 
-action\_result\.parameter\.attachment5 | string | 
-action\_result\.parameter\.attachment\_json | string | 
-action\_result\.parameter\.bcc | string |  `email` 
-action\_result\.parameter\.cc | string |  `email` 
-action\_result\.parameter\.content\_id1 | string | 
-action\_result\.parameter\.content\_id2 | string | 
-action\_result\.parameter\.content\_id3 | string | 
-action\_result\.parameter\.content\_id4 | string | 
-action\_result\.parameter\.content\_id5 | string | 
-action\_result\.parameter\.from | string |  `email` 
-action\_result\.parameter\.headers | string | 
-action\_result\.parameter\.html\_body | string | 
-action\_result\.parameter\.subject | string | 
-action\_result\.parameter\.text\_body | string | 
-action\_result\.parameter\.to | string |  `email` 
-action\_result\.data | string | 
-action\_result\.summary | string | 
-action\_result\.message | string | 
-summary\.total\_objects | numeric | 
-summary\.total\_objects\_successful | numeric | 
+DATA PATH | TYPE | CONTAINS | EXAMPLE VALUES
+--------- | ---- | -------- | --------------
+action_result.status | string |  |   success  failed 
+action_result.parameter.attachment1 | string |  |   ab2b2ccfba08ea538ef22f521caa01c3c2b17ccf 
+action_result.parameter.attachment2 | string |  |   ab2e2ccfba08ea538ef22f529caa01c3c2b17ccf 
+action_result.parameter.attachment3 | string |  |   ab2e2ccfba08ea538ef22f529caa01c3c2b17ccf 
+action_result.parameter.attachment4 | string |  |   ab2e2ccfba08ea538ef22f529caa01c3c2b17ccf 
+action_result.parameter.attachment5 | string |  |   ab2e2ccfba08ea538ef22f529caa01c3c2b17ccf 
+action_result.parameter.attachment_json | string |  |  
+action_result.parameter.bcc | string |  `email`  |   test1@testdomain.com 
+action_result.parameter.cc | string |  `email`  |   test2@testdomain.com 
+action_result.parameter.content_id1 | string |  |  
+action_result.parameter.content_id2 | string |  |  
+action_result.parameter.content_id3 | string |  |  
+action_result.parameter.content_id4 | string |  |  
+action_result.parameter.content_id5 | string |  |  
+action_result.parameter.from | string |  `email`  |   sender@testdomain.com 
+action_result.parameter.headers | string |  |   {"Subject": "Test1", "To": "test3@testdomain.com"} 
+action_result.parameter.html_body | string |  |   <html><h2>HTML heading</h2><body>HTML body.</body></html> 
+action_result.parameter.subject | string |  |   Test 
+action_result.parameter.text_body | string |  |   This is text body. 
+action_result.parameter.to | string |  `email`  |   receiver@testdomain.com 
+action_result.data | string |  |  
+action_result.summary | string |  |  
+action_result.message | string |  |   Email sent 
+summary.total_objects | numeric |  |   1 
+summary.total_objects_successful | numeric |  |   1 
