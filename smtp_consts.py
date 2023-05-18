@@ -45,6 +45,8 @@ SSL_CONFIG_SSL = "SSL"
 SSL_CONFIG_STARTTLS = "StartTLS"
 SMTP_ENCODING = "encoding"
 SMTP_ALLOW_SMTPUTF8 = "allow_smtputf8"
+SMTP_PASSWORD_LESS_AUTH_TYPE = "Password less"
+SMTP_AUTOMATIC_AUTH_TYPE = "Automatic"
 
 SMTP_SENDING_TEST_MAIL = "Sending test mail"
 SMTP_DONE = "Done..."
@@ -86,7 +88,14 @@ SMTP_DECRYPTION_ERROR = "Error occurred while decrypting the state file"
 SMTP_VALID_INT_MESSAGE = "Please provide a valid integer value in the '{param}'"
 SMTP_NON_NEG_INT_MESSAGE = "Please provide a valid non-negative integer value in the '{param}'"
 SMTP_NON_NEG_NON_ZERO_INT_MESSAGE = "Please provide a valid non-zero positive integer value in '{param}'"
-
+SMTP_AUTH_MESSAGE = "Using {} Authentication"
+SMTP_AUTH_FAILED_ACTION_MESSAGE = "{} failed for {} authorization. {}"
+SMTP_ALLOWED_AUTH_TYPES = [
+    "Automatic",
+    "OAuth",
+    "Basic",
+    "Password less"
+]
 BLEACH_SAFE_HTML_ATTRIBUTES = {
     "*": [
         "id",

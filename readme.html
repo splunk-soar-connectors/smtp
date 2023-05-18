@@ -8,7 +8,20 @@
 <ul>
   <li>Points to consider while configuring the asset</li>
   <ul>
-    <li>OAuth authentication: To use the OAuth mechanism, following parameters are required
+    The <b>auth_type</b> parameter have below four options. Connector follow the authentication mechanism as per selected value of auth_type parameter.
+    <li>
+      Automatic(default): While selecting auth type as Automatic the test connectivity follows below workflow
+      <ul>
+        <li>First, Check if all required values are present for Interactive auth then only try to connect server with <b>Interactive/OAuth</b> Authentication else jump to Basic authentication.</li>
+        <li>If the Interactive authentication fails then appropriate failure message will display. Next, Check if all required values are present for Basic auth then only try to connect server with <b>Basic</b> Authentication else jump to password less authentication</li>
+        <li>If Basic auth fail then fails then appropriate failure message will display. Finally, try to connect server with <b>Password Less</b> Authentication</li>
+        <br>
+        Basically, the connector tries to connect to the server using OAuth Authentication (Interactive auth) first. If that fails, it tries Basic Authentication, and if that also fails, it tries Password Less authentication.
+      </ul>
+      <br>
+    </li>
+    <li>OAuth authentication: Parameters required for Interactive/OAuth auth will be verified. If found, connector try to connect the provided server with provided values and authenticated else test connectivity will fail with proper failure message<br>
+      To use the OAuth mechanism, following parameters are required
       <ul>
         <li>Username</li>
         <li>Client ID</li>
@@ -18,10 +31,15 @@
       </ul>
     </li>
     <li>
-      Basic authentication: If only username and password are provided the app will use basic authentication
+      Basic authentication: Parameters required for Basic auth will be verified. If found, connector try to connect the provided server with provided values and authenticated else test connectivity will fail with proper failure message<br>
+      To use the OAuth mechanism, following parameters are required
+      <ul>
+        <li>Username</li>
+        <li>Password</li>
+      </ul>
     </li>
     <li>
-      Passwordless authentication: If the SMTP sever supports passwordless authentication and the user doesn't provide required parameters for Oauth and Basic authentication, it will go for Passwordless authentication
+      Passwordless authentication: All the parameters for Oauth and Basic authentication ignored. Connector try to connect the provided server and authenticated else test connectivity will fail with proper failure message
   </ul>
   <li>
     The priority of authentication flow is in decreasing order as follows
