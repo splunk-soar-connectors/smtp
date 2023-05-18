@@ -8,19 +8,19 @@
 <ul>
   <li>Points to consider while configuring the asset</li>
   <ul>
-    The <b>auth_type</b> parameter have below four options. Connector follow the authentication mechanism as per selected value of auth_type parameter.
+    Connector follow the authentication mechanism as per selected value of <b>auth_type</b> parameter. The <b>auth_type</b> parameter have below four options.
     <li>
-      Automatic(default): While selecting auth type as Automatic the test connectivity follows below workflow
+      Automatic(default): The test connectivity follows the following workflow when auth type is selected as Automatic.
       <ul>
-        <li>First, Check if all required values are present for Interactive auth then only try to connect server with <b>Interactive/OAuth</b> Authentication else jump to Basic authentication.</li>
-        <li>If the Interactive authentication fails then appropriate failure message will display. Next, Check if all required values are present for Basic auth then only try to connect server with <b>Basic</b> Authentication else jump to password less authentication</li>
-        <li>If Basic auth fail then fails then appropriate failure message will display. Finally, try to connect server with <b>Password Less</b> Authentication</li>
+        <li>Firstly, It will Check if all the required values are present for Interactive auth then only try to connect to the server with <b>Interactive/OAuth</b> Authentication else jump to Basic authentication.</li>
+        <li>If the Interactive authentication fails then appropriate failure message will be displayed. Next, It will check if all the required values are present for Basic auth then only try to connect to the server with <b>Basic</b> Authentication else jump to password less authentication</li>
+        <li>If Basic auth fails then appropriate failure message will be displayed.And it will try to connect to the server with <b>Password Less</b> Authentication</li>
         <br>
         Basically, the connector tries to connect to the server using OAuth Authentication (Interactive auth) first. If that fails, it tries Basic Authentication, and if that also fails, it tries Password Less authentication.
       </ul>
       <br>
     </li>
-    <li>OAuth authentication: Parameters required for Interactive/OAuth auth will be verified. If found, connector try to connect the provided server with provided values and authenticated else test connectivity will fail with proper failure message<br>
+    <li>OAuth authentication: Parameters required for Interactive/OAuth auth will be verified. Connector tries to connect to the provided server with provided values and authenticated. Otherwise test connectivity will fail with appropriate failure message<br>
       To use the OAuth mechanism, following parameters are required
       <ul>
         <li>Username</li>
@@ -31,15 +31,15 @@
       </ul>
     </li>
     <li>
-      Basic authentication: Parameters required for Basic auth will be verified. If found, connector try to connect the provided server with provided values and authenticated else test connectivity will fail with proper failure message<br>
-      To use the OAuth mechanism, following parameters are required
+      Basic authentication: Parameters required for Basic auth will be verified. Connector tries to connect to the provided server with provided values and authenticated. Otherwise test connectivity will fail with appropriate failure message<br>
+      To use the basic mechanism, following parameters are required
       <ul>
         <li>Username</li>
         <li>Password</li>
       </ul>
     </li>
     <li>
-      Passwordless authentication: All the parameters for Oauth and Basic authentication ignored. Connector try to connect the provided server and authenticated else test connectivity will fail with proper failure message
+      Passwordless authentication: All the parameters for Oauth and Basic authentication ignored. Connector tries to connect the provided server and authenticated. Otherwise test connectivity will fail with proper failure message
   </ul>
   <li>
     The priority of authentication flow is in decreasing order as follows

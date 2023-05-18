@@ -156,8 +156,11 @@ class SmtpConnector(BaseConnector):
         self.debug_print("Determining auth type")
         auth_type = config.get("auth_type", SMTP_AUTOMATIC_AUTH_TYPE)
         if auth_type not in SMTP_ALLOWED_AUTH_TYPES:
-            self.save_progress("You have selected {} Authentication. Please select auth type from {} list".format(auth_type, SMTP_ALLOWED_AUTH_TYPES))
-            return phantom.APP_ERROR
+            msg = "You have selected {} Authentication. \
+                Please select auth type from {} list.".format(auth_type, SMTP_ALLOWED_AUTH_TYPES)
+            if action_id != SMTP_TEST_CONNECTIVITY:
+                msg += SMTP_FAIL_CONNECTIVITY_TEST
+            return action_result.set_status(phantom.APP_ERROR, msg)
 
         # Check all the auth type as per inputs given by user with flow of [Interactive -> Basic -> Password less]
         self.save_progress("You have selected {} Authentication".format(auth_type))
@@ -169,7 +172,11 @@ class SmtpConnector(BaseConnector):
                     msg = action_result.get_message()
                     self.save_progress(SMTP_AUTH_FAILED_ACTION_MESSAGE.format(action_id, auth_type, msg))
                     if auth_type == SMTP_PASSWORD_LESS_AUTH_TYPE:
-                        action_result.set_status(phantom.APP_ERROR)
+                        msg = "Authentication failed for connecting to server with {} types \
+                            of authentication mechanism.".format(SMTP_ALLOWED_AUTH_TYPES[1:])
+                        if action_id != SMTP_TEST_CONNECTIVITY:
+                            msg += SMTP_FAIL_CONNECTIVITY_TEST
+                        return action_result.set_status(phantom.APP_ERROR, msg)
                 else:
                     return phantom.APP_SUCCESS
             return action_result.get_status()

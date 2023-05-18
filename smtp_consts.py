@@ -17,7 +17,8 @@ SMTP_SUCC_SMTP_EMAIL_SENT = "Email sent"
 SMTP_ERROR_SMTP_CONNECTIVITY_TO_SERVER = "Connection to server failed"
 SMTP_ERROR_SMTP_SEND_EMAIL = "Email send failed"
 SMTP_SUCC_CONNECTIVITY_TEST = "Test Connectivity Passed"
-SMTP_ERROR_CONNECTIVITY_TEST = "Test Connectivity Failed"
+SMTP_ERROR_CONNECTIVITY_TEST = "\nTest Connectivity Failed"
+SMTP_FAIL_CONNECTIVITY_TEST = " Please run test connectivity first."
 
 SMTP_PROG_UNABLE_TO_ATTACH_FILE = "Unable to attach file {}"
 SMTP_MESSAGE_SKIP_AUTH_NO_USERNAME_PASSWORD = "Skipping authentication, since Username or Password not configured"  # pragma: allowlist secret
@@ -47,6 +48,7 @@ SMTP_ENCODING = "encoding"
 SMTP_ALLOW_SMTPUTF8 = "allow_smtputf8"
 SMTP_PASSWORD_LESS_AUTH_TYPE = "Password less"
 SMTP_AUTOMATIC_AUTH_TYPE = "Automatic"
+SMTP_TEST_CONNECTIVITY = "Test Connectivity"
 
 SMTP_SENDING_TEST_MAIL = "Sending test mail"
 SMTP_DONE = "Done..."
