@@ -21,20 +21,21 @@ This app provides the ability to send email using SMTP
 
       
 
-    -   The **auth_type** parameter have below four options. Connector follow the authentication
-        mechanism as per selected value of auth_type parameter.
-    -   Automatic(default): While selecting auth type as Automatic the test connectivity follows
-        below workflow
-        -   First, Check if all required values are present for Interactive auth then only try to
-            connect server with **Interactive/OAuth** Authentication else jump to Basic
-            authentication.
+    -   Connector follow the authentication mechanism as per selected value of **auth_type**
+        parameter. The **auth_type** parameter have below four options.
+    -   Automatic(default): The test connectivity follows the following workflow when auth type is
+        selected as Automatic.
+        -   Firstly, It will Check if all the required values are present for Interactive auth then
+            only try to connect to the server with **Interactive/OAuth** Authentication else jump to
+            Basic authentication.
 
-        -   If the Interactive authentication fails then appropriate failure message will display.
-            Next, Check if all required values are present for Basic auth then only try to connect
-            server with **Basic** Authentication else jump to password less authentication
+        -   If the Interactive authentication fails then appropriate failure message will be
+            displayed. Next, It will check if all the required values are present for Basic auth
+            then only try to connect to the server with **Basic** Authentication else jump to
+            password less authentication
 
-        -   If Basic auth fail then fails then appropriate failure message will display. Finally,
-            try to connect server with **Password Less** Authentication
+        -   If Basic auth fails then appropriate failure message will be displayed.And it will try
+            to connect to the server with **Password Less** Authentication
 
               
               
@@ -43,24 +44,24 @@ This app provides the ability to send email using SMTP
             fails, it tries Password Less authentication.
 
           
-    -   OAuth authentication: Parameters required for Interactive/OAuth auth will be verified. If
-        found, connector try to connect the provided server with provided values and authenticated
-        else test connectivity will fail with proper failure message  
+    -   OAuth authentication: Parameters required for Interactive/OAuth auth will be verified.
+        Connector tries to connect to the provided server with provided values and authenticated.
+        Otherwise test connectivity will fail with appropriate failure message  
         To use the OAuth mechanism, following parameters are required
         -   Username
         -   Client ID
         -   Client Secret
         -   OAuth Authorization URL
         -   OAuth Token URL
-    -   Basic authentication: Parameters required for Basic auth will be verified. If found,
-        connector try to connect the provided server with provided values and authenticated else
-        test connectivity will fail with proper failure message  
-        To use the OAuth mechanism, following parameters are required
+    -   Basic authentication: Parameters required for Basic auth will be verified. Connector tries
+        to connect to the provided server with provided values and authenticated. Otherwise test
+        connectivity will fail with appropriate failure message  
+        To use the basic mechanism, following parameters are required
         -   Username
         -   Password
     -   Passwordless authentication: All the parameters for Oauth and Basic authentication ignored.
-        Connector try to connect the provided server and authenticated else test connectivity will
-        fail with proper failure message
+        Connector tries to connect the provided server and authenticated. Otherwise test
+        connectivity will fail with proper failure message
 
 -   The priority of authentication flow is in decreasing order as follows
     -   OAuth
