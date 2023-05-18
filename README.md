@@ -2,7 +2,7 @@
 # SMTP
 
 Publisher: Splunk  
-Connector Version: 2.4.0  
+Connector Version: 3.0.0  
 Product Vendor: Generic  
 Product Name: SMTP  
 Product Version Supported (regex): ".\*"  
@@ -21,17 +21,46 @@ This app provides the ability to send email using SMTP
 
       
 
-    -   OAuth authentication: To use the OAuth mechanism, following parameters are required
+    -   The **auth_type** parameter have below four options. Connector follow the authentication
+        mechanism as per selected value of auth_type parameter.
+    -   Automatic(default): While selecting auth type as Automatic the test connectivity follows
+        below workflow
+        -   First, Check if all required values are present for Interactive auth then only try to
+            connect server with **Interactive/OAuth** Authentication else jump to Basic
+            authentication.
+
+        -   If the Interactive authentication fails then appropriate failure message will display.
+            Next, Check if all required values are present for Basic auth then only try to connect
+            server with **Basic** Authentication else jump to password less authentication
+
+        -   If Basic auth fail then fails then appropriate failure message will display. Finally,
+            try to connect server with **Password Less** Authentication
+
+              
+              
+            Basically, the connector tries to connect to the server using OAuth Authentication
+            (Interactive auth) first. If that fails, it tries Basic Authentication, and if that also
+            fails, it tries Password Less authentication.
+
+          
+    -   OAuth authentication: Parameters required for Interactive/OAuth auth will be verified. If
+        found, connector try to connect the provided server with provided values and authenticated
+        else test connectivity will fail with proper failure message  
+        To use the OAuth mechanism, following parameters are required
         -   Username
         -   Client ID
         -   Client Secret
         -   OAuth Authorization URL
         -   OAuth Token URL
-    -   Basic authentication: If only username and password are provided the app will use basic
-        authentication
-    -   Passwordless authentication: If the SMTP sever supports passwordless authentication and the
-        user doesn't provide required parameters for Oauth and Basic authentication, it will go for
-        Passwordless authentication
+    -   Basic authentication: Parameters required for Basic auth will be verified. If found,
+        connector try to connect the provided server with provided values and authenticated else
+        test connectivity will fail with proper failure message  
+        To use the OAuth mechanism, following parameters are required
+        -   Username
+        -   Password
+    -   Passwordless authentication: All the parameters for Oauth and Basic authentication ignored.
+        Connector try to connect the provided server and authenticated else test connectivity will
+        fail with proper failure message
 
 -   The priority of authentication flow is in decreasing order as follows
     -   OAuth
@@ -196,6 +225,8 @@ VARIABLE | REQUIRED | TYPE | DESCRIPTION
 -------- | -------- | ---- | -----------
 **server** |  required  | string | Server IP/Hostname
 **port** |  optional  | numeric | Port
+**auth_type** |  optional  | string | Auth Type
+**ph_0** |  optional  | ph | Place holder
 **username** |  optional  | string | Username (or email address)
 **password** |  optional  | password | Password (For Basic Auth)
 **client_id** |  optional  | string | OAuth Client ID (For OAuth)
