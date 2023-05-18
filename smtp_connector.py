@@ -172,11 +172,12 @@ class SmtpConnector(BaseConnector):
                     msg = action_result.get_message()
                     self.save_progress(SMTP_AUTH_FAILED_ACTION_MESSAGE.format(action_id, auth_type, msg))
                     if auth_type == SMTP_PASSWORD_LESS_AUTH_TYPE:
-                        msg = "Authentication failed for connecting to server with {} types \
-                            of authentication mechanism.".format(SMTP_ALLOWED_AUTH_TYPES[1:])
                         if action_id != SMTP_TEST_CONNECTIVITY:
-                            msg += SMTP_FAILED_CONNECTIVITY_TEST
-                        return action_result.set_status(phantom.APP_ERROR, msg)
+                            msg = "Authentication failed for connecting to server with {} types \
+                            of authentication mechanism. {}".format(SMTP_ALLOWED_AUTH_TYPES[1:], SMTP_FAILED_CONNECTIVITY_TEST)
+                            return action_result.set_status(phantom.APP_ERROR, msg)
+                        else:
+                            return action_result.set_status(phantom.APP_ERROR)
                 else:
                     return phantom.APP_SUCCESS
             return action_result.get_status()
