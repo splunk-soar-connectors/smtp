@@ -159,7 +159,7 @@ class SmtpConnector(BaseConnector):
             msg = "You have selected {} Authentication. \
                 Please select auth type from {} list.".format(auth_type, SMTP_ALLOWED_AUTH_TYPES)
             if action_id != SMTP_TEST_CONNECTIVITY:
-                msg += SMTP_FAIL_CONNECTIVITY_TEST
+                msg += SMTP_FAILED_CONNECTIVITY_TEST
             return action_result.set_status(phantom.APP_ERROR, msg)
 
         # Check all the auth type as per inputs given by user with flow of [Interactive -> Basic -> Password less]
@@ -175,7 +175,7 @@ class SmtpConnector(BaseConnector):
                         msg = "Authentication failed for connecting to server with {} types \
                             of authentication mechanism.".format(SMTP_ALLOWED_AUTH_TYPES[1:])
                         if action_id != SMTP_TEST_CONNECTIVITY:
-                            msg += SMTP_FAIL_CONNECTIVITY_TEST
+                            msg += SMTP_FAILED_CONNECTIVITY_TEST
                         return action_result.set_status(phantom.APP_ERROR, msg)
                 else:
                     return phantom.APP_SUCCESS

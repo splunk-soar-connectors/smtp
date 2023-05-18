@@ -18,7 +18,7 @@ SMTP_ERROR_SMTP_CONNECTIVITY_TO_SERVER = "Connection to server failed"
 SMTP_ERROR_SMTP_SEND_EMAIL = "Email send failed"
 SMTP_SUCC_CONNECTIVITY_TEST = "Test Connectivity Passed"
 SMTP_ERROR_CONNECTIVITY_TEST = "\nTest Connectivity Failed"
-SMTP_FAIL_CONNECTIVITY_TEST = " Please run test connectivity first."
+SMTP_FAILED_CONNECTIVITY_TEST = " Please run test connectivity first."
 
 SMTP_PROG_UNABLE_TO_ATTACH_FILE = "Unable to attach file {}"
 SMTP_MESSAGE_SKIP_AUTH_NO_USERNAME_PASSWORD = "Skipping authentication, since Username or Password not configured"  # pragma: allowlist secret
