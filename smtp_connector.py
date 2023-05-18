@@ -88,7 +88,7 @@ class SmtpConnector(BaseConnector):
         """
 
         config = self.get_config()
-        self._auth_mechanism = "OAuth"
+        self._auth_mechanism = SMTP_OAUTH_AUTH_TYPE
         self.debug_print("Using Interactive Auth")
         required_params = ["client_id", "client_secret", "auth_url", "token_url"]
         for key in required_params:
@@ -119,7 +119,7 @@ class SmtpConnector(BaseConnector):
         """
 
         config = self.get_config()
-        self._auth_mechanism = "Basic"
+        self._auth_mechanism = SMTP_BASIC_AUTH_TYPE
 
         self.debug_print("Using Basic Auth")
         required_params = ["username", "password"]
@@ -180,7 +180,6 @@ class SmtpConnector(BaseConnector):
                             return action_result.set_status(phantom.APP_ERROR)
                 else:
                     return phantom.APP_SUCCESS
-            return action_result.get_status()
 
         # Check specific auth type as per input given by user in auth_type parameter
         self.save_progress(SMTP_AUTH_MESSAGE.format(auth_type))
@@ -192,7 +191,7 @@ class SmtpConnector(BaseConnector):
 
     def finalize(self):
 
-        if self._auth_mechanism == "OAuth":
+        if self._auth_mechanism == SMTP_OAUTH_AUTH_TYPE:
             try:
                 if self._access_token:
                     self._state["oauth_token"]["access_token"] = self.encrypt_state(self._access_token, "access")
@@ -562,7 +561,7 @@ class SmtpConnector(BaseConnector):
     def _connect_to_server(self, action_result, first_try=True):
 
         config = self.get_config()
-        is_oauth = self._auth_mechanism == "OAuth"
+        is_oauth = self._auth_mechanism == SMTP_OAUTH_AUTH_TYPE
 
         self._smtp_conn = None
         server = config[phantom.APP_JSON_SERVER]
@@ -599,7 +598,7 @@ class SmtpConnector(BaseConnector):
         self._smtp_conn.ehlo()
         # Login
         try:
-            if self._auth_mechanism == "OAuth":
+            if self._auth_mechanism == SMTP_OAUTH_AUTH_TYPE:
                 if config.get(phantom.APP_JSON_USERNAME) is None:
                     return action_result.set_status(
                         phantom.APP_ERROR,
@@ -609,7 +608,7 @@ class SmtpConnector(BaseConnector):
                 auth_string = self._generate_oauth_string(config[phantom.APP_JSON_USERNAME], self._access_token)
                 # self._smtp_conn.ehlo(config.get("client_id"))
                 response_code, response_message = self._smtp_conn.docmd('AUTH', 'XOAUTH2 {}'.format(auth_string))
-            elif self._auth_mechanism == "Basic":
+            elif self._auth_mechanism == SMTP_BASIC_AUTH_TYPE:
                 self.debug_print("username and password used")
                 response_code, response_message = self._smtp_conn.login(config[phantom.APP_JSON_USERNAME], config[phantom.APP_JSON_PASSWORD])
             elif self._auth_mechanism == SMTP_PASSWORD_LESS_AUTH_TYPE:
@@ -945,7 +944,7 @@ class SmtpConnector(BaseConnector):
     def _connect_to_server_helper(self, action_result):
         """Redirect the flow based on auth type"""
 
-        if self._auth_mechanism == "OAuth":
+        if self._auth_mechanism == SMTP_OAUTH_AUTH_TYPE:
             if self._refresh_token and self._access_token == "":
                 self.debug_print("Try to generate token from refresh token")
                 ret_val, message = self._interactive_auth_refresh()
