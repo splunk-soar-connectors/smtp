@@ -15,58 +15,95 @@ This app provides the ability to send email using SMTP
 [comment]: # ""
 [comment]: # "  Licensed under Apache 2.0 (https://www.apache.org/licenses/LICENSE-2.0.txt)"
 [comment]: # ""
-## General Points
+## Backward compatibility
 
--   Points to consider while configuring the asset
+-   In the version 3.0.0, a new configuration parameter “Authentication type” is added. Once the
+    connector is upgraded from any of the previous version to 3.0.0, the default value “Automatic”
+    will be set in “Authentication type” parameter and it will behave as stated below in the
+    document.
+-   After the app is upgraded to v3.0.0, it is suggested to update the value of “Authentication
+    type” parameter to the suitable value by editing and re-saving the asset, in order to ensure
+    test connectivity works as expected
+
+## Authentication Type parameter
+
+-   In the version 3.0.0 of the connector, we have added the new asset configuration parameter
+    “auth_type”. This is an optional parameter and it is used to determine the type of
+    authentication to use for test connectivity.
+
+<!-- -->
+
+-   The “Authentication type” parameter has four options:
+    -   Automatic (Default)
+    -   OAuth/Interactive Authentication
+    -   Basic
+    -   Passwordless
+
+<!-- -->
+
+-   Points to consider while configuring the Authentication Type parameter:
 
       
 
-    -   Connector follow the authentication mechanism as per selected value of **auth_type**
-        parameter. The **auth_type** parameter have below four options.
-    -   Automatic(default): The test connectivity follows the following workflow when auth type is
-        selected as Automatic.
-        -   Firstly, It will Check if all the required values are present for Interactive auth then
-            only try to connect to the server with **Interactive/OAuth** Authentication else jump to
-            Basic authentication.
+    -   The flow of Authentication Type parameter is as follows:
+    -   **Automatic(default)** :
+        -   For automatic auth_type priority of authentication flow is in decreasing order as
+            follows:
+            1.  OAuth
+            2.  Basic
+            3.  Passwordless
+    -   First, the required parameters for the OAuth will be checked, if provided, the connector
+        will try to establish the connection using the OAuth authentication.
+    -   If OAuth authentication fails, the required parameters for the Basic Authentication will be
+        checked, if provided, the connector will try to establish the connection using the Basic
+        Authentication.
+    -   If the Basic authentication also fails, then the connection will be established using the
+        passwordless authentication. If the connection for passwordless also fails, the test
+        connectivity will be considered unsuccessful for Automatic Authentication.
 
-        -   If the Interactive authentication fails then appropriate failure message will be
-            displayed. Next, It will check if all the required values are present for Basic auth
-            then only try to connect to the server with **Basic** Authentication else jump to
-            password less authentication
-
-        -   If Basic auth fails then appropriate failure message will be displayed.And it will try
-            to connect to the server with **Password Less** Authentication
-
-              
-              
-            Basically, the connector tries to connect to the server using OAuth Authentication
-            (Interactive auth) first. If that fails, it tries Basic Authentication, and if that also
-            fails, it tries Password Less authentication.
-
-          
-    -   OAuth authentication: Parameters required for Interactive/OAuth auth will be verified.
-        Connector tries to connect to the provided server with provided values and authenticated.
-        Otherwise test connectivity will fail with appropriate failure message  
-        To use the OAuth mechanism, following parameters are required
+-   **OAuth** :
+    -   If this option is selected, the connector will explicitly use the OAuth mechanism to connect
+        with the given server.
+    -   First the required parameters for the OAuth will be verified, if all the required parameters
+        are entered, the connector will try to establish the connection with the server. If the
+        connection is successful, test connectivity will pass.
+    -   Required parameters for the OAuth Authentication are:
         -   Username
         -   Client ID
         -   Client Secret
         -   OAuth Authorization URL
         -   OAuth Token URL
-    -   Basic authentication: Parameters required for Basic auth will be verified. Connector tries
-        to connect to the provided server with provided values and authenticated. Otherwise test
-        connectivity will fail with appropriate failure message  
-        To use the basic mechanism, following parameters are required
+    -   If any of the above mentioned parameter is missing the test connectivity will fail.
+
+-   **Basic** :
+    -   If this option is selected, the connector will explicitly use the Basic Authentication to
+        connect with the given server.
+    -   First the required parameters for the basic authentication will be verified, if all the
+        required parameters are entered, the connector will try to establish the connection with the
+        server. If the connection is successful, test connectivity will pass.
+    -   Required parameters for the Basic Authentication are:
         -   Username
         -   Password
-    -   Passwordless authentication: All the parameters for Oauth and Basic authentication ignored.
-        Connector tries to connect the provided server and authenticated. Otherwise test
-        connectivity will fail with proper failure message
 
--   The priority of authentication flow is in decreasing order as follows
-    -   OAuth
-    -   Basic
-    -   Passwordless
+        If any of the above mentioned parameter is missing the test connectivity will fail.
+
+-   **Passwordless** :
+    -   If this option is selected, the connector will explicitly use the Passwordless
+        Authentication to connect with the given server.
+
+    -   No parameter is required to establish the connection using the passwordless mechanism. If
+        the provided server is valid SMTP server the test connectivity will pass.
+
+          
+          
+        **Note:** When using the Passwordless Authentication, it may happen that the test
+        connectivity will pass but the send email action may fail, this can happen due to the server
+        expecting user authentication to send the email, and in passwordless we are only validating
+        the server.
+
+  
+
+## General Points
 
 -   Attachments and HTML formatting are supported
 
@@ -85,78 +122,71 @@ This app provides the ability to send email using SMTP
     587, but it's also possible to do start TLS on port 25. So in that case, you may want to select
     StartTLS and specify port 25. The default port numbers are listed in this table:
 
-|         SSL Method    | Port |
-|-----------------------|------|
-|          **None**     | 25   |
-|          **SSL**      | 465  |
-|          **StartTLS** | 587  |
+      
+      
 
+    |         SSL Method    | Port |
+    |-----------------------|------|
+    |          **None**     | 25   |
+    |          **SSL**      | 465  |
+    |          **StartTLS** | 587  |
 
+      
 
-**NOTE :** While running the test connectivity with OAuth, username value is compulsory to pass. The
-username value is required because its used to generate new token, every time test connectivity is
-run.
+    
 
+    
 
+    To obtain the required parameters, please check the document of the service provider
 
-  
+    
 
+    
 
+    Here we have attached links for the most used mail services to find parameters values:
 
+    
 
+    
 
-To obtain the required parameters, please check the document of the service provider
+      
+    
 
+    GOOGLE
 
+    
 
+    
 
+    [Setting up OAuth2.0](https://support.google.com/cloud/answer/6158849?hl=en) [Using OAuth2.0 to
+    access google
+    API's](https://developers.google.com/identity/protocols/oauth2#1.-obtain-oauth-2.0-credentials-from-the-dynamic_data.setvar.console_name-.)
 
-Here we have attached links for the most used mail services to find parameters values:
+    
 
+      
+    
 
+    MICROSOFT
 
+    
 
+    
 
-  
+    [Authentication for
+    SMTP](https://learn.microsoft.com/en-us/exchange/client-developer/legacy-protocols/how-to-authenticate-an-imap-pop-smtp-application-by-using-oauth)
+    [Authorization code flow for
+    OAuth2.0](https://learn.microsoft.com/en-us/azure/active-directory/develop/v2-oauth2-auth-code-flow)
 
+    
 
+    Note: Service providers might have html/css rendering issues.
 
-GOOGLE
+    
 
+    
 
-
-
-
-[Setting up OAuth2.0](https://support.google.com/cloud/answer/6158849?hl=en) [Using OAuth2.0 to
-access google
-API's](https://developers.google.com/identity/protocols/oauth2#1.-obtain-oauth-2.0-credentials-from-the-dynamic_data.setvar.console_name-.)
-
-
-
-  
-
-
-
-MICROSOFT
-
-
-
-
-
-[Authentication for
-SMTP](https://learn.microsoft.com/en-us/exchange/client-developer/legacy-protocols/how-to-authenticate-an-imap-pop-smtp-application-by-using-oauth)
-[Authorization code flow for
-OAuth2.0](https://learn.microsoft.com/en-us/azure/active-directory/develop/v2-oauth2-auth-code-flow)
-
-
-
-Note: Service providers might have html/css rendering issues.
-
-
-
-
-
-  
+      
 
 ## Playbook Backward Compatibility
 
