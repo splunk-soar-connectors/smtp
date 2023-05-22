@@ -4,65 +4,172 @@
   Licensed under Apache 2.0 (https://www.apache.org/licenses/LICENSE-2.0.txt)
 -->
 
-<h2>General Points</h2>
+<h2>
+  Backward compatibility
+</h2>
 <ul>
-  <li>Points to consider while configuring the asset</li>
-  <ul>
-    Connector follow the authentication mechanism as per selected value of <b>auth_type</b> parameter. The <b>auth_type</b> parameter have below four options.
-    <li>
-      Automatic(default): The test connectivity follows the following workflow when auth type is selected as Automatic.
-      <ul>
-        <li>Firstly, It will Check if all the required values are present for Interactive auth then only try to connect to the server with <b>Interactive/OAuth</b> Authentication else jump to Basic authentication.</li>
-        <li>If the Interactive authentication fails then appropriate failure message will be displayed. Next, It will check if all the required values are present for Basic auth then only try to connect to the server with <b>Basic</b> Authentication else jump to password less authentication</li>
-        <li>If Basic auth fails then appropriate failure message will be displayed.And it will try to connect to the server with <b>Password Less</b> Authentication</li>
-        <br>
-        Basically, the connector tries to connect to the server using OAuth Authentication (Interactive auth) first. If that fails, it tries Basic Authentication, and if that also fails, it tries Password Less authentication.
-      </ul>
-      <br>
-    </li>
-    <li>OAuth authentication: Parameters required for Interactive/OAuth auth will be verified. Connector tries to connect to the provided server with provided values and authenticated. Otherwise test connectivity will fail with appropriate failure message<br>
-      To use the OAuth mechanism, following parameters are required
-      <ul>
-        <li>Username</li>
-        <li>Client ID</li>
-        <li>Client Secret</li>
-        <li>OAuth Authorization URL</li>
-        <li>OAuth Token URL</li>
-      </ul>
-    </li>
-    <li>
-      Basic authentication: Parameters required for Basic auth will be verified. Connector tries to connect to the provided server with provided values and authenticated. Otherwise test connectivity will fail with appropriate failure message<br>
-      To use the basic mechanism, following parameters are required
-      <ul>
-        <li>Username</li>
-        <li>Password</li>
-      </ul>
-    </li>
-    <li>
-      Passwordless authentication: All the parameters for Oauth and Basic authentication ignored. Connector tries to connect the provided server and authenticated. Otherwise test connectivity will fail with proper failure message
-  </ul>
+  <li>In the version 3.0.0, a new configuration parameter “Authentication type” is added. Once the connector is upgraded from any of the previous version to 3.0.0, the default value “Automatic” will be set in “Authentication type” parameter and it will behave as stated below in the document.
+  </li>
   <li>
-    The priority of authentication flow is in decreasing order as follows
+    After the app is upgraded to v3.0.0, it is suggested to update the value of “Authentication type” parameter to the suitable value by editing and re-saving the asset, in order to ensure test connectivity works as expected
+  </li>
+</ul>
+<h2>Authentication Type parameter</h2>
+<ul>
+  <li>
+    In the version 3.0.0 of the connector, we have added the new asset configuration parameter “auth_type”. This is an
+    optional parameter and it is used to determine the type of authentication to use for test connectivity.
+  </li>
+</ul>
+<ul>
+  <li>
+    The “Authentication type” parameter has four options:
     <ul>
-      <li>OAuth</li>
-      <li>Basic</li>
-      <li>Passwordless</li>
+      <li>
+        Automatic (Default)
+      </li>
+      <li>
+        OAuth/Interactive Authentication
+      </li>
+      <li>
+        Basic
+      </li>
+      <li>
+        Passwordless
+      </li>
     </ul>
   </li>
-  <li>Attachments and HTML formatting are supported</li>
-  <li>The asset configuration parameter <b>Enable SMTPUTF8 support (Check this only if the SMTP server supports SMTPUTF8
-      option)</b> should be disabled if the SMTP server does not support the SMTPUTF8 configuration option. For the SMTP
-    servers supporting SMTPUTF8, please enable this parameter. If this parameter is kept disabled for the SMTP servers
-    supporting SMTPUTF8, all the actions having Unicode characters in TO, CC or BCC attributes will fail due to encoding
-    issues in Python 3 installation of the app due to a known SDK behavior.</li>
-  <li>The <b>username</b> and <b>password</b> fields for an SMTP Asset are optional because some SMTP servers do not
-    require any authentication to accept mail. The <b>ssl_config</b> and <b>port</b> fields are related, but only the
-    field <b>port</b> is optional. This is because each of the ssl_config options has an associated default port number,
-    and you only have to specify the port if you want to override that default. For example, the default SMTP port for
-    StartTLS-style encryption is 587, but it's also possible to do start TLS on port 25. So in that case, you may want
-    to select StartTLS and specify port 25. The default port numbers are listed in this table:</li>
 </ul>
-
+<ul>
+  <li>Points to consider while configuring the Authentication Type parameter:</li>
+  <ul>
+    The flow of Authentication Type parameter is as follows:
+    <li>
+      <b>Automatic(default)</b>:
+      <ul>
+        <li>
+          For automatic auth_type priority of authentication flow is in decreasing order as follows:
+          <ol>
+            <li>OAuth</li>
+            <li>Basic</li>
+            <li>Passwordless</li>
+          </ol>
+        </li>
+    </li>
+    <li>
+      First, the required parameters for the OAuth will be checked, if provided, the connector will try to establish the
+      connection using the OAuth authentication.
+    </li>
+    <li>
+      If OAuth authentication fails, the required parameters for the Basic Authentication will be checked, if provided,
+      the connector will try to establish the connection using the Basic Authentication.
+    </li>
+    <li>
+      If the Basic authentication also fails, then the connection will be established using the passwordless
+      authentication. If the connection for passwordless also fails, the test connectivity will be considered
+      unsuccessful for Automatic Authentication.
+    </li>
+  </ul>
+  <li>
+    <b>OAuth</b>:
+    <ul>
+      <li>
+        If this option is selected, the connector will explicitly use the OAuth mechanism to connect with the given
+        server.
+      </li>
+      <li>
+        First the required parameters for the OAuth will be verified, if all the required parameters are entered, the
+        connector will try to establish the connection with the server. If the connection is successful, test
+        connectivity will pass.
+      </li>
+      <li>
+        Required parameters for the OAuth Authentication are:
+        <ul>
+          <li>
+            Username
+          </li>
+          <li>
+            Client ID
+          </li>
+          <li>
+            Client Secret
+          </li>
+          <li>
+            OAuth Authorization URL
+          </li>
+          <li>
+            OAuth Token URL
+          </li>
+        </ul>
+      </li>
+      <li>
+        If any of the above mentioned parameter is missing the test connectivity will fail.
+      </li>
+    </ul>
+  </li>
+  <li>
+    <b>Basic</b>:
+    <ul>
+      <li>
+        If this option is selected, the connector will explicitly use the Basic Authentication to connect with the given
+        server.
+      </li>
+      <li>
+        First the required parameters for the basic authentication will be verified, if all the required parameters are
+        entered, the connector will try to establish the connection with the server. If the connection is successful,
+        test connectivity will pass.
+      </li>
+      <li>
+        Required parameters for the Basic Authentication are:
+        <ul>
+          <li>
+            Username
+          </li>
+          <li>
+            Password
+          </li>
+        </ul>
+        If any of the above mentioned parameter is missing the test connectivity will fail.
+      </li>
+    </ul>
+  </li>
+  <li>
+    <b>Passwordless</b>:
+    <ul>
+      <li>
+        If this option is selected, the connector will explicitly use the Passwordless Authentication to connect with
+        the given server.
+      </li>
+      <li>
+        No parameter is required to establish the connection using the passwordless mechanism. If the provided server is
+        valid SMTP server the test connectivity will pass.
+      </li>
+      <br><b>Note:</b> When using the Passwordless Authentication, it may happen that the test connectivity will pass
+      but the send email action may fail, this can happen due to the server expecting user authentication to send the
+      email, and in passwordless we are only validating the server.
+    </ul>
+  </li>
+</ul>
+<br>
+</li>
+</ul>
+<h2>
+  General Points
+</h2>
+<ul>
+<li>Attachments and HTML formatting are supported</li>
+<li>The asset configuration parameter <b>Enable SMTPUTF8 support (Check this only if the SMTP server supports SMTPUTF8
+    option)</b> should be disabled if the SMTP server does not support the SMTPUTF8 configuration option. For the SMTP
+  servers supporting SMTPUTF8, please enable this parameter. If this parameter is kept disabled for the SMTP servers
+  supporting SMTPUTF8, all the actions having Unicode characters in TO, CC or BCC attributes will fail due to encoding
+  issues in Python 3 installation of the app due to a known SDK behavior.</li>
+<li>The <b>username</b> and <b>password</b> fields for an SMTP Asset are optional because some SMTP servers do not
+  require any authentication to accept mail. The <b>ssl_config</b> and <b>port</b> fields are related, but only the
+  field <b>port</b> is optional. This is because each of the ssl_config options has an associated default port number,
+  and you only have to specify the port if you want to override that default. For example, the default SMTP port for
+  StartTLS-style encryption is 587, but it's also possible to do start TLS on port 25. So in that case, you may want
+  to select StartTLS and specify port 25. The default port numbers are listed in this table:</li>
+<br>
 <table>
   <tr class=plain>
     <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SSL Method</th>
@@ -81,11 +188,6 @@
     <td>587</td>
   </tr>
 </table>
-
-<div>
-  <b>NOTE : </b> While running the test connectivity with OAuth, username value is compulsory to pass. The username
-  value is required because its used to generate new token, every time test connectivity is run.
-</div>
 <br>
 <div>
   <div>To obtain the required parameters, please check the document of the service provider</div>
@@ -112,7 +214,7 @@
   </div>
 </div>
 <br>
-
+</ul>
 <h2>Playbook Backward Compatibility</h2>
 <ul>
   <li> The behavior of the following action has been modified. Hence, it is requested to the end-user to please update

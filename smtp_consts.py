@@ -16,8 +16,8 @@ SMTP_SUCC_SMTP_CONNECTIVITY_TO_SERVER = "Connected to server"
 SMTP_SUCC_SMTP_EMAIL_SENT = "Email sent"
 SMTP_ERROR_SMTP_CONNECTIVITY_TO_SERVER = "Connection to server failed"
 SMTP_ERROR_SMTP_SEND_EMAIL = "Email send failed"
-SMTP_SUCC_CONNECTIVITY_TEST = "Test Connectivity Passed"
-SMTP_ERROR_CONNECTIVITY_TEST = "Test Connectivity Failed"
+SMTP_SUCC_CONNECTIVITY_TEST = "Test Connectivity Passed for {} authentication"
+SMTP_ERROR_CONNECTIVITY_TEST = "Test Connectivity Failed for {} authentication"
 SMTP_FAILED_CONNECTIVITY_TEST = " Please run test connectivity first."
 
 SMTP_PROG_UNABLE_TO_ATTACH_FILE = "Unable to attach file {}"
@@ -46,7 +46,7 @@ SSL_CONFIG_SSL = "SSL"
 SSL_CONFIG_STARTTLS = "StartTLS"
 SMTP_ENCODING = "encoding"
 SMTP_ALLOW_SMTPUTF8 = "allow_smtputf8"
-SMTP_PASSWORD_LESS_AUTH_TYPE = "Password less"
+SMTP_PASSWORD_LESS_AUTH_TYPE = "Passwordless"
 SMTP_OAUTH_AUTH_TYPE = "OAuth"
 SMTP_BASIC_AUTH_TYPE = "Basic"
 SMTP_AUTOMATIC_AUTH_TYPE = "Automatic"
@@ -64,8 +64,8 @@ Either the server does not support SMTPUT8 or the 'Enable SMTPUTF8 support' asse
 SMTP_ERROR_TO_FROM_UNAVAILABLE = "Error: Failed to send the email. The {} is unavailable. Please check the action parameters"
 SMTP_ERROR_CONNECTIVITY_TO_SERVER = "Error connecting to server"
 SMTP_ERROR_LOGGING_IN_TO_SERVER = "Error logging in to server"
-SMTP_REQUIRED_PARAM_OAUTH = "ERROR: {0} is a required parameter for OAuth Authentication, please specify one."
-SMTP_REQUIRED_PARAM_BASIC = "ERROR: {0} is a required parameter for Basic Authentication, please specify one."
+SMTP_REQUIRED_PARAM_AUTH = "One or more required parameters for {} authentication is missing."\
+    " Please specify all the required parameters are: {}."
 SMTP_STATE_FILE_CORRUPT_ERROR = "Error occurred while loading the state file due to its unexpected format. " \
     "Resetting the state file with the default format. Please try again."
 
@@ -93,12 +93,12 @@ SMTP_VALID_INT_MESSAGE = "Please provide a valid integer value in the '{param}'"
 SMTP_NON_NEG_INT_MESSAGE = "Please provide a valid non-negative integer value in the '{param}'"
 SMTP_NON_NEG_NON_ZERO_INT_MESSAGE = "Please provide a valid non-zero positive integer value in '{param}'"
 SMTP_AUTH_MESSAGE = "Using {} Authentication"
-SMTP_AUTH_FAILED_ACTION_MESSAGE = "{} failed for {} authorization. {}"
+SMTP_AUTH_FAILED_ACTION_MESSAGE = "{} failed for {} authentication. {}"
 SMTP_ALLOWED_AUTH_TYPES = [
     "Automatic",
     "OAuth",
     "Basic",
-    "Password less"
+    "Passwordless"
 ]
 BLEACH_SAFE_HTML_ATTRIBUTES = {
     "*": [

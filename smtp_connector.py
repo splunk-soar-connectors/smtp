@@ -90,10 +90,10 @@ class SmtpConnector(BaseConnector):
         config = self.get_config()
         self._auth_mechanism = SMTP_OAUTH_AUTH_TYPE
         self.debug_print("Using Interactive Auth")
-        required_params = ["client_id", "client_secret", "auth_url", "token_url"]
+        required_params = ["username", "client_id", "client_secret", "auth_url", "token_url"]
         for key in required_params:
             if not config.get(key):
-                return action_result.set_status(phantom.APP_ERROR, SMTP_REQUIRED_PARAM_OAUTH.format(key))
+                return action_result.set_status(phantom.APP_ERROR, SMTP_REQUIRED_PARAM_AUTH.format(self._auth_mechanism, ", ".join(i for i in required_params)))
 
         self._access_token = self._state.get("oauth_token", {}).get("access_token")
         self._refresh_token = self._state.get("oauth_token", {}).get("refresh_token")
@@ -125,20 +125,20 @@ class SmtpConnector(BaseConnector):
         required_params = ["username", "password"]
         for key in required_params:
             if not config.get(key):
-                return action_result.set_status(phantom.APP_ERROR, SMTP_REQUIRED_PARAM_BASIC.format(key))
+                return action_result.set_status(phantom.APP_ERROR, SMTP_REQUIRED_PARAM_AUTH.format(self._auth_mechanism, ", ".join(i for i in required_params)))
 
         if phantom.is_fail(self._connect_to_server_helper(action_result)):
             return action_result.get_status()
 
         return phantom.APP_SUCCESS
 
-    def _with_password_less_type(self, action_result):
+    def _with_passwordless_type(self, action_result):
         """ Try to connect server with password less auth
         return : APP_SUCCESS/APP_ERROR
         """
 
         self._auth_mechanism = SMTP_PASSWORD_LESS_AUTH_TYPE
-        self.debug_print("Using Password less")
+        self.debug_print("Using Passwordless")
 
         if phantom.is_fail(self._connect_to_server_helper(action_result)):
             return action_result.get_status()
@@ -166,8 +166,8 @@ class SmtpConnector(BaseConnector):
         self.save_progress("You have selected {} Authentication".format(auth_type))
         if auth_type == SMTP_AUTOMATIC_AUTH_TYPE:
             for auth_type in SMTP_ALLOWED_AUTH_TYPES[1:]:
-                auth = eval(f"self._with_{auth_type.lower().replace(' ','_')}_type(action_result)")
                 self.save_progress(SMTP_AUTH_MESSAGE.format(auth_type))
+                auth = eval(f"self._with_{auth_type.lower()}_type(action_result)")
                 if phantom.is_fail(auth):
                     msg = action_result.get_message()
                     self.save_progress(SMTP_AUTH_FAILED_ACTION_MESSAGE.format(action_id, auth_type, msg))
@@ -978,13 +978,13 @@ class SmtpConnector(BaseConnector):
         # Check auth type and connect to the server
         self.debug_print("Checking auth type and connecting to the server")
         if phantom.is_fail(self._process_auth_type(action_result)):
-            action_result.append_to_message(SMTP_ERROR_CONNECTIVITY_TEST)
+            action_result.append_to_message(SMTP_ERROR_CONNECTIVITY_TEST.format(self._auth_mechanism))
             return action_result.get_status()
 
         if self._auth_mechanism == SMTP_PASSWORD_LESS_AUTH_TYPE:
 
-            self.save_progress(SMTP_SUCC_CONNECTIVITY_TEST)
-            return action_result.set_status(phantom.APP_SUCCESS, SMTP_SUCC_CONNECTIVITY_TEST)
+            self.save_progress(SMTP_SUCC_CONNECTIVITY_TEST.format(self._auth_mechanism))
+            return action_result.set_status(phantom.APP_SUCCESS, SMTP_SUCC_CONNECTIVITY_TEST.format(self._auth_mechanism))
 
         param = {
             SMTP_JSON_TO: (config.get('sender_address') or config[phantom.APP_JSON_USERNAME]),
@@ -998,13 +998,13 @@ class SmtpConnector(BaseConnector):
         if (phantom.is_fail(self._handle_send_email(param, action_result))):
             self.debug_print("connect failed")
             self.save_progress("Error message: {}".format(action_result.get_message()))
-            return action_result.set_status(phantom.APP_ERROR, SMTP_ERROR_CONNECTIVITY_TEST)
+            return action_result.set_status(phantom.APP_ERROR, SMTP_ERROR_CONNECTIVITY_TEST.format(self._auth_mechanism))
 
         self.save_progress(SMTP_DONE)
 
         self.debug_print("connect passed")
-        self.save_progress(SMTP_SUCC_CONNECTIVITY_TEST)
-        return action_result.set_status(phantom.APP_SUCCESS, SMTP_SUCC_CONNECTIVITY_TEST)
+        self.save_progress(SMTP_SUCC_CONNECTIVITY_TEST.format(self._auth_mechanism))
+        return action_result.set_status(phantom.APP_SUCCESS, SMTP_SUCC_CONNECTIVITY_TEST.format(self._auth_mechanism))
 
     def html_to_text(self, html):
         soup = BeautifulSoup(html, "html.parser")
