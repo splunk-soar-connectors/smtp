@@ -8,10 +8,13 @@
   Backward compatibility
 </h2>
 <ul>
-  <li>In the version 3.0.0, a new configuration parameter “Authentication type” is added. Once the connector is upgraded from any of the previous version to 3.0.0, the default value “Automatic” will be set in “Authentication type” parameter and it will behave as stated below in the document.
+  <li>In the version 3.0.0, a new configuration parameter “Authentication type” is added. Once the connector is upgraded
+    from any of the previous version to 3.0.0, the default value “Automatic” will be set in “Authentication type”
+    parameter and it will behave as stated below in the document.
   </li>
   <li>
-    After the app is upgraded to v3.0.0, it is suggested to update the value of “Authentication type” parameter to the suitable value by editing and re-saving the asset, in order to ensure test connectivity works as expected
+    After the app is upgraded to v3.0.0, it is suggested to update the value of “Authentication type” parameter to the
+    suitable value by editing and re-saving the asset, in order to ensure test connectivity works as expected
   </li>
 </ul>
 <h2>Authentication Type parameter</h2>
@@ -25,51 +28,42 @@
   <li>
     The “Authentication type” parameter has four options:
     <ul>
-      <li>
-        Automatic (Default)
-      </li>
-      <li>
-        OAuth/Interactive Authentication
-      </li>
-      <li>
-        Basic
-      </li>
-      <li>
-        Passwordless
-      </li>
+      <li>Automatic (Default)</li>
+      <li>OAuth/Interactive Authentication</li>
+      <li>Basic</li>
+      <li>Passwordless</li>
     </ul>
   </li>
 </ul>
 <ul>
-  <li>Points to consider while configuring the Authentication Type parameter:</li>
-  <ul>
-    The flow of Authentication Type parameter is as follows:
-    <li>
-      <b>Automatic(default)</b>:
-      <ul>
-        <li>
-          For automatic auth_type priority of authentication flow is in decreasing order as follows:
-          <ol>
-            <li>OAuth</li>
-            <li>Basic</li>
-            <li>Passwordless</li>
-          </ol>
-        </li>
-    </li>
-    <li>
-      First, the required parameters for the OAuth will be checked, if provided, the connector will try to establish the
-      connection using the OAuth authentication.
-    </li>
-    <li>
-      If OAuth authentication fails, the required parameters for the Basic Authentication will be checked, if provided,
-      the connector will try to establish the connection using the Basic Authentication.
-    </li>
-    <li>
-      If the Basic authentication also fails, then the connection will be established using the passwordless
-      authentication. If the connection for passwordless also fails, the test connectivity will be considered
-      unsuccessful for Automatic Authentication.
-    </li>
-  </ul>
+  <li>
+    <b>Automatic(default)</b>:
+    <ul>
+      <li>
+        For automatic auth_type priority of authentication flow is in decreasing order as follows:
+        <ol>
+          <li>OAuth</li>
+          <li>Basic</li>
+          <li>Passwordless</li>
+        </ol>
+      </li>
+      <li>
+        First, the required parameters for the OAuth will be checked, if provided, the connector will try to establish
+        the
+        connection using the OAuth authentication.
+      </li>
+      <li>
+        If OAuth authentication fails, the required parameters for the Basic Authentication will be checked, if
+        provided,
+        the connector will try to establish the connection using the Basic Authentication.
+      </li>
+      <li>
+        If the Basic authentication also fails, then the connection will be established using the passwordless
+        authentication. If the connection for passwordless also fails, the test connectivity will be considered
+        unsuccessful for Automatic Authentication.
+      </li>
+    </ul>
+  </li>
   <li>
     <b>OAuth</b>:
     <ul>
@@ -157,63 +151,63 @@
   General Points
 </h2>
 <ul>
-<li>Attachments and HTML formatting are supported</li>
-<li>The asset configuration parameter <b>Enable SMTPUTF8 support (Check this only if the SMTP server supports SMTPUTF8
-    option)</b> should be disabled if the SMTP server does not support the SMTPUTF8 configuration option. For the SMTP
-  servers supporting SMTPUTF8, please enable this parameter. If this parameter is kept disabled for the SMTP servers
-  supporting SMTPUTF8, all the actions having Unicode characters in TO, CC or BCC attributes will fail due to encoding
-  issues in Python 3 installation of the app due to a known SDK behavior.</li>
-<li>The <b>username</b> and <b>password</b> fields for an SMTP Asset are optional because some SMTP servers do not
-  require any authentication to accept mail. The <b>ssl_config</b> and <b>port</b> fields are related, but only the
-  field <b>port</b> is optional. This is because each of the ssl_config options has an associated default port number,
-  and you only have to specify the port if you want to override that default. For example, the default SMTP port for
-  StartTLS-style encryption is 587, but it's also possible to do start TLS on port 25. So in that case, you may want
-  to select StartTLS and specify port 25. The default port numbers are listed in this table:</li>
-<br>
-<table>
-  <tr class=plain>
-    <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SSL Method</th>
-    <th>Port</th>
-  </tr>
-  <tr>
-    <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>None</b></td>
-    <td>25</td>
-  </tr>
-  <tr>
-    <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>SSL</b></td>
-    <td>465</td>
-  </tr>
-  <tr>
-    <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>StartTLS</b></td>
-    <td>587</td>
-  </tr>
-</table>
-<br>
-<div>
-  <div>To obtain the required parameters, please check the document of the service provider</div>
-  <div>Here we have attached links for the most used mail services to find parameters values:</div>
+  <li>Attachments and HTML formatting are supported</li>
+  <li>The asset configuration parameter <b>Enable SMTPUTF8 support (Check this only if the SMTP server supports SMTPUTF8
+      option)</b> should be disabled if the SMTP server does not support the SMTPUTF8 configuration option. For the SMTP
+    servers supporting SMTPUTF8, please enable this parameter. If this parameter is kept disabled for the SMTP servers
+    supporting SMTPUTF8, all the actions having Unicode characters in TO, CC or BCC attributes will fail due to encoding
+    issues in Python 3 installation of the app due to a known SDK behavior.</li>
+  <li>The <b>username</b> and <b>password</b> fields for an SMTP Asset are optional because some SMTP servers do not
+    require any authentication to accept mail. The <b>ssl_config</b> and <b>port</b> fields are related, but only the
+    field <b>port</b> is optional. This is because each of the ssl_config options has an associated default port number,
+    and you only have to specify the port if you want to override that default. For example, the default SMTP port for
+    StartTLS-style encryption is 587, but it's also possible to do start TLS on port 25. So in that case, you may want
+    to select StartTLS and specify port 25. The default port numbers are listed in this table:</li>
+  <br>
+  <table>
+    <tr class=plain>
+      <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SSL Method</th>
+      <th>Port</th>
+    </tr>
+    <tr>
+      <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>None</b></td>
+      <td>25</td>
+    </tr>
+    <tr>
+      <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>SSL</b></td>
+      <td>465</td>
+    </tr>
+    <tr>
+      <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>StartTLS</b></td>
+      <td>587</td>
+    </tr>
+  </table>
+  <br>
   <div>
-    <br>
-    <div>GOOGLE</div>
+    <div>To obtain the required parameters, please check the document of the service provider</div>
+    <div>Here we have attached links for the most used mail services to find parameters values:</div>
     <div>
-      <a href="https://support.google.com/cloud/answer/6158849?hl=en">Setting up OAuth2.0</a>
-      <a
-        href="https://developers.google.com/identity/protocols/oauth2#1.-obtain-oauth-2.0-credentials-from-the-dynamic_data.setvar.console_name-.">Using
-        OAuth2.0 to access google API's</a>
+      <br>
+      <div>GOOGLE</div>
+      <div>
+        <a href="https://support.google.com/cloud/answer/6158849?hl=en">Setting up OAuth2.0</a>
+        <a
+          href="https://developers.google.com/identity/protocols/oauth2#1.-obtain-oauth-2.0-credentials-from-the-dynamic_data.setvar.console_name-.">Using
+          OAuth2.0 to access google API's</a>
+      </div>
+      <br>
+      <div>MICROSOFT</div>
+      <div>
+        <a
+          href="https://learn.microsoft.com/en-us/exchange/client-developer/legacy-protocols/how-to-authenticate-an-imap-pop-smtp-application-by-using-oauth">Authentication
+          for SMTP</a>
+        <a href="https://learn.microsoft.com/en-us/azure/active-directory/develop/v2-oauth2-auth-code-flow">Authorization
+          code flow for OAuth2.0</a>
+      </div>
+      Note: Service providers might have html/css rendering issues.
     </div>
-    <br>
-    <div>MICROSOFT</div>
-    <div>
-      <a
-        href="https://learn.microsoft.com/en-us/exchange/client-developer/legacy-protocols/how-to-authenticate-an-imap-pop-smtp-application-by-using-oauth">Authentication
-        for SMTP</a>
-      <a href="https://learn.microsoft.com/en-us/azure/active-directory/develop/v2-oauth2-auth-code-flow">Authorization
-        code flow for OAuth2.0</a>
-    </div>
-    Note: Service providers might have html/css rendering issues.
   </div>
-</div>
-<br>
+  <br>
 </ul>
 <h2>Playbook Backward Compatibility</h2>
 <ul>

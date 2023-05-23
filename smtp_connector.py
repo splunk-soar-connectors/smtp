@@ -93,7 +93,8 @@ class SmtpConnector(BaseConnector):
         required_params = ["username", "client_id", "client_secret", "auth_url", "token_url"]
         for key in required_params:
             if not config.get(key):
-                return action_result.set_status(phantom.APP_ERROR, SMTP_REQUIRED_PARAM_AUTH.format(self._auth_mechanism, ", ".join(i for i in required_params)))
+                return action_result.set_status(phantom.APP_ERROR, SMTP_REQUIRED_PARAM_AUTH.format(
+                    self._auth_mechanism, self._auth_mechanism, ", ".join(i for i in required_params)))
 
         self._access_token = self._state.get("oauth_token", {}).get("access_token")
         self._refresh_token = self._state.get("oauth_token", {}).get("refresh_token")
@@ -125,7 +126,8 @@ class SmtpConnector(BaseConnector):
         required_params = ["username", "password"]
         for key in required_params:
             if not config.get(key):
-                return action_result.set_status(phantom.APP_ERROR, SMTP_REQUIRED_PARAM_AUTH.format(self._auth_mechanism, ", ".join(i for i in required_params)))
+                return action_result.set_status(phantom.APP_ERROR, SMTP_REQUIRED_PARAM_AUTH.format(
+                    self._auth_mechanism, self._auth_mechanism, ", ".join(i for i in required_params)))
 
         if phantom.is_fail(self._connect_to_server_helper(action_result)):
             return action_result.get_status()
@@ -183,7 +185,7 @@ class SmtpConnector(BaseConnector):
 
         # Check specific auth type as per input given by user in auth_type parameter
         self.save_progress(SMTP_AUTH_MESSAGE.format(auth_type))
-        auth = eval(f"self._with_{auth_type.lower().replace(' ','_')}_type(action_result)")
+        auth = eval(f"self._with_{auth_type.lower()}_type(action_result)")
         if phantom.is_fail(auth):
             return action_result.get_status()
 
