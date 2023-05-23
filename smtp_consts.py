@@ -65,7 +65,7 @@ SMTP_ERROR_TO_FROM_UNAVAILABLE = "Error: Failed to send the email. The {} is una
 SMTP_ERROR_CONNECTIVITY_TO_SERVER = "Error connecting to server"
 SMTP_ERROR_LOGGING_IN_TO_SERVER = "Error logging in to server"
 SMTP_REQUIRED_PARAM_AUTH = "One or more required parameters for {} authentication is missing."\
-    " The required parameters for {} authentication mechanism are: {}."
+    " The required parameters for {} authentication are: {}"
 SMTP_STATE_FILE_CORRUPT_ERROR = "Error occurred while loading the state file due to its unexpected format. " \
     "Resetting the state file with the default format. Please try again."
 
