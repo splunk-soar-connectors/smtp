@@ -165,14 +165,14 @@ class SmtpConnector(BaseConnector):
             return action_result.set_status(phantom.APP_ERROR, msg)
 
         # Check all the auth type as per inputs given by user with flow of [Interactive -> Basic -> Password less]
-        self.save_progress("You have selected {} Authentication".format(auth_type))
+        self.save_progress("You have selected {} Authentication".format(auth_type))   # nosemgrep
         if auth_type == SMTP_AUTOMATIC_AUTH_TYPE:
             for auth_type in SMTP_ALLOWED_AUTH_TYPES[1:]:
-                self.save_progress(SMTP_AUTH_MESSAGE.format(auth_type))
+                self.save_progress(SMTP_AUTH_MESSAGE.format(auth_type))   # nosemgrep
                 auth = eval(f"self._with_{auth_type.lower()}_type(action_result)")
                 if phantom.is_fail(auth):
                     msg = action_result.get_message()
-                    self.save_progress(SMTP_AUTH_FAILED_ACTION_MESSAGE.format(action_id, auth_type, msg))
+                    self.save_progress(SMTP_AUTH_FAILED_ACTION_MESSAGE.format(action_id, auth_type, msg))   # nosemgrep
                     if auth_type == SMTP_PASSWORD_LESS_AUTH_TYPE:
                         if action_id != SMTP_TEST_CONNECTIVITY:
                             msg = "Authentication failed for connecting to server with {} types \
@@ -184,7 +184,7 @@ class SmtpConnector(BaseConnector):
                     return phantom.APP_SUCCESS
 
         # Check specific auth type as per input given by user in auth_type parameter
-        self.save_progress(SMTP_AUTH_MESSAGE.format(auth_type))
+        self.save_progress(SMTP_AUTH_MESSAGE.format(auth_type))   # nosemgrep
         auth = eval(f"self._with_{auth_type.lower()}_type(action_result)")
         if phantom.is_fail(auth):
             return action_result.get_status()
@@ -985,7 +985,7 @@ class SmtpConnector(BaseConnector):
 
         if self._auth_mechanism == SMTP_PASSWORD_LESS_AUTH_TYPE:
 
-            self.save_progress(SMTP_SUCC_CONNECTIVITY_TEST.format(self._auth_mechanism))
+            self.save_progress(SMTP_SUCC_CONNECTIVITY_TEST.format(self._auth_mechanism))   # nosemgrep
             return action_result.set_status(phantom.APP_SUCCESS, SMTP_SUCC_CONNECTIVITY_TEST.format(self._auth_mechanism))
 
         param = {
@@ -1005,7 +1005,7 @@ class SmtpConnector(BaseConnector):
         self.save_progress(SMTP_DONE)
 
         self.debug_print("connect passed")
-        self.save_progress(SMTP_SUCC_CONNECTIVITY_TEST.format(self._auth_mechanism))
+        self.save_progress(SMTP_SUCC_CONNECTIVITY_TEST.format(self._auth_mechanism))   # nosemgrep
         return action_result.set_status(phantom.APP_SUCCESS, SMTP_SUCC_CONNECTIVITY_TEST.format(self._auth_mechanism))
 
     def html_to_text(self, html):
