@@ -41,17 +41,11 @@ This app provides the ability to send email using SMTP
 
 <!-- -->
 
--   Points to consider while configuring the Authentication Type parameter:
-
-      
-
-    -   The flow of Authentication Type parameter is as follows:
-    -   **Automatic(default)** :
-        -   For automatic auth_type priority of authentication flow is in decreasing order as
-            follows:
-            1.  OAuth
-            2.  Basic
-            3.  Passwordless
+-   **Automatic(default)** :
+    -   For automatic auth_type priority of authentication flow is in decreasing order as follows:
+        1.  OAuth
+        2.  Basic
+        3.  Passwordless
     -   First, the required parameters for the OAuth will be checked, if provided, the connector
         will try to establish the connection using the OAuth authentication.
     -   If OAuth authentication fails, the required parameters for the Basic Authentication will be
@@ -60,7 +54,6 @@ This app provides the ability to send email using SMTP
     -   If the Basic authentication also fails, then the connection will be established using the
         passwordless authentication. If the connection for passwordless also fails, the test
         connectivity will be considered unsuccessful for Automatic Authentication.
-
 -   **OAuth** :
     -   If this option is selected, the connector will explicitly use the OAuth mechanism to connect
         with the given server.
@@ -74,7 +67,6 @@ This app provides the ability to send email using SMTP
         -   OAuth Authorization URL
         -   OAuth Token URL
     -   If any of the above mentioned parameter is missing the test connectivity will fail.
-
 -   **Basic** :
     -   If this option is selected, the connector will explicitly use the Basic Authentication to
         connect with the given server.
@@ -86,7 +78,6 @@ This app provides the ability to send email using SMTP
         -   Password
 
         If any of the above mentioned parameter is missing the test connectivity will fail.
-
 -   **Passwordless** :
     -   If this option is selected, the connector will explicitly use the Passwordless
         Authentication to connect with the given server.
