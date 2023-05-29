@@ -2,4 +2,4 @@ beautifulsoup4==4.9.1
 bleach==6.0.0
 bleach-allowlist==1.0.3
 bleach[css]
-requests==2.25.0
+requests==2.31.0
