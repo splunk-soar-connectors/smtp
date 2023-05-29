@@ -34,14 +34,14 @@ This app provides the ability to send email using SMTP
 <!-- -->
 
 -   The “Authentication type” parameter has four options:
-    -   Automatic (Default)
+    -   Automatic (default)
     -   OAuth/Interactive Authentication
     -   Basic
     -   Passwordless
 
 <!-- -->
 
--   **Automatic(default)** :
+-   **Automatic (default)** :
     -   For automatic auth_type priority of authentication flow is in decreasing order as follows:
         1.  OAuth
         2.  Basic
