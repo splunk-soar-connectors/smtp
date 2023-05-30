@@ -247,15 +247,15 @@ VARIABLE | REQUIRED | TYPE | DESCRIPTION
 -------- | -------- | ---- | -----------
 **server** |  required  | string | Server IP/Hostname
 **port** |  optional  | numeric | Port
-**auth_type** |  optional  | string | Auth Type
+**auth_type** |  optional  | string | Authentication type to use for connectivity
 **ph_0** |  optional  | ph | Place holder
 **username** |  optional  | string | Username (or email address)
 **password** |  optional  | password | Password (For Basic Auth)
 **client_id** |  optional  | string | OAuth Client ID (For OAuth)
 **client_secret** |  optional  | password | OAuth Client Secret (For OAuth)
-**auth_url** |  optional  | string | OAuth Authorization URL
-**token_url** |  optional  | string | OAuth Token URL
-**scopes** |  optional  | string | OAuth API Scope (space-separated)
+**auth_url** |  optional  | string | OAuth Authorization URL (For OAuth)
+**token_url** |  optional  | string | OAuth Token URL (For OAuth)
+**scopes** |  optional  | string | OAuth API Scope (space-separated)(For OAuth)
 **sender_address** |  optional  | string | Sender Address
 **ssl_config** |  required  | string | SSL Method
 **allow_smtputf8** |  optional  | boolean | Enable SMTPUTF8 support (Check this only if the SMTP server supports SMTPUTF8 option)
