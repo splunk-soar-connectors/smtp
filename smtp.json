@@ -36,7 +36,7 @@
         "auth_type": {
             "data_type": "string",
             "order": 2,
-            "description": "Auth Type",
+            "description": "Authentication type to use for connectivity",
             "default": "Automatic",
             "value_list": [
                 "Automatic",
@@ -72,16 +72,16 @@
         },
         "auth_url": {
             "data_type": "string",
-            "description": "OAuth Authorization URL",
+            "description": "OAuth Authorization URL (For OAuth)",
             "order": 8
         },
         "token_url": {
             "data_type": "string",
-            "description": "OAuth Token URL",
+            "description": "OAuth Token URL (For OAuth)",
             "order": 9
         },
         "scopes": {
-            "description": "OAuth API Scope (space-separated)",
+            "description": "OAuth API Scope (space-separated)(For OAuth)",
             "data_type": "string",
             "order": 10
         },
