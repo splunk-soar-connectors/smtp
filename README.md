@@ -126,6 +126,25 @@ This app provides the ability to send email using SMTP
 
     
 
+    -   Splunk SOAR (Cloud) has restrictions for the use of TCP port 25
+        <div style="margin-left: 2em">
+
+        Splunk SOAR (Cloud) does not provide access for outbound connections nor exceptions for TCP
+        port 25. The nature of the content and capabilities of the SOAR platform allow an unsecured
+        connection to deliver email messages of a sensitive nature without a way to ensure a proper
+        level of encryption or acceptable recovery processes. Splunk SOAR (On-premises) does and
+        will provide outbound access for cloud to cloud connections for appropriate SMTPS ports like
+        587, 465, or a customized port. Customers who still require TCP port 25 SMTP support can do
+        so within their internal environments through the Automation Broker.
+
+        
+
+    
+
+      
+
+    
+
     
 
     To obtain the required parameters, please check the document of the service provider
