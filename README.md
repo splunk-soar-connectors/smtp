@@ -124,75 +124,70 @@ This app provides the ability to send email using SMTP
 
       
 
+-   Splunk SOAR (Cloud) does not provide access to TCP port 25 \[
+    [link](https://docs.splunk.com/Documentation/SOAR/current/ServiceDescription/SplunkSOARService#Differences_Between_Splunk_SOAR_.28Cloud.29_and_Splunk_SOAR)
+    \]. However, Splunk SOAR (On-premises) does and will provide outbound access for cloud-to-cloud
+    connections for appropriate SMTPS ports like 587, 465, or a customized port. If there is a
+    requirement to access TCP port 25 SMTP on Splunk SOAR (Cloud) then it can be achieved within the
+    internal environments through the Automation Broker.
+
+      
+      
+
     
 
-    -   Splunk SOAR (Cloud) does not provide access to TCP port 25 \[
-        [link](https://docs.splunk.com/Documentation/SOAR/current/ServiceDescription/SplunkSOARService#Differences_Between_Splunk_SOAR_.28Cloud.29_and_Splunk_SOAR)
-        \]. However, Splunk SOAR (On-premises) does and will provide outbound access for
-        cloud-to-cloud connections for appropriate SMTPS ports like 587, 465, or a customized port.
-        If there is a requirement to access TCP port 25 SMTP on Splunk SOAR (Cloud) then it can be
-        achieved within the internal environments through the Automation Broker.
+    
+
+    To obtain the required parameters, please check the document of the service provider
 
     
 
-  
+    
 
+    Here we have attached links for the most used mail services to find parameters values:
 
+    
 
+    
 
+      
+    
 
-To obtain the required parameters, please check the document of the service provider
+    GOOGLE
 
+    
 
+    
 
+    [Setting up OAuth2.0](https://support.google.com/cloud/answer/6158849?hl=en) [Using OAuth2.0 to
+    access google
+    API's](https://developers.google.com/identity/protocols/oauth2#1.-obtain-oauth-2.0-credentials-from-the-dynamic_data.setvar.console_name-.)
 
+    
 
-Here we have attached links for the most used mail services to find parameters values:
+      
+    
 
+    MICROSOFT
 
+    
 
+    
 
+    [Authentication for
+    SMTP](https://learn.microsoft.com/en-us/exchange/client-developer/legacy-protocols/how-to-authenticate-an-imap-pop-smtp-application-by-using-oauth)
+    [Authorization code flow for
+    OAuth2.0](https://learn.microsoft.com/en-us/azure/active-directory/develop/v2-oauth2-auth-code-flow)
 
-  
+    
 
+    Note: Service providers might have html/css rendering issues.
 
+    
 
-GOOGLE
+    
 
-
-
-
-
-[Setting up OAuth2.0](https://support.google.com/cloud/answer/6158849?hl=en) [Using OAuth2.0 to
-access google
-API's](https://developers.google.com/identity/protocols/oauth2#1.-obtain-oauth-2.0-credentials-from-the-dynamic_data.setvar.console_name-.)
-
-
-
-  
-
-
-
-MICROSOFT
-
-
-
-
-
-[Authentication for
-SMTP](https://learn.microsoft.com/en-us/exchange/client-developer/legacy-protocols/how-to-authenticate-an-imap-pop-smtp-application-by-using-oauth)
-[Authorization code flow for
-OAuth2.0](https://learn.microsoft.com/en-us/azure/active-directory/develop/v2-oauth2-auth-code-flow)
-
-
-
-Note: Service providers might have html/css rendering issues.
-
-
-
-
-
-  
+      
 
 ## Playbook Backward Compatibility
 
