@@ -185,9 +185,7 @@
   <br>
   <div>
   <li>
-    Splunk SOAR (Cloud) has restrictions for the use of TCP port 25
-    <ul>
-      Splunk SOAR (Cloud) does not provide access for outbound connections nor exceptions for TCP port 25. The nature of the content and capabilities of the SOAR platform allow an unsecured connection to deliver email messages of a sensitive nature without a way to ensure a proper level of encryption or acceptable recovery processes. Splunk SOAR (On-premises) does and will provide outbound access for cloud to cloud connections for appropriate SMTPS ports like 587, 465, or a customized port. Customers who still require TCP port 25 SMTP support can do so within their internal environments through the Automation Broker.
+    Splunk SOAR (Cloud) does not provide access to TCP port 25 [<a  href="https://docs.splunk.com/Documentation/SOAR/current/ServiceDescription/SplunkSOARService#Differences_Between_Splunk_SOAR_.28Cloud.29_and_Splunk_SOAR">link</a>]. However, Splunk SOAR (On-premises) does and will provide outbound access for cloud-to-cloud connections for appropriate SMTPS ports like 587, 465, or a customized port. If there is a requirement to access TCP port 25 SMTP on Splunk SOAR (Cloud) then it can be achieved within the internal environments through the Automation Broker.
     </ul>
   </li>
   </div>
