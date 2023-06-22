@@ -157,7 +157,11 @@
     servers supporting SMTPUTF8, please enable this parameter. If this parameter is kept disabled for the SMTP servers
     supporting SMTPUTF8, all the actions having Unicode characters in TO, CC or BCC attributes will fail due to encoding
     issues in Python 3 installation of the app due to a known SDK behavior.</li>
-  <li>The <b>username</b> and <b>password</b> fields for an SMTP Asset are optional because some SMTP servers do not
+  <li>
+    The Gmail server's policy set is to use the username associated with the login credentials as the 'from' address by default. To send the email from a different address follow the given <a href="https://support.google.com/mail/answer/22370?hl=en&authuser=1#zippy=">steps</a> to configure the email address on Gmail server.
+    <br>Note - Uncheck 'Treat as an alias' while adding email address for sending email from another email address.
+  </li>
+    <li>The <b>username</b> and <b>password</b> fields for an SMTP Asset are optional because some SMTP servers do not
     require any authentication to accept mail. The <b>ssl_config</b> and <b>port</b> fields are related, but only the
     field <b>port</b> is optional. This is because each of the ssl_config options has an associated default port number,
     and you only have to specify the port if you want to override that default. For example, the default SMTP port for
