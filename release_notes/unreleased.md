@@ -1,2 +1,1 @@
 **Unreleased**
-* Added 'auth_type' configuration parameter to select authentication method [PAPP-30384]
