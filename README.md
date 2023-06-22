@@ -105,6 +105,13 @@ This app provides the ability to send email using SMTP
     Unicode characters in TO, CC or BCC attributes will fail due to encoding issues in Python 3
     installation of the app due to a known SDK behavior.
 
+-   The Gmail server's policy set is to use the username associated with the login credentials as
+    the 'from' address by default. To send the email from a different address follow the given
+    [steps](https://support.google.com/mail/answer/22370?hl=en&authuser=1#zippy=) to configure the
+    email address on Gmail server.  
+    Note - Uncheck 'Treat as an alias' while adding email address for sending email from another
+    email address.
+
 -   The **username** and **password** fields for an SMTP Asset are optional because some SMTP
     servers do not require any authentication to accept mail. The **ssl_config** and **port** fields
     are related, but only the field **port** is optional. This is because each of the ssl_config
