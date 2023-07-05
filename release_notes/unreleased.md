@@ -1,2 +1,2 @@
 **Unreleased**
-Bug fix related to inline attachment [PAPP-30315]
+* Bug fix related to inline attachment [PAPP-30315]
