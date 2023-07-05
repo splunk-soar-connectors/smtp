@@ -2,11 +2,11 @@
 # SMTP
 
 Publisher: Splunk  
-Connector Version: 2.5.0  
+Connector Version: 3.0.0  
 Product Vendor: Generic  
 Product Name: SMTP  
 Product Version Supported (regex): ".\*"  
-Minimum Product Version: 5.5.0  
+Minimum Product Version: 6.0.0  
 
 This app provides the ability to send email using SMTP
 
@@ -15,28 +15,86 @@ This app provides the ability to send email using SMTP
 [comment]: # ""
 [comment]: # "  Licensed under Apache 2.0 (https://www.apache.org/licenses/LICENSE-2.0.txt)"
 [comment]: # ""
-## General Points
+## Backward compatibility
 
--   Points to consider while configuring the asset
+-   In the version 3.0.0, a new configuration parameter “Authentication type” is added. Once the
+    connector is upgraded from any of the previous version to 3.0.0, the default value “Automatic”
+    will be set in “Authentication type” parameter and it will behave as stated below in the
+    document.
+-   After the app is upgraded to v3.0.0, it is suggested to update the value of “Authentication
+    type” parameter to the suitable value by editing and re-saving the asset, in order to ensure
+    test connectivity works as expected
 
-      
+## Authentication Type parameter
 
-    -   OAuth authentication: To use the OAuth mechanism, following parameters are required
+-   In the version 3.0.0 of the connector, we have added the new asset configuration parameter
+    “auth_type”. This is an optional parameter and it is used to determine the type of
+    authentication to use for test connectivity.
+
+<!-- -->
+
+-   The “Authentication type” parameter has four options:
+    -   Automatic (default)
+    -   OAuth/Interactive Authentication
+    -   Basic
+    -   Passwordless
+
+<!-- -->
+
+-   **Automatic (default)** :
+    -   For automatic auth_type priority of authentication flow is in decreasing order as follows:
+        1.  OAuth
+        2.  Basic
+        3.  Passwordless
+    -   First, the required parameters for the OAuth will be checked, if provided, the connector
+        will try to establish the connection using the OAuth authentication.
+    -   If OAuth authentication fails, the required parameters for the Basic Authentication will be
+        checked, if provided, the connector will try to establish the connection using the Basic
+        Authentication.
+    -   If the Basic authentication also fails, then the connection will be established using the
+        passwordless authentication. If the connection for passwordless also fails, the test
+        connectivity will be considered unsuccessful for Automatic Authentication.
+-   **OAuth** :
+    -   If this option is selected, the connector will explicitly use the OAuth mechanism to connect
+        with the given server.
+    -   First the required parameters for the OAuth will be verified, if all the required parameters
+        are entered, the connector will try to establish the connection with the server. If the
+        connection is successful, test connectivity will pass.
+    -   Required parameters for the OAuth Authentication are:
         -   Username
         -   Client ID
         -   Client Secret
         -   OAuth Authorization URL
         -   OAuth Token URL
-    -   Basic authentication: If only username and password are provided the app will use basic
-        authentication
-    -   Passwordless authentication: If the SMTP sever supports passwordless authentication and the
-        user doesn't provide required parameters for Oauth and Basic authentication, it will go for
-        Passwordless authentication
+    -   If any of the above mentioned parameter is missing the test connectivity will fail.
+-   **Basic** :
+    -   If this option is selected, the connector will explicitly use the Basic Authentication to
+        connect with the given server.
+    -   First the required parameters for the basic authentication will be verified, if all the
+        required parameters are entered, the connector will try to establish the connection with the
+        server. If the connection is successful, test connectivity will pass.
+    -   Required parameters for the Basic Authentication are:
+        -   Username
+        -   Password
 
--   The priority of authentication flow is in decreasing order as follows
-    -   OAuth
-    -   Basic
-    -   Passwordless
+        If any of the above mentioned parameter is missing the test connectivity will fail.
+-   **Passwordless** :
+    -   If this option is selected, the connector will explicitly use the Passwordless
+        Authentication to connect with the given server.
+
+    -   No parameter is required to establish the connection using the passwordless mechanism. If
+        the provided server is valid SMTP server the test connectivity will pass.
+
+          
+          
+        **Note:** When using the Passwordless Authentication, it may happen that the test
+        connectivity will pass but the send email action may fail, this can happen due to the server
+        expecting user authentication to send the email, and in passwordless we are only validating
+        the server.
+
+  
+
+## General Points
 
 -   Attachments and HTML formatting are supported
 
@@ -47,6 +105,13 @@ This app provides the ability to send email using SMTP
     Unicode characters in TO, CC or BCC attributes will fail due to encoding issues in Python 3
     installation of the app due to a known SDK behavior.
 
+-   The Gmail server's policy set is to use the username associated with the login credentials as
+    the 'from' address by default. To send the email from a different address follow the given
+    [steps](https://support.google.com/mail/answer/22370?hl=en&authuser=1#zippy=) to configure the
+    email address on Gmail server.  
+    Note - Uncheck 'Treat as an alias' while adding email address for sending email from another
+    email address.
+
 -   The **username** and **password** fields for an SMTP Asset are optional because some SMTP
     servers do not require any authentication to accept mail. The **ssl_config** and **port** fields
     are related, but only the field **port** is optional. This is because each of the ssl_config
@@ -55,78 +120,81 @@ This app provides the ability to send email using SMTP
     587, but it's also possible to do start TLS on port 25. So in that case, you may want to select
     StartTLS and specify port 25. The default port numbers are listed in this table:
 
-|         SSL Method    | Port |
-|-----------------------|------|
-|          **None**     | 25   |
-|          **SSL**      | 465  |
-|          **StartTLS** | 587  |
+      
+      
 
+    |         SSL Method    | Port |
+    |-----------------------|------|
+    |          **None**     | 25   |
+    |          **SSL**      | 465  |
+    |          **StartTLS** | 587  |
 
+      
 
-**NOTE :** While running the test connectivity with OAuth, username value is compulsory to pass. The
-username value is required because its used to generate new token, every time test connectivity is
-run.
+-   Splunk SOAR (Cloud) does not provide access to TCP port 25 \[
+    [link](https://docs.splunk.com/Documentation/SOAR/current/ServiceDescription/SplunkSOARService#Differences_Between_Splunk_SOAR_.28Cloud.29_and_Splunk_SOAR)
+    \]. However, Splunk SOAR (On-premises) does and will provide outbound access for cloud-to-cloud
+    connections for appropriate SMTPS ports like 587, 465, or a customized port. If there is a
+    requirement to access TCP port 25 SMTP on Splunk SOAR (Cloud) then it can be achieved within the
+    internal environments through the Automation Broker.
 
+      
+      
 
+    
 
-  
+    
 
+    To obtain the required parameters, please check the document of the service provider
 
+    
 
+    
 
+    Here we have attached links for the most used mail services to find parameters values:
 
-To obtain the required parameters, please check the document of the service provider
+    
 
+    
 
+      
+    
 
+    GOOGLE
 
+    
 
-Here we have attached links for the most used mail services to find parameters values:
+    
 
+    [Setting up OAuth2.0](https://support.google.com/cloud/answer/6158849?hl=en) [Using OAuth2.0 to
+    access google
+    API's](https://developers.google.com/identity/protocols/oauth2#1.-obtain-oauth-2.0-credentials-from-the-dynamic_data.setvar.console_name-.)
 
+    
 
+      
+    
 
+    MICROSOFT
 
-  
+    
 
+    
 
+    [Authentication for
+    SMTP](https://learn.microsoft.com/en-us/exchange/client-developer/legacy-protocols/how-to-authenticate-an-imap-pop-smtp-application-by-using-oauth)
+    [Authorization code flow for
+    OAuth2.0](https://learn.microsoft.com/en-us/azure/active-directory/develop/v2-oauth2-auth-code-flow)
 
-GOOGLE
+    
 
+    Note: Service providers might have html/css rendering issues.
 
+    
 
+    
 
-
-[Setting up OAuth2.0](https://support.google.com/cloud/answer/6158849?hl=en) [Using OAuth2.0 to
-access google
-API's](https://developers.google.com/identity/protocols/oauth2#1.-obtain-oauth-2.0-credentials-from-the-dynamic_data.setvar.console_name-.)
-
-
-
-  
-
-
-
-MICROSOFT
-
-
-
-
-
-[Authentication for
-SMTP](https://learn.microsoft.com/en-us/exchange/client-developer/legacy-protocols/how-to-authenticate-an-imap-pop-smtp-application-by-using-oauth)
-[Authorization code flow for
-OAuth2.0](https://learn.microsoft.com/en-us/azure/active-directory/develop/v2-oauth2-auth-code-flow)
-
-
-
-Note: Service providers might have html/css rendering issues.
-
-
-
-
-
-  
+      
 
 ## Playbook Backward Compatibility
 
@@ -196,13 +264,15 @@ VARIABLE | REQUIRED | TYPE | DESCRIPTION
 -------- | -------- | ---- | -----------
 **server** |  required  | string | Server IP/Hostname
 **port** |  optional  | numeric | Port
+**auth_type** |  optional  | string | Authentication type to use for connectivity
+**ph_0** |  optional  | ph | Place holder
 **username** |  optional  | string | Username (or email address)
 **password** |  optional  | password | Password (For Basic Auth)
 **client_id** |  optional  | string | OAuth Client ID (For OAuth)
 **client_secret** |  optional  | password | OAuth Client Secret (For OAuth)
-**auth_url** |  optional  | string | OAuth Authorization URL
-**token_url** |  optional  | string | OAuth Token URL
-**scopes** |  optional  | string | OAuth API Scope (space-separated)
+**auth_url** |  optional  | string | OAuth Authorization URL (For OAuth)
+**token_url** |  optional  | string | OAuth Token URL (For OAuth)
+**scopes** |  optional  | string | OAuth API Scope (space-separated)(For OAuth)
 **sender_address** |  optional  | string | Sender Address
 **ssl_config** |  required  | string | SSL Method
 **allow_smtputf8** |  optional  | boolean | Enable SMTPUTF8 support (Check this only if the SMTP server supports SMTPUTF8 option)
