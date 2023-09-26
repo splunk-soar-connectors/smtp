@@ -6,7 +6,7 @@ Connector Version: 3.1.0
 Product Vendor: Generic  
 Product Name: SMTP  
 Product Version Supported (regex): ".\*"  
-Minimum Product Version: 6.0.2  
+Minimum Product Version: 6.1.0  
 
 This app provides the ability to send email using SMTP
 
