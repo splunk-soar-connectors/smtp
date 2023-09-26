@@ -11,7 +11,7 @@
     "product_vendor": "Generic",
     "product_name": "SMTP",
     "product_version_regex": ".*",
-    "min_phantom_version": "6.0.2",
+    "min_phantom_version": "6.1.0",
     "rest_handler": "request_handler.handle_request",
     "license": "Copyright (c) 2016-2023 Splunk Inc.",
     "logo": "logo_splunk.svg",
@@ -19,7 +19,7 @@
     "python_version": "3",
     "fips_compliant": true,
     "latest_tested_versions": [
-        "smtp.gmail.com, smtp.office365.com August 18, 2023"
+        "smtp.gmail.com, smtp.office365.com September 26, 2023"
     ],
     "configuration": {
         "server": {
