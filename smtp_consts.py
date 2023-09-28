@@ -357,3 +357,4 @@ BLEACH_SAFE_HTML_ATTRIBUTES = {
         "type"
     ]
 }
+SMTP_BLEACH_ALLOWED_PROTOCOLS = ["cid", "data", "tel", "sms", "geo", "webcal", "callto"]

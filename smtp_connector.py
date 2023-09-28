@@ -1056,7 +1056,8 @@ class SmtpConnector(BaseConnector):
             text=email_html,
             tags=self.SAFE_HTML_TAGS,
             attributes=BLEACH_SAFE_HTML_ATTRIBUTES,
-            css_sanitizer=CSSSanitizer(allowed_css_properties=all_styles)
+            css_sanitizer=CSSSanitizer(allowed_css_properties=all_styles),
+            protocols=list(bleach.ALLOWED_PROTOCOLS) + SMTP_BLEACH_ALLOWED_PROTOCOLS
         )
         email_html = unescape(email_html)
 
@@ -1204,10 +1205,10 @@ class SmtpConnector(BaseConnector):
                 except Exception:
                     return action_result.set_status(phantom.APP_ERROR, "Error: failed to read the file for the vault ID: {}".format(vault_id))
 
-                attachment.add_header('Content-Disposition', 'attachment', filename=filename)
                 if content_id:
                     attachment.add_header('Content-ID', "<{}>".format(content_id.strip().lstrip('<').rstrip('>').strip()))
-
+                else:
+                    attachment.add_header('Content-Disposition', 'attachment', filename=filename)
                 root.attach(attachment)
 
             else:
