@@ -699,7 +699,6 @@
             }
         }
     ],
-    "pip_dependencies": {},
     "pip39_dependencies": {
         "wheel": [
             {
