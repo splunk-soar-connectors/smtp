@@ -693,8 +693,8 @@ class SmtpConnector(BaseConnector):
                     return action_result.set_status(phantom.APP_ERROR, SMTP_ERROR_SMTP_SEND_EMAIL)
 
                 phantom_home_path = self.get_phantom_home()
-                report_dir_pre_4_0 = f"{phantom_home_path}/www/reports"
-                report_dir_post_4_0 = f"{phantom_home_path}/vault/reports"
+                report_dir_pre_4_0 = os.path.join(phantom_home_path, "www", "reports")
+                report_dir_post_4_0 = os.path.join(phantom_home_path, "vault", "reports")
 
                 filename = ''
                 for report_dir in (report_dir_post_4_0, report_dir_pre_4_0):
