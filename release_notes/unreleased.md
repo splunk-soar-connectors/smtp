@@ -1,2 +1,2 @@
 **Unreleased**
-* Removing hardcoded paths to phantom home [PAPP-32426]
+* Bug fix for accessing vault temp directory path [PAPP-32426]
