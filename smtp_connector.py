@@ -643,7 +643,13 @@ class SmtpConnector(BaseConnector):
                 if not ret_val:
                     return action_result.set_status(phantom.APP_ERROR, message)
                 return self._connect_to_server(action_result, False)
+            elif response_code == 535:
+                ret_val, message = self._interactive_auth_refresh()
+                if not ret_val:
+                    return action_result.set_status(phantom.APP_ERROR, message)
+                return self._connect_to_server(action_result, False)
             elif response_code != 235:
+                self.debug_print(f"Error while connecting to SMTP server, Response code: {response_code}, Response: {response_message}")
                 return action_result.set_status(phantom.APP_ERROR,
                                                 "Logging in error, response_code: {0} response: {1}".format(response_code, response_message))
 
