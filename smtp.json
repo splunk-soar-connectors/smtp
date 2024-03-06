@@ -11,9 +11,9 @@
     "product_vendor": "Generic",
     "product_name": "SMTP",
     "product_version_regex": ".*",
-    "min_phantom_version": "6.1.0",
+    "min_phantom_version": "6.1.1",
     "rest_handler": "request_handler.handle_request",
-    "license": "Copyright (c) 2016-2023 Splunk Inc.",
+    "license": "Copyright (c) 2016-2024 Splunk Inc.",
     "logo": "logo_splunk.svg",
     "logo_dark": "logo_splunk_dark.svg",
     "python_version": "3",
@@ -699,9 +699,6 @@
             }
         }
     ],
-    "pip_dependencies": {
-        "wheel": []
-    },
     "pip39_dependencies": {
         "wheel": [
             {
@@ -722,7 +719,7 @@
             },
             {
                 "module": "soupsieve",
-                "input_file": "wheels/py3/soupsieve-2.4.1-py3-none-any.whl"
+                "input_file": "wheels/py3/soupsieve-2.5-py3-none-any.whl"
             },
             {
                 "module": "tinycss2",
