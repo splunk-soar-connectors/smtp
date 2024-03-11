@@ -707,7 +707,7 @@
             },
             {
                 "module": "bleach",
-                "input_file": "wheels/py3/bleach-6.0.0-py3-none-any.whl"
+                "input_file": "wheels/py3/bleach-6.1.0-py3-none-any.whl"
             },
             {
                 "module": "bleach_allowlist",
@@ -723,7 +723,7 @@
             },
             {
                 "module": "tinycss2",
-                "input_file": "wheels/py3/tinycss2-1.1.1-py3-none-any.whl"
+                "input_file": "wheels/py3/tinycss2-1.2.1-py3-none-any.whl"
             },
             {
                 "module": "webencodings",
