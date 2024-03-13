@@ -1,6 +1,6 @@
 # File: smtp_connector.py
 #
-# Copyright (c) 2016-2023 Splunk Inc.
+# Copyright (c) 2016-2024 Splunk Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -41,7 +41,6 @@ from bleach_allowlist import all_styles, all_tags, generally_xss_unsafe
 from bs4 import BeautifulSoup
 from phantom.action_result import ActionResult
 from phantom.base_connector import BaseConnector
-from phantom.vault import Vault
 
 from request_handler import RequestStateHandler, _get_dir_name_from_app_name
 from smtp_consts import *
@@ -693,23 +692,15 @@ class SmtpConnector(BaseConnector):
                 if '.pdf' not in attachment_vault_id:
                     return action_result.set_status(phantom.APP_ERROR, SMTP_ERROR_SMTP_SEND_EMAIL)
 
-                if hasattr(Vault, "get_phantom_home"):
-                    report_dir_pre_4_0 = '{0}/www/reports'.format(self.get_phantom_home())
-                    report_dir_post_4_0 = '{0}/vault/reports'.format(self.get_phantom_home())
-                else:
-                    report_dir_pre_4_0 = '/opt/phantom/www/reports'
-                    report_dir_post_4_0 = '/opt/phantom/vault/reports'
+                phantom_home_path = self.get_phantom_home()
+                report_dir = os.path.join(phantom_home_path, "vault", "reports")
 
-                filename = ''
-                for report_dir in (report_dir_post_4_0, report_dir_pre_4_0):
-                    test_filename = os.path.join(report_dir, attachment_vault_id)
-                    test_filename = os.path.abspath(test_filename)
+                test_filename = os.path.join(report_dir, attachment_vault_id)
+                test_filename = os.path.abspath(test_filename)
 
-                    if os.path.isfile(test_filename):
-                        filename = test_filename
-                        break
+                filename = test_filename if os.path.isfile(test_filename) else ""
 
-                is_valid_path = filename.startswith(report_dir_pre_4_0) or filename.startswith(report_dir_post_4_0)
+                is_valid_path = filename.startswith(report_dir)
 
                 if not filename or not is_valid_path:
                     return action_result.set_status(phantom.APP_ERROR, SMTP_ERROR_SMTP_SEND_EMAIL)
