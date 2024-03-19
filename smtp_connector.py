@@ -73,7 +73,7 @@ class SmtpConnector(BaseConnector):
         self._state = self.load_state()
         if not isinstance(self._state, dict):
             self.debug_print("Resetting the state file with the default format")
-            self._state = {"app_version": self.get_app_json().get("app_version")}
+            self._reset_state()
             return self.set_status(phantom.APP_ERROR, SMTP_STATE_FILE_CORRUPT_ERROR)
 
         # action_result = self.add_action_result(ActionResult())
@@ -105,6 +105,7 @@ class SmtpConnector(BaseConnector):
                     self._access_token = self.decrypt_state(self._access_token, "access")
                 if self._refresh_token:
                     self._refresh_token = self.decrypt_state(self._refresh_token, "refresh")
+
             except Exception as e:
                 self.debug_print("{}: {}".format(SMTP_DECRYPTION_ERROR, self._get_error_message_from_exception(e)))
                 return self.set_status(phantom.APP_ERROR, SMTP_DECRYPTION_ERROR)
@@ -195,18 +196,23 @@ class SmtpConnector(BaseConnector):
 
         if self._auth_mechanism == SMTP_OAUTH_AUTH_TYPE:
             try:
-                if self._access_token:
-                    self._state["oauth_token"]["access_token"] = self.encrypt_state(self._access_token, "access")
-                if self._refresh_token:
-                    self._state["oauth_token"]["refresh_token"] = self.encrypt_state(self._refresh_token, "refresh")
+                if "oauth_token" in self._state:
+                    if self._access_token:
+                        self._state["oauth_token"]["access_token"] = self.encrypt_state(self._access_token, "access")
+                    if self._refresh_token:
+                        self._state["oauth_token"]["refresh_token"] = self.encrypt_state(self._refresh_token, "refresh")
+                    else:
+                        self._state["oauth_token"]["refresh_token"] = self._refresh_token
+                    self._state[SMTP_STATE_IS_ENCRYPTED] = True
             except Exception as e:
                 self.debug_print("{}: {}".format(SMTP_ENCRYPTION_ERROR, self._get_error_message_from_exception(e)))
                 return self.set_status(phantom.APP_ERROR, SMTP_ENCRYPTION_ERROR)
 
-            self._state[SMTP_STATE_IS_ENCRYPTED] = True
-
         self.save_state(self._state)
         return phantom.APP_SUCCESS
+
+    def _reset_state(self):
+        self._state = {"app_version": self.get_app_json().get("app_version")}
 
     def _validate_integer(self, action_result, parameter, key, allow_zero=False):
         """
@@ -407,9 +413,11 @@ class SmtpConnector(BaseConnector):
 
         oauth_token = self._state.get('oauth_token', {})
         if not self._refresh_token:
+            self._reset_state()
             return phantom.APP_ERROR, "Unable to get refresh token. Please run Test Connectivity again."
 
         if client_id != self._state.get('client_id', ''):
+            self._reset_state()
             return phantom.APP_ERROR, "Client ID has been changed. Please run Test Connectivity again."
 
         request_url = config.get("token_url")
@@ -429,6 +437,7 @@ class SmtpConnector(BaseConnector):
         try:
             response_json = r.json()
             if response_json.get("error"):
+                self._reset_state()
                 return phantom.APP_ERROR, "Invalid refresh token. Please run the test connectivity again."
             oauth_token.update(r.json())
         except Exception:
@@ -448,8 +457,8 @@ class SmtpConnector(BaseConnector):
 
         # Run the initial authentication flow only if current action is test connectivity
         if self.get_action_identifier() != self.ACTION_ID_TEST_CONNECTIVITY:
-            if not self._access_token:
-                return phantom.APP_ERROR, "Unable to get access token. Has Test Connectivity been run?"
+            # if not self._access_token:
+            #     return phantom.APP_ERROR, "Unable to get access token. Has Test Connectivity been run?"
 
             try:
                 ret_val = self._connect_to_server(action_result)
