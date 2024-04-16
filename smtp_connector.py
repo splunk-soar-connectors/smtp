@@ -365,6 +365,10 @@ class SmtpConnector(BaseConnector):
             'redirect_uri': app_rest_url,
             "access_type": "offline"
         }
+
+        if "gmail" in config[phantom.APP_JSON_SERVER]:
+            params["prompt"] = "consent"
+
         if config.get('scopes'):
             params['scope'] = config['scopes']
 
