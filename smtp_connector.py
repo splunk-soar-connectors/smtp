@@ -245,7 +245,7 @@ class SmtpConnector(BaseConnector):
 
         if any(restricted_domain in domain for restricted_domain in restricted_domains):
             return False
-        
+
         return self._validate_email(input_data)
 
     def _validate_email(self, input_data):
