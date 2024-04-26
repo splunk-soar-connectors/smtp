@@ -253,7 +253,7 @@
                     "data_path": "action_result.parameter.from",
                     "data_type": "string",
                     "contains": [
-                        "email"
+                        "sender_email"
                     ],
                     "example_values": [
                         "sender@testdomain.com"
@@ -614,7 +614,7 @@
                     "data_path": "action_result.parameter.from",
                     "data_type": "string",
                     "contains": [
-                        "email"
+                        "sender_email"
                     ],
                     "example_values": [
                         "sender@testdomain.com"
