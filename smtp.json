@@ -135,11 +135,11 @@
             "read_only": false,
             "parameters": {
                 "from": {
-                    "description": "From field",
+                    "description": "Sender Address, domain can not include 'phantom', 'splunk', or 'cisco'",
                     "data_type": "string",
                     "order": 0,
                     "contains": [
-                        "email"
+                        "sender_email"
                     ],
                     "primary": true
                 },
@@ -404,12 +404,12 @@
             "read_only": false,
             "parameters": {
                 "from": {
-                    "description": "From field",
+                    "description": "Sender Address, domain can not include 'phantom', 'splunk', or 'cisco'",
                     "data_type": "string",
                     "order": 0,
                     "primary": true,
                     "contains": [
-                        "email"
+                        "sender_email"
                     ]
                 },
                 "to": {

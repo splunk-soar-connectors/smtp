@@ -78,6 +78,7 @@ class SmtpConnector(BaseConnector):
         # action_result = self.add_action_result(ActionResult())
 
         self.set_validator('email', self._validate_email)
+        self.set_validator('sender_email', self._validate_sender_email)
 
         return phantom.APP_SUCCESS
 
@@ -232,6 +233,21 @@ class SmtpConnector(BaseConnector):
 
         return phantom.APP_SUCCESS, parameter
 
+    def _validate_sender_email(self, input_data):
+        # SMTP only supports a single email as the sender
+        if ',' in input_data or ';' in input_data:
+            return False
+
+        # sender emails also have additional restriction
+        # to not include splunk related terms in the domain name
+        restricted_domains = ["splunk", "cisco", "phantom"]
+        domain = input_data.split("@")[-1]
+
+        if any(restricted_domain in domain for restricted_domain in restricted_domains):
+            return False
+        
+        return self._validate_email(input_data)
+
     def _validate_email(self, input_data):
         # validations are always tricky things, making it 100% foolproof, will take a
         # very complicated regex, even multiple regexes and each could lead to a bug that
@@ -246,6 +262,8 @@ class SmtpConnector(BaseConnector):
             emails = input_data.split(',')
         elif ';' in input_data:
             emails = input_data.split(';')
+        else:
+            emails = [input_data]
 
         for email in emails:
             if not ph_utils.is_email(email.strip()):
