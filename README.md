@@ -324,7 +324,7 @@ action_result.parameter.attachments | string |  `vault id`  |   ab2b2ccfba08ea53
 action_result.parameter.bcc | string |  `email`  |   test1@testdomain.com 
 action_result.parameter.body | string |  |   Test body 
 action_result.parameter.cc | string |  `email`  |   test2@testdomain.com 
-action_result.parameter.from | string |  `email`  |   sender@testdomain.com 
+action_result.parameter.from | string |  `sender_email`  |   sender@testdomain.com 
 action_result.parameter.headers | string |  |   {"Subject": "Test1", "To": "test3@testdomain.com"} 
 action_result.parameter.subject | string |  |   Test 
 action_result.parameter.to | string |  `email`  |   receiver@testdomain.com 
@@ -404,7 +404,7 @@ action_result.parameter.content_id2 | string |  |
 action_result.parameter.content_id3 | string |  |  
 action_result.parameter.content_id4 | string |  |  
 action_result.parameter.content_id5 | string |  |  
-action_result.parameter.from | string |  `email`  |   sender@testdomain.com 
+action_result.parameter.from | string |  `sender_email`  |   sender@testdomain.com 
 action_result.parameter.headers | string |  |   {"Subject": "Test1", "To": "test3@testdomain.com"} 
 action_result.parameter.html_body | string |  |   <html><h2>HTML heading</h2><body>HTML body.</body></html> 
 action_result.parameter.subject | string |  |   Test 
