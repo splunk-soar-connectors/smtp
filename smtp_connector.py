@@ -78,7 +78,6 @@ class SmtpConnector(BaseConnector):
         # action_result = self.add_action_result(ActionResult())
 
         self.set_validator('email', self._validate_email)
-        self.set_validator('sender_email', self._validate_sender_email)
 
         return phantom.APP_SUCCESS
 
@@ -233,10 +232,13 @@ class SmtpConnector(BaseConnector):
 
         return phantom.APP_SUCCESS, parameter
 
-    def _validate_sender_email(self, input_data):
+    def _validate_sender_email(self, action_result, input_data):
         # SMTP only supports a single email as the sender
         if ',' in input_data or ';' in input_data:
-            return False
+            return action_result.set_status(
+                phantom.APP_ERROR,
+                "SMTP only supports a single email for the 'from' field, please enter email in valid format."
+            )
 
         # sender emails also have additional restriction
         # to not include splunk related terms in the domain name
@@ -244,9 +246,12 @@ class SmtpConnector(BaseConnector):
         domain = input_data.split("@")[-1]
 
         if any(restricted_domain in domain for restricted_domain in restricted_domains):
-            return False
+            return action_result.set_status(
+                phantom.APP_ERROR,
+                "The domain provided in email is restricted, please use a different email."
+            )
 
-        return self._validate_email(input_data)
+        return action_result.set_status(phantom.APP_SUCCESS)
 
     def _validate_email(self, input_data):
         # validations are always tricky things, making it 100% foolproof, will take a
@@ -818,6 +823,11 @@ class SmtpConnector(BaseConnector):
         sender_address = config.get('sender_address', config.get(phantom.APP_JSON_USERNAME))
         email_from = param.get(SMTP_JSON_FROM, sender_address)
 
+        # validate sender email
+        ret_val = self._validate_sender_email(action_result, email_from)
+        if phantom.is_fail(ret_val):
+            return action_result.get_status()
+
         encoding = config.get(SMTP_ENCODING, False)
         smtputf8 = config.get(SMTP_ALLOW_SMTPUTF8, False)
         body = param[SMTP_JSON_BODY]
@@ -1038,6 +1048,11 @@ class SmtpConnector(BaseConnector):
         # Derive 'from' email address
         sender_address = config.get('sender_address', config.get(phantom.APP_JSON_USERNAME))
         email_from = param.get(SMTP_JSON_FROM, sender_address)
+
+        # validate sender email
+        ret_val = self._validate_sender_email(action_result, email_from)
+        if phantom.is_fail(ret_val):
+            return action_result.get_status()
 
         email_to = param['to']
         email_cc = param.get('cc')

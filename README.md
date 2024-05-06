@@ -11,7 +11,7 @@ Minimum Product Version: 6.1.1
 This app provides the ability to send email using SMTP
 
 [comment]: # " File: README.md"
-[comment]: # "  Copyright (c) 2016-2023 Splunk Inc."
+[comment]: # "  Copyright (c) 2016-2024 Splunk Inc."
 [comment]: # ""
 [comment]: # "  Licensed under Apache 2.0 (https://www.apache.org/licenses/LICENSE-2.0.txt)"
 [comment]: # ""
@@ -307,7 +307,7 @@ Some points to note: <ul> <li>Only files present in the <b>vault</b> can be atta
 #### Action Parameters
 PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
 --------- | -------- | ----------- | ---- | --------
-**from** |  optional  | Sender Address, domain can not include 'phantom', 'splunk', or 'cisco' | string |  `sender_email` 
+**from** |  optional  | Sender Address, domain can not include 'phantom', 'splunk', or 'cisco' | string |  `email` 
 **to** |  required  | List of recipients email addresses | string |  `email` 
 **cc** |  optional  | List of recipients email addresses to include on cc line | string |  `email` 
 **bcc** |  optional  | List of recipients email addresses to include on bcc line | string |  `email` 
@@ -324,7 +324,7 @@ action_result.parameter.attachments | string |  `vault id`  |   ab2b2ccfba08ea53
 action_result.parameter.bcc | string |  `email`  |   test1@testdomain.com 
 action_result.parameter.body | string |  |   Test body 
 action_result.parameter.cc | string |  `email`  |   test2@testdomain.com 
-action_result.parameter.from | string |  `sender_email`  |   sender@testdomain.com 
+action_result.parameter.from | string |  `email`  |   sender@testdomain.com 
 action_result.parameter.headers | string |  |   {"Subject": "Test1", "To": "test3@testdomain.com"} 
 action_result.parameter.subject | string |  |   Test 
 action_result.parameter.to | string |  `email`  |   receiver@testdomain.com 
@@ -367,7 +367,7 @@ If the <b>from</b> parameter is not provided, then the action will consider the 
 #### Action Parameters
 PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
 --------- | -------- | ----------- | ---- | --------
-**from** |  optional  | Sender Address, domain can not include 'phantom', 'splunk', or 'cisco' | string |  `sender_email` 
+**from** |  optional  | Sender Address, domain can not include 'phantom', 'splunk', or 'cisco' | string |  `email` 
 **to** |  required  | List of recipients email addresses | string |  `email` 
 **cc** |  optional  | List of recipients email addresses to include on cc line | string |  `email` 
 **bcc** |  optional  | List of recipients email addresses to include on bcc line | string |  `email` 
@@ -404,7 +404,7 @@ action_result.parameter.content_id2 | string |  |
 action_result.parameter.content_id3 | string |  |  
 action_result.parameter.content_id4 | string |  |  
 action_result.parameter.content_id5 | string |  |  
-action_result.parameter.from | string |  `sender_email`  |   sender@testdomain.com 
+action_result.parameter.from | string |  `email`  |   sender@testdomain.com 
 action_result.parameter.headers | string |  |   {"Subject": "Test1", "To": "test3@testdomain.com"} 
 action_result.parameter.html_body | string |  |   <html><h2>HTML heading</h2><body>HTML body.</body></html> 
 action_result.parameter.subject | string |  |   Test 
