@@ -643,9 +643,6 @@ class SmtpConnector(BaseConnector):
         if response_code is not None:
             # 334 status code for smtp signifies that the requested security mechanism is accepted
             if response_code == 334:
-                # decoded_bytes = base64.b64decode(response_message)
-                # decoded_str = decoded_bytes.decode("ascii")
-                # json_str = json.loads(decoded_str)                
                 ret_val, message = self._interactive_auth_refresh()
                 if not ret_val:
                     return action_result.set_status(phantom.APP_ERROR, message)
