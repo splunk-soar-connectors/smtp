@@ -816,6 +816,8 @@ class SmtpConnector(BaseConnector):
 
     def _send_email(self, param, action_result):
 
+        action_id = self.get_action_identifier()
+
         # username = self.get_config()[phantom.APP_JSON_USERNAME]
         config = self.get_config()
 
@@ -823,10 +825,11 @@ class SmtpConnector(BaseConnector):
         sender_address = config.get('sender_address', config.get(phantom.APP_JSON_USERNAME))
         email_from = param.get(SMTP_JSON_FROM, sender_address)
 
-        # validate sender email
-        ret_val = self._validate_sender_email(action_result, email_from)
-        if phantom.is_fail(ret_val):
-            return action_result.get_status()
+        if action_id != self.ACTION_ID_TEST_CONNECTIVITY:
+            # validate sender email
+            ret_val = self._validate_sender_email(action_result, email_from)
+            if phantom.is_fail(ret_val):
+                return action_result.get_status()
 
         encoding = config.get(SMTP_ENCODING, False)
         smtputf8 = config.get(SMTP_ALLOW_SMTPUTF8, False)
