@@ -825,11 +825,13 @@ class SmtpConnector(BaseConnector):
         sender_address = config.get('sender_address', config.get(phantom.APP_JSON_USERNAME))
         email_from = param.get(SMTP_JSON_FROM, sender_address)
 
-        if action_id != self.ACTION_ID_TEST_CONNECTIVITY:
-            # validate sender email
-            ret_val = self._validate_sender_email(action_result, email_from)
-            if phantom.is_fail(ret_val):
-                return action_result.get_status()
+        # validate sender email if inputted as a parameter
+        if param.get(SMTP_JSON_FROM) is not None:
+            # validate sender email when action is not test connectivity
+            if action_id != self.ACTION_ID_TEST_CONNECTIVITY:
+                ret_val = self._validate_sender_email(action_result, email_from)
+                if phantom.is_fail(ret_val):
+                    return action_result.get_status()
 
         encoding = config.get(SMTP_ENCODING, False)
         smtputf8 = config.get(SMTP_ALLOW_SMTPUTF8, False)
@@ -1052,10 +1054,11 @@ class SmtpConnector(BaseConnector):
         sender_address = config.get('sender_address', config.get(phantom.APP_JSON_USERNAME))
         email_from = param.get(SMTP_JSON_FROM, sender_address)
 
-        # validate sender email
-        ret_val = self._validate_sender_email(action_result, email_from)
-        if phantom.is_fail(ret_val):
-            return action_result.get_status()
+        # validate sender email if inputted as a parameter
+        if param.get(SMTP_JSON_FROM) is not None:
+            ret_val = self._validate_sender_email(action_result, email_from)
+            if phantom.is_fail(ret_val):
+                return action_result.get_status()
 
         email_to = param['to']
         email_cc = param.get('cc')
