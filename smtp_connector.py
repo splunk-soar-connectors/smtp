@@ -233,17 +233,10 @@ class SmtpConnector(BaseConnector):
         return phantom.APP_SUCCESS, parameter
 
     def _validate_sender_email(self, action_result, input_data):
-        # SMTP only supports a single email as the sender
-        if ',' in input_data or ';' in input_data:
-            return action_result.set_status(
-                phantom.APP_ERROR,
-                "SMTP only supports a single email for the 'from' field, please enter email in valid format."
-            )
-
         # sender emails also have additional restriction
         # to not include splunk related terms in the domain name
         restricted_domains = ["splunk", "cisco", "phantom"]
-        domain = input_data.split("@")[-1]
+        domain = input_data.split("@")[-1].lower()
 
         if any(restricted_domain in domain for restricted_domain in restricted_domains):
             return action_result.set_status(
@@ -825,11 +818,10 @@ class SmtpConnector(BaseConnector):
         email_from = param.get(SMTP_JSON_FROM, sender_address)
 
         # validate sender email if inputted as a parameter
-        if action_id != "test_connectivity":
-            if param.get(SMTP_JSON_FROM):
-                ret_val = self._validate_sender_email(action_result, email_from)
-                if phantom.is_fail(ret_val):
-                    return action_result.get_status()
+        if action_id != "test_connectivity" and param.get(SMTP_JSON_FROM):
+            ret_val = self._validate_sender_email(action_result, email_from)
+            if phantom.is_fail(ret_val):
+                return action_result.get_status()
 
         encoding = config.get(SMTP_ENCODING, False)
         smtputf8 = config.get(SMTP_ALLOW_SMTPUTF8, False)
