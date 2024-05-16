@@ -248,7 +248,7 @@ class SmtpConnector(BaseConnector):
         if any(restricted_domain in domain for restricted_domain in restricted_domains):
             return action_result.set_status(
                 phantom.APP_ERROR,
-                "The domain provided in email is restricted, please use a different email."
+                "The domain provided in email is restricted, please use a different email in 'from' field."
             )
 
         return action_result.set_status(phantom.APP_SUCCESS)
@@ -822,18 +822,14 @@ class SmtpConnector(BaseConnector):
 
         # Derive 'from' email address
         sender_address = config.get('sender_address', config.get(phantom.APP_JSON_USERNAME))
+        email_from = param.get(SMTP_JSON_FROM, sender_address)
 
         # validate sender email if inputted as a parameter
         if action_id != "test_connectivity":
-            email_from = param.get(SMTP_JSON_FROM)
-            if email_from:
+            if param.get(SMTP_JSON_FROM):
                 ret_val = self._validate_sender_email(action_result, email_from)
                 if phantom.is_fail(ret_val):
                     return action_result.get_status()
-            else:
-                email_from = sender_address
-        else:
-            email_from = param.get(SMTP_JSON_FROM, sender_address)
 
         encoding = config.get(SMTP_ENCODING, False)
         smtputf8 = config.get(SMTP_ALLOW_SMTPUTF8, False)
@@ -1054,15 +1050,13 @@ class SmtpConnector(BaseConnector):
 
         # Derive 'from' email address
         sender_address = config.get('sender_address', config.get(phantom.APP_JSON_USERNAME))
-        email_from = param.get(SMTP_JSON_FROM)
+        email_from = param.get(SMTP_JSON_FROM, sender_address)
 
         # validate sender email if inputted as a parameter
-        if email_from:
+        if param.get(SMTP_JSON_FROM):
             ret_val = self._validate_sender_email(action_result, email_from)
             if phantom.is_fail(ret_val):
                 return action_result.get_status()
-        else:
-            email_from = sender_address
 
         email_to = param['to']
         email_cc = param.get('cc')
