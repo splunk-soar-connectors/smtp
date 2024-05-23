@@ -241,7 +241,8 @@ class SmtpConnector(BaseConnector):
         if any(restricted_domain in domain for restricted_domain in restricted_domains):
             return action_result.set_status(
                 phantom.APP_ERROR,
-                "The domain provided in email is restricted, please use a different email in 'from' field."
+                "The domain provided in email is restricted (contains one of : splunk, cisco, phantom).\
+                    Please use a different email in the 'from' field."
             )
 
         return action_result.set_status(phantom.APP_SUCCESS)
