@@ -6,7 +6,7 @@ Connector Version: 3.3.0
 Product Vendor: Generic  
 Product Name: SMTP  
 Product Version Supported (regex): ".\*"  
-Minimum Product Version: 6.2.0  
+Minimum Product Version: 6.2.1  
 
 This app provides the ability to send email using SMTP
 
@@ -307,7 +307,7 @@ Some points to note: <ul> <li>Only files present in the <b>vault</b> can be atta
 #### Action Parameters
 PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
 --------- | -------- | ----------- | ---- | --------
-**from** |  optional  | From field | string |  `email` 
+**from** |  optional  | Sender Address, domain can not include 'phantom', 'splunk', or 'cisco' | string |  `email` 
 **to** |  required  | List of recipients email addresses | string |  `email` 
 **cc** |  optional  | List of recipients email addresses to include on cc line | string |  `email` 
 **bcc** |  optional  | List of recipients email addresses to include on bcc line | string |  `email` 
@@ -367,7 +367,7 @@ If the <b>from</b> parameter is not provided, then the action will consider the 
 #### Action Parameters
 PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
 --------- | -------- | ----------- | ---- | --------
-**from** |  optional  | From field | string |  `email` 
+**from** |  optional  | Sender Address, domain can not include 'phantom', 'splunk', or 'cisco' | string |  `email` 
 **to** |  required  | List of recipients email addresses | string |  `email` 
 **cc** |  optional  | List of recipients email addresses to include on cc line | string |  `email` 
 **bcc** |  optional  | List of recipients email addresses to include on bcc line | string |  `email` 

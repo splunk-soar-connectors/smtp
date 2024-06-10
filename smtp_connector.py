@@ -238,6 +238,21 @@ class SmtpConnector(BaseConnector):
 
         return phantom.APP_SUCCESS, parameter
 
+    def _validate_sender_email(self, action_result, input_data):
+        # sender emails also have additional restriction
+        # to not include splunk related terms in the domain name
+        restricted_domains = ["splunk", "cisco", "phantom"]
+        domain = input_data.split("@")[-1].lower()
+
+        if any(restricted_domain in domain for restricted_domain in restricted_domains):
+            return action_result.set_status(
+                phantom.APP_ERROR,
+                "The domain provided in email is restricted (contains one of : splunk, cisco, phantom).\
+                    Please use a different email in the 'from' field."
+            )
+
+        return action_result.set_status(phantom.APP_SUCCESS)
+
     def _validate_email(self, input_data):
         # validations are always tricky things, making it 100% foolproof, will take a
         # very complicated regex, even multiple regexes and each could lead to a bug that
@@ -252,6 +267,8 @@ class SmtpConnector(BaseConnector):
             emails = input_data.split(',')
         elif ';' in input_data:
             emails = input_data.split(';')
+        else:
+            emails = [input_data]
 
         for email in emails:
             if not ph_utils.is_email(email.strip()):
@@ -803,6 +820,7 @@ class SmtpConnector(BaseConnector):
         return False
 
     def _send_email(self, param, action_result):
+        action_id = self.get_action_identifier()
 
         # username = self.get_config()[phantom.APP_JSON_USERNAME]
         config = self.get_config()
@@ -810,6 +828,12 @@ class SmtpConnector(BaseConnector):
         # Derive 'from' email address
         sender_address = config.get('sender_address', config.get(phantom.APP_JSON_USERNAME))
         email_from = param.get(SMTP_JSON_FROM, sender_address)
+
+        # validate sender email if inputted as a parameter
+        if action_id != "test_connectivity" and param.get(SMTP_JSON_FROM):
+            ret_val = self._validate_sender_email(action_result, email_from)
+            if phantom.is_fail(ret_val):
+                return action_result.get_status()
 
         encoding = config.get(SMTP_ENCODING, False)
         smtputf8 = config.get(SMTP_ALLOW_SMTPUTF8, False)
@@ -1031,6 +1055,12 @@ class SmtpConnector(BaseConnector):
         # Derive 'from' email address
         sender_address = config.get('sender_address', config.get(phantom.APP_JSON_USERNAME))
         email_from = param.get(SMTP_JSON_FROM, sender_address)
+
+        # validate sender email if inputted as a parameter
+        if param.get(SMTP_JSON_FROM):
+            ret_val = self._validate_sender_email(action_result, email_from)
+            if phantom.is_fail(ret_val):
+                return action_result.get_status()
 
         email_to = param['to']
         email_cc = param.get('cc')
