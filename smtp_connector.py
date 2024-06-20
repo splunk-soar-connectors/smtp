@@ -463,9 +463,9 @@ class SmtpConnector(BaseConnector):
         except Exception:
             return phantom.APP_ERROR, "Error retrieving OAuth Token"
 
-        
         self._access_token = oauth_token.get('access_token')
         if response_json.get("refresh_token"):
+            self.debug_print("Getting new refresh token.")
             self._refresh_token = oauth_token.get('refresh_token')
 
         self._state['oauth_token'] = oauth_token
