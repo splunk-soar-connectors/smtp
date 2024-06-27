@@ -34,7 +34,6 @@ import bleach
 import encryption_helper
 import phantom.app as phantom
 import phantom.rules as ph_rules
-import phantom.utils as ph_utils
 import requests
 from bleach.css_sanitizer import CSSSanitizer
 from bleach_allowlist import all_styles, all_tags, generally_xss_unsafe
@@ -77,7 +76,8 @@ class SmtpConnector(BaseConnector):
 
         # action_result = self.add_action_result(ActionResult())
 
-        self.set_validator('email', self._validate_email)
+        # skipping the validation for email
+        self.set_validator('email', lambda input: True)
 
         return phantom.APP_SUCCESS
 
@@ -252,28 +252,6 @@ class SmtpConnector(BaseConnector):
             )
 
         return action_result.set_status(phantom.APP_SUCCESS)
-
-    def _validate_email(self, input_data):
-        # validations are always tricky things, making it 100% foolproof, will take a
-        # very complicated regex, even multiple regexes and each could lead to a bug that
-        # will invalidate the input (at a customer site), leading to actions being stopped from carrying out.
-        # So keeping things as simple as possible here. The SMTP server will hopefully do a good job of
-        # validating it's input, any errors that are sent back to the app will get propagated to the user.
-
-        emails = []
-
-        # First work on the comma as the separator
-        if ',' in input_data:
-            emails = input_data.split(',')
-        elif ';' in input_data:
-            emails = input_data.split(';')
-        else:
-            emails = [input_data]
-
-        for email in emails:
-            if not ph_utils.is_email(email.strip()):
-                return False
-        return True
 
     def make_rest_call(self, action_result, url, verify=False):
 
