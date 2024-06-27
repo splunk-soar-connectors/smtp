@@ -34,7 +34,6 @@ import bleach
 import encryption_helper
 import phantom.app as phantom
 import phantom.rules as ph_rules
-import phantom.utils as ph_utils
 import requests
 from bleach.css_sanitizer import CSSSanitizer
 from bleach_allowlist import all_styles, all_tags, generally_xss_unsafe
@@ -72,12 +71,13 @@ class SmtpConnector(BaseConnector):
         self._state = self.load_state()
         if not isinstance(self._state, dict):
             self.debug_print("Resetting the state file with the default format")
-            self._state = {"app_version": self.get_app_json().get("app_version")}
+            self._reset_state()
             return self.set_status(phantom.APP_ERROR, SMTP_STATE_FILE_CORRUPT_ERROR)
 
         # action_result = self.add_action_result(ActionResult())
 
-        self.set_validator('email', self._validate_email)
+        # skipping the validation for email
+        self.set_validator('email', lambda input: True)
 
         return phantom.APP_SUCCESS
 
@@ -104,6 +104,7 @@ class SmtpConnector(BaseConnector):
                     self._access_token = self.decrypt_state(self._access_token, "access")
                 if self._refresh_token:
                     self._refresh_token = self.decrypt_state(self._refresh_token, "refresh")
+
             except Exception as e:
                 self.debug_print("{}: {}".format(SMTP_DECRYPTION_ERROR, self._get_error_message_from_exception(e)))
                 return self.set_status(phantom.APP_ERROR, SMTP_DECRYPTION_ERROR)
@@ -194,18 +195,23 @@ class SmtpConnector(BaseConnector):
 
         if self._auth_mechanism == SMTP_OAUTH_AUTH_TYPE:
             try:
-                if self._access_token:
-                    self._state["oauth_token"]["access_token"] = self.encrypt_state(self._access_token, "access")
-                if self._refresh_token:
-                    self._state["oauth_token"]["refresh_token"] = self.encrypt_state(self._refresh_token, "refresh")
+                if "oauth_token" in self._state:
+                    if self._access_token:
+                        self._state["oauth_token"]["access_token"] = self.encrypt_state(self._access_token, "access")
+                    if self._refresh_token:
+                        self._state["oauth_token"]["refresh_token"] = self.encrypt_state(self._refresh_token, "refresh")
+                    else:
+                        self._state["oauth_token"]["refresh_token"] = self._refresh_token
+                    self._state[SMTP_STATE_IS_ENCRYPTED] = True
             except Exception as e:
                 self.debug_print("{}: {}".format(SMTP_ENCRYPTION_ERROR, self._get_error_message_from_exception(e)))
                 return self.set_status(phantom.APP_ERROR, SMTP_ENCRYPTION_ERROR)
 
-            self._state[SMTP_STATE_IS_ENCRYPTED] = True
-
         self.save_state(self._state)
         return phantom.APP_SUCCESS
+
+    def _reset_state(self):
+        self._state = {"app_version": self.get_app_json().get("app_version")}
 
     def _validate_integer(self, action_result, parameter, key, allow_zero=False):
         """
@@ -246,28 +252,6 @@ class SmtpConnector(BaseConnector):
             )
 
         return action_result.set_status(phantom.APP_SUCCESS)
-
-    def _validate_email(self, input_data):
-        # validations are always tricky things, making it 100% foolproof, will take a
-        # very complicated regex, even multiple regexes and each could lead to a bug that
-        # will invalidate the input (at a customer site), leading to actions being stopped from carrying out.
-        # So keeping things as simple as possible here. The SMTP server will hopefully do a good job of
-        # validating it's input, any errors that are sent back to the app will get propagated to the user.
-
-        emails = []
-
-        # First work on the comma as the separator
-        if ',' in input_data:
-            emails = input_data.split(',')
-        elif ';' in input_data:
-            emails = input_data.split(';')
-        else:
-            emails = [input_data]
-
-        for email in emails:
-            if not ph_utils.is_email(email.strip()):
-                return False
-        return True
 
     def make_rest_call(self, action_result, url, verify=False):
 
@@ -375,6 +359,10 @@ class SmtpConnector(BaseConnector):
             'redirect_uri': app_rest_url,
             "access_type": "offline"
         }
+
+        if "gmail" in config[phantom.APP_JSON_SERVER]:
+            params["prompt"] = "consent"
+
         if config.get('scopes'):
             params['scope'] = config['scopes']
 
@@ -423,9 +411,11 @@ class SmtpConnector(BaseConnector):
 
         oauth_token = self._state.get('oauth_token', {})
         if not self._refresh_token:
+            self._reset_state()
             return phantom.APP_ERROR, "Unable to get refresh token. Please run Test Connectivity again."
 
         if client_id != self._state.get('client_id', ''):
+            self._reset_state()
             return phantom.APP_ERROR, "Client ID has been changed. Please run Test Connectivity again."
 
         request_url = config.get("token_url")
@@ -445,13 +435,16 @@ class SmtpConnector(BaseConnector):
         try:
             response_json = r.json()
             if response_json.get("error"):
+                self._reset_state()
                 return phantom.APP_ERROR, "Invalid refresh token. Please run the test connectivity again."
             oauth_token.update(r.json())
         except Exception:
             return phantom.APP_ERROR, "Error retrieving OAuth Token"
 
         self._access_token = oauth_token.get('access_token')
-        self._refresh_token = oauth_token.get('refresh_token')
+        if response_json.get("refresh_token"):
+            self.debug_print("Getting new refresh token.")
+            self._refresh_token = oauth_token.get('refresh_token')
 
         self._state['oauth_token'] = oauth_token
         return phantom.APP_SUCCESS, ""
@@ -464,8 +457,8 @@ class SmtpConnector(BaseConnector):
 
         # Run the initial authentication flow only if current action is test connectivity
         if self.get_action_identifier() != self.ACTION_ID_TEST_CONNECTIVITY:
-            if not self._access_token:
-                return phantom.APP_ERROR, "Unable to get access token. Has Test Connectivity been run?"
+            # if not self._access_token:
+            #     return phantom.APP_ERROR, "Unable to get access token. Has Test Connectivity been run?"
 
             try:
                 ret_val = self._connect_to_server(action_result)
@@ -650,16 +643,26 @@ class SmtpConnector(BaseConnector):
                 decoded_bytes = base64.b64decode(response_message)
                 decoded_str = decoded_bytes.decode("ascii")
                 json_str = json.loads(decoded_str)
-                if json_str.get("status") == "400":
-                    return action_result.set_status(
-                        phantom.APP_ERROR,
-                        "Could not connect to server, please check your asset configuration and re-run test connectivity"
-                    )
+
+                if "gmail" in config[phantom.APP_JSON_SERVER]:
+                    pass
+                else:
+                    if json_str.get("status") == "400":
+                        return action_result.set_status(
+                            phantom.APP_ERROR,
+                            "Could not connect to server, please check your asset configuration and re-run test connectivity"
+                        )
+                ret_val, message = self._interactive_auth_refresh()
+                if not ret_val:
+                    return action_result.set_status(phantom.APP_ERROR, message)
+                return self._connect_to_server(action_result, False)
+            elif response_code == 535:
                 ret_val, message = self._interactive_auth_refresh()
                 if not ret_val:
                     return action_result.set_status(phantom.APP_ERROR, message)
                 return self._connect_to_server(action_result, False)
             elif response_code != 235:
+                self.debug_print(f"Error while connecting to SMTP server, Response code: {response_code}, Response: {response_message}")
                 return action_result.set_status(phantom.APP_ERROR,
                                                 "Logging in error, response_code: {0} response: {1}".format(response_code, response_message))
 
