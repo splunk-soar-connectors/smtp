@@ -5,7 +5,7 @@
     "publisher": "Splunk",
     "type": "email",
     "main_module": "smtp_connector.py",
-    "app_version": "3.2.0",
+    "app_version": "3.2.1",
     "utctime_updated": "2024-03-06T13:04:08.000000Z",
     "package_name": "phantom_smtp",
     "product_vendor": "Generic",
@@ -135,7 +135,7 @@
             "read_only": false,
             "parameters": {
                 "from": {
-                    "description": "Sender Address, domain can not include 'phantom', 'splunk', or 'cisco'",
+                    "description": "Sender Address",
                     "data_type": "string",
                     "order": 0,
                     "contains": [
@@ -404,7 +404,7 @@
             "read_only": false,
             "parameters": {
                 "from": {
-                    "description": "Sender Address, domain can not include 'phantom', 'splunk', or 'cisco'",
+                    "description": "Sender Address",
                     "data_type": "string",
                     "order": 0,
                     "primary": true,
