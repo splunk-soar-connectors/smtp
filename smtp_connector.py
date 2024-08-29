@@ -794,7 +794,6 @@ class SmtpConnector(BaseConnector):
         return False
 
     def _send_email(self, param, action_result):
-        action_id = self.get_action_identifier()
 
         # username = self.get_config()[phantom.APP_JSON_USERNAME]
         config = self.get_config()
