@@ -77,12 +77,12 @@ class SmtpConnector(BaseConnector):
         # action_result = self.add_action_result(ActionResult())
 
         # skipping the validation for email
-        self.set_validator('email', lambda input: True)
+        self.set_validator("email", lambda input: True)
 
         return phantom.APP_SUCCESS
 
     def _with_oauth_type(self, action_result):
-        """ Try to connect server with Interactive auth
+        """Try to connect server with Interactive auth
         return : APP_SUCCESS/APP_ERROR
         """
 
@@ -92,8 +92,10 @@ class SmtpConnector(BaseConnector):
         required_params = ["username", "client_id", "client_secret", "auth_url", "token_url"]
         for key in required_params:
             if not config.get(key):
-                return action_result.set_status(phantom.APP_ERROR, SMTP_REQUIRED_PARAM_AUTH.format(
-                    self._auth_mechanism, self._auth_mechanism, ", ".join(i for i in required_params)))
+                return action_result.set_status(
+                    phantom.APP_ERROR,
+                    SMTP_REQUIRED_PARAM_AUTH.format(self._auth_mechanism, self._auth_mechanism, ", ".join(i for i in required_params)),
+                )
 
         self._access_token = self._state.get("oauth_token", {}).get("access_token")
         self._refresh_token = self._state.get("oauth_token", {}).get("refresh_token")
@@ -114,7 +116,7 @@ class SmtpConnector(BaseConnector):
         return phantom.APP_SUCCESS
 
     def _with_basic_type(self, action_result):
-        """ Try to connect server with basic auth
+        """Try to connect server with basic auth
         return : APP_SUCCESS/APP_ERROR
         """
 
@@ -125,8 +127,10 @@ class SmtpConnector(BaseConnector):
         required_params = ["username", "password"]
         for key in required_params:
             if not config.get(key):
-                return action_result.set_status(phantom.APP_ERROR, SMTP_REQUIRED_PARAM_AUTH.format(
-                    self._auth_mechanism, self._auth_mechanism, ", ".join(i for i in required_params)))
+                return action_result.set_status(
+                    phantom.APP_ERROR,
+                    SMTP_REQUIRED_PARAM_AUTH.format(self._auth_mechanism, self._auth_mechanism, ", ".join(i for i in required_params)),
+                )
 
         if phantom.is_fail(self._connect_to_server_helper(action_result)):
             return action_result.get_status()
@@ -134,7 +138,7 @@ class SmtpConnector(BaseConnector):
         return phantom.APP_SUCCESS
 
     def _with_passwordless_type(self, action_result):
-        """ Try to connect server with password less auth
+        """Try to connect server with password less auth
         return : APP_SUCCESS/APP_ERROR
         """
 
@@ -147,7 +151,7 @@ class SmtpConnector(BaseConnector):
         return phantom.APP_SUCCESS
 
     def _process_auth_type(self, action_result):
-        """ Get auth from auth_type parameter and try to connect server with specified auth.
+        """Get auth from auth_type parameter and try to connect server with specified auth.
         return : APP_SUCCESS/APP_ERROR
         """
 
@@ -158,18 +162,20 @@ class SmtpConnector(BaseConnector):
         auth_type = config.get("auth_type", SMTP_AUTOMATIC_AUTH_TYPE)
 
         # Check all the auth type as per inputs given by user with flow of [Interactive -> Basic -> Password less]
-        self.save_progress("You have selected {} Authentication".format(auth_type))   # nosemgrep
+        self.save_progress("You have selected {} Authentication".format(auth_type))  # nosemgrep
         if auth_type == SMTP_AUTOMATIC_AUTH_TYPE:
             for auth_type in SMTP_ALLOWED_AUTH_TYPES[1:]:
-                self.save_progress(SMTP_AUTH_MESSAGE.format(auth_type))   # nosemgrep
+                self.save_progress(SMTP_AUTH_MESSAGE.format(auth_type))  # nosemgrep
                 auth = eval(f"self._with_{auth_type.lower()}_type(action_result)")
                 if phantom.is_fail(auth):
                     msg = action_result.get_message()
-                    self.save_progress(SMTP_AUTH_FAILED_ACTION_MESSAGE.format(action_id, auth_type, msg))   # nosemgrep
+                    self.save_progress(SMTP_AUTH_FAILED_ACTION_MESSAGE.format(action_id, auth_type, msg))  # nosemgrep
                     if auth_type == SMTP_PASSWORD_LESS_AUTH_TYPE:
                         if action_id != SMTP_TEST_CONNECTIVITY:
                             msg = "Authentication failed for connecting to server with {} types \
-                            of authentication.{}".format(SMTP_ALLOWED_AUTH_TYPES[1:], SMTP_FAILED_CONNECTIVITY_TEST)
+                            of authentication.{}".format(
+                                SMTP_ALLOWED_AUTH_TYPES[1:], SMTP_FAILED_CONNECTIVITY_TEST
+                            )
                             return action_result.set_status(phantom.APP_ERROR, msg)
                         else:
                             return action_result.set_status(phantom.APP_ERROR)
@@ -177,13 +183,15 @@ class SmtpConnector(BaseConnector):
                     return phantom.APP_SUCCESS
 
         # Check specific auth type as per input given by user in auth_type parameter
-        self.save_progress(SMTP_AUTH_MESSAGE.format(auth_type))   # nosemgrep
+        self.save_progress(SMTP_AUTH_MESSAGE.format(auth_type))  # nosemgrep
         auth = eval(f"self._with_{auth_type.lower()}_type(action_result)")
         if phantom.is_fail(auth):
             msg = action_result.get_message()
             if action_id != SMTP_TEST_CONNECTIVITY:
                 msg = "Authentication failed for connecting to server with {} \
-                    authentication.{}".format(auth_type, SMTP_FAILED_CONNECTIVITY_TEST)
+                    authentication.{}".format(
+                    auth_type, SMTP_FAILED_CONNECTIVITY_TEST
+                )
                 return action_result.set_status(phantom.APP_ERROR, msg)
             else:
                 return action_result.set_status(phantom.APP_ERROR, msg)
@@ -242,9 +250,9 @@ class SmtpConnector(BaseConnector):
         try:
             r = requests.get(url, verify=verify, timeout=DEFAULT_REQUEST_TIMEOUT)
             if not r:
-                message = 'Status Code: {0}'.format(r.status_code)
+                message = "Status Code: {0}".format(r.status_code)
                 if r.text:
-                    message = "{} Error from Server: {}".format(message, r.text.replace('{', '{{').replace('}', '}}'))
+                    message = "{} Error from Server: {}".format(message, r.text.replace("{", "{{").replace("}", "}}"))
                 return action_result.set_status(phantom.APP_ERROR, "Error retrieving system info, {0}".format(message)), None
         except Exception as e:
             return action_result.set_status(phantom.APP_ERROR, "Error : {0}".format(e)), None
@@ -258,15 +266,14 @@ class SmtpConnector(BaseConnector):
 
     def _get_phantom_base_url_smtp(self, action_result):
 
-        ret_val, resp_json = self.make_rest_call(action_result, '{}rest/system_info'.format(self.get_phantom_base_url()))
+        ret_val, resp_json = self.make_rest_call(action_result, "{}rest/system_info".format(self.get_phantom_base_url()))
 
         if phantom.is_fail(ret_val):
             return action_result.get_status(), None
 
-        phantom_base_url = resp_json.get('base_url')
+        phantom_base_url = resp_json.get("base_url")
         if not phantom_base_url:
-            return action_result.set_status(
-                phantom.APP_ERROR, "SOAR Base URL is not configured, please configure it in System Settings"), None
+            return action_result.set_status(phantom.APP_ERROR, "SOAR Base URL is not configured, please configure it in System Settings"), None
 
         phantom_base_url = phantom_base_url.strip("/")
 
@@ -274,13 +281,12 @@ class SmtpConnector(BaseConnector):
 
     def _get_asset_name(self, action_result):
 
-        ret_val, resp_json = self.make_rest_call(
-            action_result, '{}rest/asset/{}'.format(self.get_phantom_base_url(), self.get_asset_id()))
+        ret_val, resp_json = self.make_rest_call(action_result, "{}rest/asset/{}".format(self.get_phantom_base_url(), self.get_asset_id()))
 
         if phantom.is_fail(ret_val):
             return action_result.get_status(), None
 
-        asset_name = resp_json.get('name')
+        asset_name = resp_json.get("name")
         if not asset_name:
             return action_result.set_status(phantom.APP_ERROR, "Error retrieving asset name"), None
 
@@ -297,11 +303,11 @@ class SmtpConnector(BaseConnector):
         ret_val, asset_name = self._get_asset_name(action_result)
         if phantom.is_fail(ret_val):
             return action_result.get_status(), action_result.get_message()
-        self.save_progress('Using SOAR base URL as: {0}'.format(phantom_base_url))
+        self.save_progress("Using SOAR base URL as: {0}".format(phantom_base_url))
         app_json = self.get_app_json()
-        app_name = app_json['name']
+        app_name = app_json["name"]
         app_dir_name = _get_dir_name_from_app_name(app_name)
-        url_to_app_rest = "{0}/rest/handler/{1}_{2}/{3}".format(phantom_base_url, app_dir_name, app_json['appid'], asset_name)
+        url_to_app_rest = "{0}/rest/handler/{1}_{2}/{3}".format(phantom_base_url, app_dir_name, app_json["appid"], asset_name)
         return phantom.APP_SUCCESS, url_to_app_rest
 
     def _interactive_auth_initial(self, client_id, rsh, client_secret):
@@ -316,43 +322,37 @@ class SmtpConnector(BaseConnector):
         config = self.get_config()
 
         request_url = config.get("auth_url", "").strip("\\/")
-        token_url = config.get("token_url", "").strip('\\/')
+        token_url = config.get("token_url", "").strip("\\/")
         # set proxy if configured
         proxy = {}
-        if 'HTTP_PROXY' in os.environ:
-            proxy['http'] = os.environ.get('HTTP_PROXY')
-        if 'HTTPS_PROXY' in os.environ:
-            proxy['https'] = os.environ.get('HTTPS_PROXY')
-        if 'NO_PROXY' in os.environ:
-            proxy['no_proxy'] = os.environ.get('NO_PROXY')
+        if "HTTP_PROXY" in os.environ:
+            proxy["http"] = os.environ.get("HTTP_PROXY")
+        if "HTTPS_PROXY" in os.environ:
+            proxy["https"] = os.environ.get("HTTPS_PROXY")
+        if "NO_PROXY" in os.environ:
+            proxy["no_proxy"] = os.environ.get("NO_PROXY")
 
-        state['proxy'] = proxy
+        state["proxy"] = proxy
 
-        state['client_id'] = client_id
-        state['redirect_url'] = app_rest_url
-        state['request_url'] = request_url
-        state['token_url'] = token_url
-        state['client_secret'] = base64.b64encode(client_secret.encode()).decode()
+        state["client_id"] = client_id
+        state["redirect_url"] = app_rest_url
+        state["request_url"] = request_url
+        state["token_url"] = token_url
+        state["client_secret"] = base64.b64encode(client_secret.encode()).decode()
 
         rsh.save_state(state)
         self.save_progress("Redirect URI: {}".format(app_rest_url))
-        params = {
-            'response_type': 'code',
-            'client_id': client_id,
-            'state': asset_id,
-            'redirect_uri': app_rest_url,
-            "access_type": "offline"
-        }
+        params = {"response_type": "code", "client_id": client_id, "state": asset_id, "redirect_uri": app_rest_url, "access_type": "offline"}
 
         if "gmail" in config[phantom.APP_JSON_SERVER]:
             params["prompt"] = "consent"
 
-        if config.get('scopes'):
-            params['scope'] = config['scopes']
+        if config.get("scopes"):
+            params["scope"] = config["scopes"]
 
         try:
-            url = requests.Request('GET', request_url, params=params).prepare().url
-            url = '{}&'.format(url)
+            url = requests.Request("GET", request_url, params=params).prepare().url
+            url = "{}&".format(url)
         except Exception as e:
             return phantom.APP_ERROR, "Message : {}".format(e)
 
@@ -367,23 +367,23 @@ class SmtpConnector(BaseConnector):
             try:
                 state = rsh.load_state()
             except Exception:
-                self._state.pop('oauth_token', None)
+                self._state.pop("oauth_token", None)
                 return phantom.APP_ERROR, SMTP_ASSET_CORRUPTED
 
-            oauth_token = state.get('oauth_token')
+            oauth_token = state.get("oauth_token")
             if oauth_token:
                 break
-            elif state.get('error'):
+            elif state.get("error"):
                 return phantom.APP_ERROR, "Error retrieving OAuth token"
         else:
             return phantom.APP_ERROR, "Timed out waiting for login"
 
-        if oauth_token.get('access_token'):
-            self._access_token = oauth_token.get('access_token')
-        if oauth_token.get('refresh_token'):
-            self._refresh_token = oauth_token.get('refresh_token')
+        if oauth_token.get("access_token"):
+            self._access_token = oauth_token.get("access_token")
+        if oauth_token.get("refresh_token"):
+            self._refresh_token = oauth_token.get("refresh_token")
 
-        self._state['oauth_token'] = oauth_token
+        self._state["oauth_token"] = oauth_token
 
         return phantom.APP_SUCCESS, ""
 
@@ -393,23 +393,18 @@ class SmtpConnector(BaseConnector):
         client_id = config.get("client_id")
         client_secret = config.get("client_secret")
 
-        oauth_token = self._state.get('oauth_token', {})
+        oauth_token = self._state.get("oauth_token", {})
         if not self._refresh_token:
             self._reset_state()
             return phantom.APP_ERROR, "Unable to get refresh token. Please run Test Connectivity again."
 
-        if client_id != self._state.get('client_id', ''):
+        if client_id != self._state.get("client_id", ""):
             self._reset_state()
             return phantom.APP_ERROR, "Client ID has been changed. Please run Test Connectivity again."
 
         request_url = config.get("token_url")
 
-        body = {
-            'grant_type': 'refresh_token',
-            'client_id': client_id,
-            'refresh_token': self._refresh_token,
-            'client_secret': client_secret
-        }
+        body = {"grant_type": "refresh_token", "client_id": client_id, "refresh_token": self._refresh_token, "client_secret": client_secret}
 
         try:
             r = requests.post(request_url, data=body, timeout=DEFAULT_REQUEST_TIMEOUT)
@@ -425,12 +420,12 @@ class SmtpConnector(BaseConnector):
         except Exception:
             return phantom.APP_ERROR, "Error retrieving OAuth Token"
 
-        self._access_token = oauth_token.get('access_token')
+        self._access_token = oauth_token.get("access_token")
         if response_json.get("refresh_token"):
             self.debug_print("Getting new refresh token.")
-            self._refresh_token = oauth_token.get('refresh_token')
+            self._refresh_token = oauth_token.get("refresh_token")
 
-        self._state['oauth_token'] = oauth_token
+        self._state["oauth_token"] = oauth_token
         return phantom.APP_SUCCESS, ""
 
     def _set_interactive_auth(self, action_result):
@@ -462,7 +457,7 @@ class SmtpConnector(BaseConnector):
             if phantom.is_fail(ret_val):
                 return phantom.APP_ERROR, message
 
-            self._state['client_id'] = client_id
+            self._state["client_id"] = client_id
 
             try:
                 ret_val = self._connect_to_server(action_result)
@@ -475,19 +470,19 @@ class SmtpConnector(BaseConnector):
         return phantom.APP_SUCCESS, ""
 
     def encrypt_state(self, encrypt_var, token_name):
-        """ Handle encryption of token.
+        """Handle encryption of token.
         :param encrypt_var: Variable needs to be encrypted
         :return: encrypted variable
         """
-        self.debug_print(SMTP_ENCRYPT_TOKEN.format(token_name))   # nosemgrep
+        self.debug_print(SMTP_ENCRYPT_TOKEN.format(token_name))  # nosemgrep
         return encryption_helper.encrypt(encrypt_var, self.get_asset_id())
 
     def decrypt_state(self, decrypt_var, token_name):
-        """ Handle decryption of token.
+        """Handle decryption of token.
         :param decrypt_var: Variable needs to be decrypted
         :return: decrypted variable
         """
-        self.debug_print(SMTP_DECRYPT_TOKEN.format(token_name))    # nosemgrep
+        self.debug_print(SMTP_DECRYPT_TOKEN.format(token_name))  # nosemgrep
         return encryption_helper.decrypt(decrypt_var, self.get_asset_id())
 
     def _get_error_message_from_exception(self, e):
@@ -501,7 +496,7 @@ class SmtpConnector(BaseConnector):
         error_message = ERROR_MESSAGE_UNAVAILABLE
         self.error_print("Error occurred : ", e)
         try:
-            if hasattr(e, 'args'):
+            if hasattr(e, "args"):
                 if len(e.args) > 1:
                     error_code = e.args[0]
                     error_message = e.args[1]
@@ -520,22 +515,24 @@ class SmtpConnector(BaseConnector):
     def _parse_connection_error(self, action_result, e):
         """An error has already occurred"""
 
-        message = ''
-        exception_message = ''
+        message = ""
+        exception_message = ""
 
         try:
             config = self.get_config()
             exception_message = self._get_error_message_from_exception(e)
-            port_message = ' Please try without specifying the port. ' if (config.get(SMTP_JSON_PORT)) else ' '
+            port_message = " Please try without specifying the port. " if (config.get(SMTP_JSON_PORT)) else " "
 
-            if (config[SMTP_JSON_SSL_CONFIG] == SSL_CONFIG_SSL) and ('ssl.c' in exception_message):
+            if (config[SMTP_JSON_SSL_CONFIG] == SSL_CONFIG_SSL) and ("ssl.c" in exception_message):
                 message = "{0}.\r\n{1}{2}Error Text: {3}".format(
-                    SMTP_ERROR_SMTP_CONNECTIVITY_TO_SERVER, SMTP_ERROR_SSL_CONFIG_SSL, port_message, exception_message)
+                    SMTP_ERROR_SMTP_CONNECTIVITY_TO_SERVER, SMTP_ERROR_SSL_CONFIG_SSL, port_message, exception_message
+                )
                 return action_result.set_status(phantom.APP_ERROR, message)
 
-            if (config[SMTP_JSON_SSL_CONFIG] == SSL_CONFIG_STARTTLS) and ('unexpectedly close' in exception_message):
+            if (config[SMTP_JSON_SSL_CONFIG] == SSL_CONFIG_STARTTLS) and ("unexpectedly close" in exception_message):
                 message = "{0}.\r\n{1}{2}Error Text:{3}".format(
-                    SMTP_ERROR_SMTP_CONNECTIVITY_TO_SERVER, SMTP_ERROR_STARTTLS_CONFIG, port_message, exception_message)
+                    SMTP_ERROR_SMTP_CONNECTIVITY_TO_SERVER, SMTP_ERROR_STARTTLS_CONFIG, port_message, exception_message
+                )
                 return action_result.set_status(phantom.APP_ERROR, message)
 
         except Exception:
@@ -564,14 +561,14 @@ class SmtpConnector(BaseConnector):
         self.save_progress(phantom.APP_PROG_CONNECTING_TO_ELLIPSES, server)
 
         # default the ssl config to non SSL i.e. either None or StartTLS
-        func_to_use = getattr(smtplib, 'SMTP')
+        func_to_use = getattr(smtplib, "SMTP")
 
         # Get the SSL config to use
         ssl_config = config.get(SMTP_JSON_SSL_CONFIG, SSL_CONFIG_STARTTLS)
 
         # if it is SSL, (not None or StartTLS) then the function to call is different
         if ssl_config == SSL_CONFIG_SSL:
-            func_to_use = getattr(smtplib, 'SMTP_SSL')
+            func_to_use = getattr(smtplib, "SMTP_SSL")
 
         # use the port if specified
         if SMTP_JSON_PORT in config:
@@ -587,7 +584,7 @@ class SmtpConnector(BaseConnector):
         self._smtp_conn.ehlo()
 
         # Use the StartTLS command if the config was set to StartTLS
-        if (self._smtp_conn.has_extn('STARTTLS') and (ssl_config == SSL_CONFIG_STARTTLS)):
+        if self._smtp_conn.has_extn("STARTTLS") and (ssl_config == SSL_CONFIG_STARTTLS):
             self._smtp_conn.starttls()
 
         self._smtp_conn.ehlo()
@@ -597,12 +594,11 @@ class SmtpConnector(BaseConnector):
                 if config.get(phantom.APP_JSON_USERNAME) is None:
                     return action_result.set_status(
                         phantom.APP_ERROR,
-                        'A username must be specified to run test connectivity using OAuth. '
-                        'Please check your asset configuration.'
+                        "A username must be specified to run test connectivity using OAuth. " "Please check your asset configuration.",
                     )
                 auth_string = self._generate_oauth_string(config[phantom.APP_JSON_USERNAME], self._access_token)
                 # self._smtp_conn.ehlo(config.get("client_id"))
-                response_code, response_message = self._smtp_conn.docmd('AUTH', 'XOAUTH2 {}'.format(auth_string))
+                response_code, response_message = self._smtp_conn.docmd("AUTH", "XOAUTH2 {}".format(auth_string))
             elif self._auth_mechanism == SMTP_BASIC_AUTH_TYPE:
                 self.debug_print("username and password used")
                 response_code, response_message = self._smtp_conn.login(config[phantom.APP_JSON_USERNAME], config[phantom.APP_JSON_PASSWORD])
@@ -630,8 +626,7 @@ class SmtpConnector(BaseConnector):
 
                 if "gmail" not in config[phantom.APP_JSON_SERVER] and json_str.get("status") == "400":
                     return action_result.set_status(
-                        phantom.APP_ERROR,
-                        "Could not connect to server, please check your asset configuration and re-run test connectivity"
+                        phantom.APP_ERROR, "Could not connect to server, please check your asset configuration and re-run test connectivity"
                     )
                 ret_val, message = self._interactive_auth_refresh()
                 if not ret_val:
@@ -644,8 +639,9 @@ class SmtpConnector(BaseConnector):
                 return self._connect_to_server(action_result, False)
             elif response_code != 235:
                 self.debug_print(f"Error while connecting to SMTP server, Response code: {response_code}, Response: {response_message}")
-                return action_result.set_status(phantom.APP_ERROR,
-                                                "Logging in error, response_code: {0} response: {1}".format(response_code, response_message))
+                return action_result.set_status(
+                    phantom.APP_ERROR, "Logging in error, response_code: {0} response: {1}".format(response_code, response_message)
+                )
 
         self.save_progress(SMTP_SUCC_SMTP_CONNECTIVITY_TO_SERVER)
         return phantom.APP_SUCCESS
@@ -658,11 +654,11 @@ class SmtpConnector(BaseConnector):
             text = soup.get_text()
 
             # need to decode/encode for utf-8 emails with html
-            if message_encoding == 'utf-8':
+            if message_encoding == "utf-8":
                 # text = text.decode('utf-8')
-                part_plain = MIMEText(text, 'plain', 'utf-8')
+                part_plain = MIMEText(text, "plain", "utf-8")
             else:
-                part_plain = MIMEText(text, 'plain')
+                part_plain = MIMEText(text, "plain")
 
             outer.attach(part_plain)
         except Exception as e:
@@ -670,10 +666,10 @@ class SmtpConnector(BaseConnector):
 
         try:
             # lastly attach html
-            if message_encoding == 'utf-8':
-                part_html = MIMEText(body, 'html', 'utf-8')
+            if message_encoding == "utf-8":
+                part_html = MIMEText(body, "html", "utf-8")
             else:
-                part_html = MIMEText(body, 'html')
+                part_html = MIMEText(body, "html")
 
             outer.attach(part_html)
         except Exception as e:
@@ -688,9 +684,9 @@ class SmtpConnector(BaseConnector):
 
         for attachment_vault_id in attachments:
 
-            if self.get_container_id() == '0':
+            if self.get_container_id() == "0":
 
-                if '.pdf' not in attachment_vault_id:
+                if ".pdf" not in attachment_vault_id:
                     return action_result.set_status(phantom.APP_ERROR, SMTP_ERROR_SMTP_SEND_EMAIL)
 
                 phantom_home_path = self.get_phantom_home()
@@ -706,16 +702,16 @@ class SmtpConnector(BaseConnector):
                 if not filename or not is_valid_path:
                     return action_result.set_status(phantom.APP_ERROR, SMTP_ERROR_SMTP_SEND_EMAIL)
 
-                with open(filename, 'rb') as fp:
-                    msg = MIMEBase('application', 'pdf')
+                with open(filename, "rb") as fp:
+                    msg = MIMEBase("application", "pdf")
                     msg.set_payload(fp.read())
 
                 filename = os.path.basename(filename)
                 # handling ugly file names that are of the format "report_type__id-X__ts-<timestamp>.pdf", where 'X' is any number
-                if '__' in filename:
-                    pieces = filename.split('__')
+                if "__" in filename:
+                    pieces = filename.split("__")
                     if len(pieces) == 3:
-                        filename = '{}_{}'.format(pieces[0], pieces[2])  # get rid of __id_x__
+                        filename = "{}_{}".format(pieces[0], pieces[2])  # get rid of __id_x__
 
                 # Encode the payload using Base64
                 encoders.encode_base64(msg)
@@ -740,8 +736,8 @@ class SmtpConnector(BaseConnector):
                 # pick up the first one, they all point to the same file
                 vault_meta_info = vault_meta_info[0]
 
-                attachment_path = vault_meta_info['name']
-                file_path = vault_meta_info['path']
+                attachment_path = vault_meta_info["name"]
+                file_path = vault_meta_info["path"]
 
                 # Guess the content type based on the file's extension.  Encoding
                 # will be ignored, although we should check for simple things like
@@ -751,25 +747,25 @@ class SmtpConnector(BaseConnector):
                 if ctype is None or encoding is not None:
                     # No guess could be made, or the file is encoded (compressed), so
                     # use a generic bag-of-bits type.
-                    ctype = 'application/octet-stream'
-                maintype, subtype = ctype.split('/', 1)
+                    ctype = "application/octet-stream"
+                maintype, subtype = ctype.split("/", 1)
                 try:
-                    if maintype == 'text':
+                    if maintype == "text":
                         fp = open(file_path)
                         # Note: we should handle calculating the charset
                         msg = MIMEText(fp.read(), _subtype=subtype)
                         fp.close()
-                    elif maintype == 'message':
+                    elif maintype == "message":
                         fp = open(file_path)
                         base_msg = message_from_file(fp)
                         msg = MIMEMessage(base_msg, _subtype=subtype)
                         fp.close()
-                    elif maintype == 'image':
-                        fp = open(file_path, 'rb')
+                    elif maintype == "image":
+                        fp = open(file_path, "rb")
                         msg = MIMEImage(fp.read(), _subtype=subtype)
                         fp.close()
                     else:
-                        fp = open(file_path, 'rb')
+                        fp = open(file_path, "rb")
                         msg = MIMEBase(maintype, subtype)
                         msg.set_payload(fp.read())
                         fp.close()
@@ -779,7 +775,7 @@ class SmtpConnector(BaseConnector):
                     return action_result.set_status(phantom.APP_ERROR, self._get_error_message_from_exception(e))
 
             # Set the filename parameter
-            msg.add_header('Content-Disposition', 'attachment', filename=filename)
+            msg.add_header("Content-Disposition", "attachment", filename=filename)
             outer.attach(msg)
 
         return phantom.APP_SUCCESS
@@ -798,7 +794,7 @@ class SmtpConnector(BaseConnector):
         config = self.get_config()
 
         # Derive 'from' email address
-        sender_address = config.get('sender_address', config.get(phantom.APP_JSON_USERNAME))
+        sender_address = config.get("sender_address", config.get(phantom.APP_JSON_USERNAME))
         email_from = param.get(SMTP_JSON_FROM, sender_address)
 
         encoding = config.get(SMTP_ENCODING, False)
@@ -809,9 +805,9 @@ class SmtpConnector(BaseConnector):
             return action_result.set_status(phantom.APP_ERROR, "Error: failed to get email sender")
 
         if encoding:
-            message_encoding = 'utf-8'
+            message_encoding = "utf-8"
         else:
-            message_encoding = 'ascii'
+            message_encoding = "ascii"
 
         outer = None
         attachments = None
@@ -823,18 +819,19 @@ class SmtpConnector(BaseConnector):
 
         try:
             if self._is_html(body):
-                outer = MIMEMultipart('alternative')
+                outer = MIMEMultipart("alternative")
                 self._attach_bodies(outer, body, action_result, message_encoding)
             elif attachments:
                 # it is not html, but has attachments
                 outer = MIMEMultipart()
-                msg = MIMEText(param[SMTP_JSON_BODY], 'plain', message_encoding)
+                msg = MIMEText(param[SMTP_JSON_BODY], "plain", message_encoding)
                 outer.attach(msg)
             else:
-                outer = MIMEText(param[SMTP_JSON_BODY], 'plain', message_encoding)
+                outer = MIMEText(param[SMTP_JSON_BODY], "plain", message_encoding)
         except Exception as e:
-            return action_result.set_status(phantom.APP_ERROR, "{0}. {1}".format(
-                SMTP_UNICODE_ERROR_MESSAGE, self._get_error_message_from_exception(e)))
+            return action_result.set_status(
+                phantom.APP_ERROR, "{0}. {1}".format(SMTP_UNICODE_ERROR_MESSAGE, self._get_error_message_from_exception(e))
+            )
 
         if SMTP_JSON_HEADERS in param:
             try:
@@ -856,21 +853,21 @@ class SmtpConnector(BaseConnector):
         bcc_comma_sep_list = param.get(SMTP_JSON_BCC, None)
 
         if SMTP_JSON_SUBJECT in param:
-            outer['Subject'] = param[SMTP_JSON_SUBJECT]
+            outer["Subject"] = param[SMTP_JSON_SUBJECT]
             action_result.update_param({SMTP_JSON_SUBJECT: param[SMTP_JSON_SUBJECT]})
 
-        outer['From'] = email_from
-        action_result.update_param({SMTP_JSON_FROM: outer['From']})
+        outer["From"] = email_from
+        action_result.update_param({SMTP_JSON_FROM: outer["From"]})
 
         to_list = [x.strip() for x in to_comma_sep_list.split(",")]
         to_list = list(filter(None, to_list))
-        outer['To'] = ", ".join(to_list)
+        outer["To"] = ", ".join(to_list)
 
         if cc_comma_sep_list:
             cc_list = [x.strip() for x in cc_comma_sep_list.split(",")]
             cc_list = list(filter(None, cc_list))
             to_list.extend(cc_list)
-            outer['CC'] = ",".join(cc_list)
+            outer["CC"] = ",".join(cc_list)
 
         if bcc_comma_sep_list:
             bcc_list = [x.strip() for x in bcc_comma_sep_list.split(",")]
@@ -887,15 +884,19 @@ class SmtpConnector(BaseConnector):
                 mail_options.append("SMTPUTF8")
             self._smtp_conn.sendmail(email_from, to_list, outer.as_string(), mail_options=mail_options)
         except UnicodeEncodeError:
-            return action_result.set_status(phantom.APP_ERROR, "{}. {}".format(
-                SMTP_ERROR_SMTP_SEND_EMAIL, SMTP_ERROR_SMTPUTF8_CONFIG))
+            return action_result.set_status(phantom.APP_ERROR, "{}. {}".format(SMTP_ERROR_SMTP_SEND_EMAIL, SMTP_ERROR_SMTPUTF8_CONFIG))
         except Exception as e:
-            return action_result.set_status(phantom.APP_ERROR, "{}. {}".format(
-                SMTP_ERROR_SMTP_SEND_EMAIL, self._get_error_message_from_exception(e)))
+            return action_result.set_status(
+                phantom.APP_ERROR, "{}. {}".format(SMTP_ERROR_SMTP_SEND_EMAIL, self._get_error_message_from_exception(e))
+            )
 
         if self.invalid_vault_ids:
-            return action_result.set_status(phantom.APP_SUCCESS, "{}. The following attachments are invalid and were not sent: {}".format(
-                SMTP_SUCC_SMTP_EMAIL_SENT, ", ".join(self.invalid_vault_ids)))
+            return action_result.set_status(
+                phantom.APP_SUCCESS,
+                "{}. The following attachments are invalid and were not sent: {}".format(
+                    SMTP_SUCC_SMTP_EMAIL_SENT, ", ".join(self.invalid_vault_ids)
+                ),
+            )
 
         return action_result.set_status(phantom.APP_SUCCESS, SMTP_SUCC_SMTP_EMAIL_SENT)
 
@@ -915,8 +916,9 @@ class SmtpConnector(BaseConnector):
         try:
             status_code = self._send_email(param, action_result)
         except Exception as e:
-            return action_result.set_status(phantom.APP_ERROR, "{}. {}".format(
-                SMTP_ERROR_SMTP_SEND_EMAIL, self._get_error_message_from_exception(e)))
+            return action_result.set_status(
+                phantom.APP_ERROR, "{}. {}".format(SMTP_ERROR_SMTP_SEND_EMAIL, self._get_error_message_from_exception(e))
+            )
 
         return status_code
 
@@ -977,28 +979,30 @@ class SmtpConnector(BaseConnector):
 
         if self._auth_mechanism == SMTP_PASSWORD_LESS_AUTH_TYPE:
 
-            self.save_progress(SMTP_SUCC_CONNECTIVITY_TEST.format(self._auth_mechanism))   # nosemgrep
+            self.save_progress(SMTP_SUCC_CONNECTIVITY_TEST.format(self._auth_mechanism))  # nosemgrep
             return action_result.set_status(phantom.APP_SUCCESS, SMTP_SUCC_CONNECTIVITY_TEST.format(self._auth_mechanism))
 
         param = {
-            SMTP_JSON_TO: (config.get('sender_address') or config[phantom.APP_JSON_USERNAME]),
-            SMTP_JSON_FROM: (config.get('sender_address') or config[phantom.APP_JSON_USERNAME]),
+            SMTP_JSON_TO: (config.get("sender_address") or config[phantom.APP_JSON_USERNAME]),
+            SMTP_JSON_FROM: (config.get("sender_address") or config[phantom.APP_JSON_USERNAME]),
             SMTP_JSON_SUBJECT: "Test SMTP config",
-            SMTP_JSON_BODY: "This is a test mail, sent by the SOAR device,\nto test connectivity to the SMTP Asset."}
+            SMTP_JSON_BODY: "This is a test mail, sent by the SOAR device,\nto test connectivity to the SMTP Asset.",
+        }
 
         self.debug_print(param, param)
 
         self.save_progress(SMTP_SENDING_TEST_MAIL)
-        if (phantom.is_fail(self._handle_send_email(param, action_result))):
+        if phantom.is_fail(self._handle_send_email(param, action_result)):
             self.debug_print("connect failed")
             self.save_progress("Error message: {}".format(action_result.get_message()))
-            return action_result.set_status(phantom.APP_ERROR, SMTP_ERROR_CONNECTIVITY_TEST.format(
-                config.get("auth_type", self._auth_mechanism)))
+            return action_result.set_status(
+                phantom.APP_ERROR, SMTP_ERROR_CONNECTIVITY_TEST.format(config.get("auth_type", self._auth_mechanism))
+            )
 
         self.save_progress(SMTP_DONE)
 
         self.debug_print("connect passed")
-        self.save_progress(SMTP_SUCC_CONNECTIVITY_TEST.format(self._auth_mechanism))   # nosemgrep
+        self.save_progress(SMTP_SUCC_CONNECTIVITY_TEST.format(self._auth_mechanism))  # nosemgrep
         return action_result.set_status(phantom.APP_SUCCESS, SMTP_SUCC_CONNECTIVITY_TEST.format(self._auth_mechanism))
 
     def html_to_text(self, html):
@@ -1019,12 +1023,12 @@ class SmtpConnector(BaseConnector):
         config = self.get_config()
 
         # Derive 'from' email address
-        sender_address = config.get('sender_address', config.get(phantom.APP_JSON_USERNAME))
+        sender_address = config.get("sender_address", config.get(phantom.APP_JSON_USERNAME))
         email_from = param.get(SMTP_JSON_FROM, sender_address)
 
-        email_to = param['to']
-        email_cc = param.get('cc')
-        email_bcc = param.get('bcc')
+        email_to = param["to"]
+        email_cc = param.get("cc")
+        email_bcc = param.get("bcc")
         # Filter method returns a Filter object on Python v3 and a List on Python v2
         # So, to maintain the uniformity the Filter object has been explicitly type casted to List
         email_to = [x.strip() for x in email_to.split(",")]
@@ -1038,18 +1042,18 @@ class SmtpConnector(BaseConnector):
             email_bcc = [x.strip() for x in email_bcc.split(",")]
             email_bcc = list(filter(None, email_bcc))
 
-        email_subject = param.get('subject')
-        email_headers = param.get('headers')
-        email_html = param['html_body']
-        email_text = param.get('text_body')
-        attachment_json = param.get('attachment_json')
+        email_subject = param.get("subject")
+        email_headers = param.get("headers")
+        email_html = param["html_body"]
+        email_text = param.get("text_body")
+        attachment_json = param.get("attachment_json")
 
         email_html = bleach.clean(
             text=email_html,
             tags=self.SAFE_HTML_TAGS,
             attributes=BLEACH_SAFE_HTML_ATTRIBUTES,
             css_sanitizer=CSSSanitizer(allowed_css_properties=all_styles),
-            protocols=list(bleach.ALLOWED_PROTOCOLS) + SMTP_BLEACH_ALLOWED_PROTOCOLS
+            protocols=list(bleach.ALLOWED_PROTOCOLS) + SMTP_BLEACH_ALLOWED_PROTOCOLS,
         )
         email_html = unescape(email_html)
 
@@ -1057,9 +1061,9 @@ class SmtpConnector(BaseConnector):
         smtputf8 = config.get(SMTP_ALLOW_SMTPUTF8, False)
 
         if encoding:
-            message_encoding = 'utf-8'
+            message_encoding = "utf-8"
         else:
-            message_encoding = 'ascii'
+            message_encoding = "ascii"
 
         # Validation for the 'from' email address
         if not email_from:
@@ -1091,13 +1095,14 @@ class SmtpConnector(BaseConnector):
 
             has_dictionary = False
             for x in attachment_json:
-                if isinstance(x, dict) and x.get('vault_id'):
+                if isinstance(x, dict) and x.get("vault_id"):
                     has_dictionary = True
                     break
 
             if not has_dictionary:
-                return action_result.set_status(phantom.APP_ERROR,
-                                                "Error: attachment json field does not contain any dictionaries with the \"vault_id\" key")
+                return action_result.set_status(
+                    phantom.APP_ERROR, 'Error: attachment json field does not contain any dictionaries with the "vault_id" key'
+                )
 
             for attachment in attachment_json:
                 for key, value in list(attachment.items()):
@@ -1108,29 +1113,24 @@ class SmtpConnector(BaseConnector):
             attachment_json = []
 
         for i in range(1, 6):
-            attachment_json += [
-                {
-                    'vault_id': param.get('attachment{}'.format(i)),
-                    'content_id': param.get('content_id{}'.format(i))
-                }
-            ]
+            attachment_json += [{"vault_id": param.get("attachment{}".format(i)), "content_id": param.get("content_id{}".format(i))}]
 
-        attachment_json = list(filter(lambda x: isinstance(x, dict) and x.get('vault_id'), attachment_json))
+        attachment_json = list(filter(lambda x: isinstance(x, dict) and x.get("vault_id"), attachment_json))
 
-        root = MIMEMultipart('related')
+        root = MIMEMultipart("related")
 
-        root['from'] = email_from
-        root['to'] = ",".join(email_to)
+        root["from"] = email_from
+        root["to"] = ",".join(email_to)
 
         if email_cc:
-            root['cc'] = ", ".join(email_cc)
+            root["cc"] = ", ".join(email_cc)
             email_to.extend(email_cc)
 
         if email_bcc:
             email_to.extend(email_bcc)
 
         if email_subject:
-            root['subject'] = email_subject
+            root["subject"] = email_subject
 
         for k, v in list(email_headers.items()):
             root[k] = v
@@ -1138,23 +1138,24 @@ class SmtpConnector(BaseConnector):
         if not email_text:
             email_text = self.html_to_text(email_html)
 
-        msg = MIMEMultipart('alternative')
+        msg = MIMEMultipart("alternative")
 
         try:
-            if message_encoding == 'utf-8':
-                msg.attach(MIMEText(email_text, 'plain', 'utf-8'))
-                msg.attach(MIMEText(email_html, 'html', 'utf-8'))
+            if message_encoding == "utf-8":
+                msg.attach(MIMEText(email_text, "plain", "utf-8"))
+                msg.attach(MIMEText(email_html, "html", "utf-8"))
             else:
-                msg.attach(MIMEText(email_text, 'plain', 'ascii'))
-                msg.attach(MIMEText(email_html, 'html', 'ascii'))
+                msg.attach(MIMEText(email_text, "plain", "ascii"))
+                msg.attach(MIMEText(email_html, "html", "ascii"))
         except Exception as e:
-            return action_result.set_status(phantom.APP_ERROR, "{0}. {1}".format(
-                SMTP_UNICODE_ERROR_MESSAGE, self._get_error_message_from_exception(e)))
+            return action_result.set_status(
+                phantom.APP_ERROR, "{0}. {1}".format(SMTP_UNICODE_ERROR_MESSAGE, self._get_error_message_from_exception(e))
+            )
         root.attach(msg)
 
         for x in attachment_json:
-            vault_id = x['vault_id']
-            content_id = x.get('content_id')
+            vault_id = x["vault_id"]
+            content_id = x.get("content_id")
             try:
                 _, _, data = ph_rules.vault_info(container_id=self.get_container_id(), vault_id=vault_id)
                 if not data:
@@ -1163,27 +1164,27 @@ class SmtpConnector(BaseConnector):
             except Exception:
                 return action_result.set_status(phantom.APP_ERROR, "Error: failed to find vault ID: {}".format(vault_id))
 
-            if data and len(data) > 0 and isinstance(data[0], dict) and data[0].get('path'):
-                path = data[0].get('path')
+            if data and len(data) > 0 and isinstance(data[0], dict) and data[0].get("path"):
+                path = data[0].get("path")
 
-                attachment_path = data[0].get('name')
+                attachment_path = data[0].get("name")
                 filename = os.path.basename(attachment_path)
                 ctype, encoding = mimetypes.guess_type(attachment_path)
                 if ctype is None:
-                    ctype = 'application/octet-stream'
-                maintype, subtype = ctype.split('/', 1)
+                    ctype = "application/octet-stream"
+                maintype, subtype = ctype.split("/", 1)
 
                 try:
-                    if maintype == 'text':
+                    if maintype == "text":
                         with open(path, "r") as fp:
                             attachment = MIMEText(fp.read(), _subtype=subtype)
 
-                    elif maintype == 'message':
+                    elif maintype == "message":
                         with open(path, "r") as fp:
                             base_msg = message_from_file(fp)
                             attachment = MIMEMessage(base_msg, _subtype=subtype)
 
-                    elif maintype == 'image':
+                    elif maintype == "image":
                         # Python 2to3 change
                         with open(path, "rb") as fp:
                             attachment = MIMEImage(fp.read(), _subtype=subtype)
@@ -1198,9 +1199,9 @@ class SmtpConnector(BaseConnector):
                     return action_result.set_status(phantom.APP_ERROR, "Error: failed to read the file for the vault ID: {}".format(vault_id))
 
                 if content_id:
-                    attachment.add_header('Content-ID', "<{}>".format(content_id.strip().lstrip('<').rstrip('>').strip()))
+                    attachment.add_header("Content-ID", "<{}>".format(content_id.strip().lstrip("<").rstrip(">").strip()))
                 else:
-                    attachment.add_header('Content-Disposition', 'attachment', filename=filename)
+                    attachment.add_header("Content-Disposition", "attachment", filename=filename)
                 root.attach(attachment)
 
             else:
@@ -1215,11 +1216,11 @@ class SmtpConnector(BaseConnector):
             self._smtp_conn.sendmail(email_from, email_to, root.as_string(), mail_options=mail_options)
 
         except UnicodeEncodeError:
-            return action_result.set_status(phantom.APP_ERROR, "{}. {}".format(
-                SMTP_ERROR_SMTP_SEND_EMAIL, SMTP_ERROR_SMTPUTF8_CONFIG))
+            return action_result.set_status(phantom.APP_ERROR, "{}. {}".format(SMTP_ERROR_SMTP_SEND_EMAIL, SMTP_ERROR_SMTPUTF8_CONFIG))
         except Exception as e:
-            return action_result.set_status(phantom.APP_ERROR, "{}. {}".format(
-                SMTP_ERROR_SMTP_SEND_EMAIL, self._get_error_message_from_exception(e)))
+            return action_result.set_status(
+                phantom.APP_ERROR, "{}. {}".format(SMTP_ERROR_SMTP_SEND_EMAIL, self._get_error_message_from_exception(e))
+            )
 
         return action_result.set_status(phantom.APP_SUCCESS, SMTP_SUCC_SMTP_EMAIL_SENT)
 
@@ -1235,11 +1236,11 @@ class SmtpConnector(BaseConnector):
 
         config = self.get_config()
         smtputf8 = config.get(SMTP_ALLOW_SMTPUTF8, False)
-        raw_email = param['raw_email']
+        raw_email = param["raw_email"]
         raw_email = raw_email.replace("\\n", "\n")
         msg = message_from_string(raw_email)
-        email_from = msg.get('from', '')
-        email_to_str = msg.get('to', '')
+        email_from = msg.get("from", "")
+        email_to_str = msg.get("to", "")
         # email_to = ",".join(filter(lambda x: x, [ msg['to'], msg['cc'], msg['bcc'] ]))
         # email_to = [y for x in email_to.split(',') for y in x.split() if y]
         # Filter method returns a Filter object on Python v3 and a List on Python v2
@@ -1252,11 +1253,11 @@ class SmtpConnector(BaseConnector):
         if not len(email_to_str):
             return action_result.set_status(phantom.APP_ERROR, SMTP_ERROR_TO_FROM_UNAVAILABLE.format("recipient (to)"))
 
-        email_to = [x.strip() for x in msg['to'].split(",")]
-        if msg['cc']:
-            email_to.extend([x.strip() for x in msg['cc'].split(",")])
-        if msg['bcc']:
-            email_to.extend([x.strip() for x in msg['bcc'].split(",")])
+        email_to = [x.strip() for x in msg["to"].split(",")]
+        if msg["cc"]:
+            email_to.extend([x.strip() for x in msg["cc"].split(",")])
+        if msg["bcc"]:
+            email_to.extend([x.strip() for x in msg["bcc"].split(",")])
             # Remove BCC field from the headers as we do not want to display it in the email's headers
             for header in msg._headers:
                 if header[0].lower() == "bcc":
@@ -1274,21 +1275,21 @@ class SmtpConnector(BaseConnector):
             self._smtp_conn.sendmail(email_from, email_to, msg.as_string(), mail_options=mail_options)
 
         except UnicodeEncodeError:
-            return action_result.set_status(phantom.APP_ERROR, "{}. {}".format(
-                SMTP_ERROR_SMTP_SEND_EMAIL, SMTP_ERROR_SMTPUTF8_CONFIG))
+            return action_result.set_status(phantom.APP_ERROR, "{}. {}".format(SMTP_ERROR_SMTP_SEND_EMAIL, SMTP_ERROR_SMTPUTF8_CONFIG))
         except Exception as e:
-            return action_result.set_status(phantom.APP_ERROR, "{}. {}".format(
-                SMTP_ERROR_SMTP_SEND_EMAIL, self._get_error_message_from_exception(e)))
+            return action_result.set_status(
+                phantom.APP_ERROR, "{}. {}".format(SMTP_ERROR_SMTP_SEND_EMAIL, self._get_error_message_from_exception(e))
+            )
 
         return action_result.set_status(phantom.APP_SUCCESS, SMTP_SUCC_SMTP_EMAIL_SENT)
 
     def handle_action(self, param):
         """Function that handles all the actions
 
-            Args:
+        Args:
 
-            Return:
-                A status code
+        Return:
+            A status code
         """
 
         # Get the action that we are supposed to carry out, set it in the connection result object
@@ -1307,7 +1308,7 @@ class SmtpConnector(BaseConnector):
         return ret_val
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 
     import argparse
 
@@ -1315,10 +1316,10 @@ if __name__ == '__main__':
 
     argparser = argparse.ArgumentParser()
 
-    argparser.add_argument('input_test_json', help='Input Test JSON file')
-    argparser.add_argument('-u', '--username', help='username', required=False)
-    argparser.add_argument('-p', '--password', help='password', required=False)
-    argparser.add_argument('-v', '--verify', action='store_true', help='verify', required=False, default=False)
+    argparser.add_argument("input_test_json", help="Input Test JSON file")
+    argparser.add_argument("-u", "--username", help="username", required=False)
+    argparser.add_argument("-p", "--password", help="password", required=False)
+    argparser.add_argument("-v", "--verify", action="store_true", help="verify", required=False, default=False)
 
     args = argparser.parse_args()
     session_id = None
@@ -1335,24 +1336,24 @@ if __name__ == '__main__':
 
     if username and password:
         try:
-            login_url = SmtpConnector._get_phantom_base_url() + '/login'
+            login_url = SmtpConnector._get_phantom_base_url() + "/login"
 
             print("Accessing the Login page")
             r = requests.get(login_url, verify=verify, timeout=DEFAULT_REQUEST_TIMEOUT)
-            csrftoken = r.cookies['csrftoken']
+            csrftoken = r.cookies["csrftoken"]
 
             data = dict()
-            data['username'] = username
-            data['password'] = password
-            data['csrfmiddlewaretoken'] = csrftoken
+            data["username"] = username
+            data["password"] = password
+            data["csrfmiddlewaretoken"] = csrftoken
 
             headers = dict()
-            headers['Cookie'] = 'csrftoken=' + csrftoken
-            headers['Referer'] = login_url
+            headers["Cookie"] = "csrftoken=" + csrftoken
+            headers["Referer"] = login_url
 
             print("Logging into Platform to get the session id")
             r2 = requests.post(login_url, verify=verify, data=data, headers=headers, timeout=DEFAULT_REQUEST_TIMEOUT)
-            session_id = r2.cookies['sessionid']
+            session_id = r2.cookies["sessionid"]
         except Exception as e:
             print("Unable to get session id from the platform. Error: " + str(e))
             sys.exit(1)
@@ -1366,8 +1367,8 @@ if __name__ == '__main__':
         connector.print_progress_message = True
 
         if session_id is not None:
-            in_json['user_session_token'] = session_id
-            connector._set_csrf_info(csrftoken, headers['Referer'])
+            in_json["user_session_token"] = session_id
+            connector._set_csrf_info(csrftoken, headers["Referer"])
 
         ret_val = connector._handle_action(json.dumps(in_json), None)
         print(json.dumps(json.loads(ret_val), indent=4))

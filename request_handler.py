@@ -29,7 +29,7 @@ def handle_request(request, path_parts):
 
 
 def _get_dir_name_from_app_name(app_name):
-    app_name = ''.join([x for x in app_name if x.isalnum()])
+    app_name = "".join([x for x in app_name if x.isalnum()])
     app_name = app_name.lower()
     if not app_name:
         app_name = "app_for_phantom"
@@ -44,32 +44,32 @@ class SMTPRequestHandler:
 
     def _return_error(self, error_msg, status):
         state = self._rsh.load_state()
-        state['error'] = True
+        state["error"] = True
         self._rsh.save_state(state)
         return HttpResponse(error_msg, status=status, content_type="text/plain")
 
     def _get_oauth_token(self, code):
         state = self._rsh.load_state()
 
-        client_id = state['client_id']
-        redirect_uri = state['redirect_url']
-        client_secret = base64.b64decode(state['client_secret']).decode()
-        proxy = state['proxy']
-        token_url = state['token_url']
+        client_id = state["client_id"]
+        redirect_uri = state["redirect_url"]
+        client_secret = base64.b64decode(state["client_secret"]).decode()
+        proxy = state["proxy"]
+        token_url = state["token_url"]
 
-        if proxy.get('http'):
-            os.environ['HTTP_PROXY'] = proxy.get('http')
-        if proxy.get('https'):
-            os.environ['HTTPS_PROXY'] = proxy.get('https')
-        if proxy.get('no_proxy'):
-            os.environ['NO_PROXY'] = proxy.get('no_proxy')
+        if proxy.get("http"):
+            os.environ["HTTP_PROXY"] = proxy.get("http")
+        if proxy.get("https"):
+            os.environ["HTTPS_PROXY"] = proxy.get("https")
+        if proxy.get("no_proxy"):
+            os.environ["NO_PROXY"] = proxy.get("no_proxy")
 
         body = {
-            'grant_type': 'authorization_code',
-            'redirect_uri': redirect_uri,
-            'client_id': client_id,
-            'code': code,
-            'client_secret': client_secret
+            "grant_type": "authorization_code",
+            "redirect_uri": redirect_uri,
+            "client_id": client_id,
+            "code": code,
+            "client_secret": client_secret,
         }
 
         try:
@@ -78,12 +78,9 @@ class SMTPRequestHandler:
             resp_json = r.json()
 
         except Exception as e:
-            return False, self._return_error(
-                "Error retrieving OAuth Token: {}".format(str(e)),
-                401
-            )
+            return False, self._return_error("Error retrieving OAuth Token: {}".format(str(e)), 401)
 
-        state['oauth_token'] = resp_json
+        state["oauth_token"] = resp_json
         self._rsh.save_state(state)
 
         return True, None
@@ -92,15 +89,15 @@ class SMTPRequestHandler:
         try:
             GET = self._request.GET
 
-            asset_id = GET.get('state')
+            asset_id = GET.get("state")
             self._rsh = RequestStateHandler(asset_id)
 
-            error = GET.get('error')
+            error = GET.get("error")
             if error:
-                error_msg = GET.get('error_description')
+                error_msg = GET.get("error_description")
                 return self._return_error(error_msg, 401)
 
-            code = GET.get('code')
+            code = GET.get("code")
 
             ret_val, http_object = self._get_oauth_token(code)
 
@@ -121,21 +118,15 @@ class RequestStateHandler:
             raise AttributeError("RequestStateHandler got invalid asset_id")
 
     def _encrypt_state(self, state):
-        if 'oauth_token' in state:
-            oauth_token = state['oauth_token']
-            state['oauth_token'] = encryption_helper.encrypt(  # pylint: disable=E1101
-                json.dumps(oauth_token),
-                self._asset_id
-            )
+        if "oauth_token" in state:
+            oauth_token = state["oauth_token"]
+            state["oauth_token"] = encryption_helper.encrypt(json.dumps(oauth_token), self._asset_id)  # pylint: disable=E1101
         return state
 
     def _decrypt_state(self, state):
-        if 'oauth_token' in state:
-            oauth_token = encryption_helper.decrypt(  # pylint: disable=E1101
-                state['oauth_token'],
-                self._asset_id
-            )
-            state['oauth_token'] = json.loads(oauth_token)
+        if "oauth_token" in state:
+            oauth_token = encryption_helper.decrypt(state["oauth_token"], self._asset_id)  # pylint: disable=E1101
+            state["oauth_token"] = json.loads(oauth_token)
         return state
 
     def _get_state_file(self):
@@ -156,7 +147,7 @@ class RequestStateHandler:
         state = self._encrypt_state(state)
         state_file = self._get_state_file()
         try:
-            with open(state_file, 'w+') as fp:
+            with open(state_file, "w+") as fp:
                 fp.write(json.dumps(state))
         except Exception:
             pass
@@ -167,7 +158,7 @@ class RequestStateHandler:
         state_file = self._get_state_file()
         state = {}
         try:
-            with open(state_file, 'r') as fp:
+            with open(state_file, "r") as fp:
                 in_json = fp.read()
                 state = json.loads(in_json)
         except Exception:
