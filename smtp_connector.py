@@ -104,7 +104,6 @@ class SmtpConnector(BaseConnector):
                     self._access_token = self.decrypt_state(self._access_token, "access")
                 if self._refresh_token:
                     self._refresh_token = self.decrypt_state(self._refresh_token, "refresh")
-
             except Exception as e:
                 self.debug_print("{}: {}".format(SMTP_DECRYPTION_ERROR, self._get_error_message_from_exception(e)))
                 return self.set_status(phantom.APP_ERROR, SMTP_DECRYPTION_ERROR)
@@ -442,8 +441,8 @@ class SmtpConnector(BaseConnector):
 
         # Run the initial authentication flow only if current action is test connectivity
         if self.get_action_identifier() != self.ACTION_ID_TEST_CONNECTIVITY:
-            # if not self._access_token:
-            #     return phantom.APP_ERROR, "Unable to get access token. Has Test Connectivity been run?"
+            if not self._access_token:
+                return phantom.APP_ERROR, "Unable to get access token. Has Test Connectivity been run?"
 
             try:
                 ret_val = self._connect_to_server(action_result)
@@ -629,14 +628,11 @@ class SmtpConnector(BaseConnector):
                 decoded_str = decoded_bytes.decode("ascii")
                 json_str = json.loads(decoded_str)
 
-                if "gmail" in config[phantom.APP_JSON_SERVER]:
-                    pass
-                else:
-                    if json_str.get("status") == "400":
-                        return action_result.set_status(
-                            phantom.APP_ERROR,
-                            "Could not connect to server, please check your asset configuration and re-run test connectivity"
-                        )
+                if "gmail" not in config[phantom.APP_JSON_SERVER] and json_str.get("status") == "400":
+                    return action_result.set_status(
+                        phantom.APP_ERROR,
+                        "Could not connect to server, please check your asset configuration and re-run test connectivity"
+                    )
                 ret_val, message = self._interactive_auth_refresh()
                 if not ret_val:
                     return action_result.set_status(phantom.APP_ERROR, message)
