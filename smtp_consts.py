@@ -22,7 +22,7 @@ SMTP_FAILED_CONNECTIVITY_TEST = " Please run test connectivity first."
 
 SMTP_PROG_UNABLE_TO_ATTACH_FILE = "Unable to attach file {}"
 SMTP_MESSAGE_SKIP_AUTH_NO_USERNAME_PASSWORD = "Skipping authentication, since Username or Password not configured"  # pragma: allowlist secret
-SMTP_ERROR_PARSE_HEADERS = 'Unable to parse headers as a dictionary: {}'
+SMTP_ERROR_PARSE_HEADERS = "Unable to parse headers as a dictionary: {}"
 SMTP_UNICODE_ERROR_MESSAGE = "Error occurred while associating the email content in the email message object. \
 If you are dealing with the Unicode characters,please mark the asset configuration parameter 'Enable Unicode \
 support' as true, if not done already and try again."
@@ -64,13 +64,17 @@ Either the server does not support SMTPUT8 or the 'Enable SMTPUTF8 support' asse
 SMTP_ERROR_TO_FROM_UNAVAILABLE = "Error: Failed to send the email. The {} is unavailable. Please check the action parameters"
 SMTP_ERROR_CONNECTIVITY_TO_SERVER = "Error connecting to server"
 SMTP_ERROR_LOGGING_IN_TO_SERVER = "Error logging in to server"
-SMTP_REQUIRED_PARAM_AUTH = "One or more required parameters for {} authentication is missing."\
-    " The required parameters for {} authentication are: {}"
-SMTP_STATE_FILE_CORRUPT_ERROR = "Error occurred while loading the state file due to its unexpected format. " \
+SMTP_REQUIRED_PARAM_AUTH = (
+    "One or more required parameters for {} authentication is missing." " The required parameters for {} authentication are: {}"
+)
+SMTP_STATE_FILE_CORRUPT_ERROR = (
+    "Error occurred while loading the state file due to its unexpected format. "
     "Resetting the state file with the default format. Please try again."
+)
 
-SMTP_ASSET_CORRUPTED = "ERROR: The token present in the state file is corrupted. Deleting the token. " \
-    "Please test the connectivity to generate a new token"
+SMTP_ASSET_CORRUPTED = (
+    "ERROR: The token present in the state file is corrupted. Deleting the token. " "Please test the connectivity to generate a new token"
+)
 
 # Constants relating to '_get_error_message_from_exception'
 ERROR_MESSAGE_UNAVAILABLE = "Error message unavailable. Please check the asset configuration and|or action parameters"
@@ -80,7 +84,7 @@ PARSE_ERROR_MESSAGE = "Unable to parse the error message. Please check the asset
 DEFAULT_REQUEST_TIMEOUT = 30  # 30 seconds
 
 
-SMTP_STATE_IS_ENCRYPTED = 'is_encrypted'
+SMTP_STATE_IS_ENCRYPTED = "is_encrypted"
 
 # For encryption and decryption
 SMTP_ENCRYPT_TOKEN = "Encrypting the {} token"
@@ -94,26 +98,9 @@ SMTP_NON_NEG_INT_MESSAGE = "Please provide a valid non-negative integer value in
 SMTP_NON_NEG_NON_ZERO_INT_MESSAGE = "Please provide a valid non-zero positive integer value in '{param}'"
 SMTP_AUTH_MESSAGE = "Using {} Authentication"
 SMTP_AUTH_FAILED_ACTION_MESSAGE = "{} failed for {} authentication. {}"
-SMTP_ALLOWED_AUTH_TYPES = [
-    "Automatic",
-    "OAuth",
-    "Basic",
-    "Passwordless"
-]
+SMTP_ALLOWED_AUTH_TYPES = ["Automatic", "OAuth", "Basic", "Passwordless"]
 BLEACH_SAFE_HTML_ATTRIBUTES = {
-    "*": [
-        "id",
-        "class",
-        "lang",
-        "style",
-        "title",
-        "width",
-        "height",
-        "name",
-        "placeholder",
-        "required",
-        "value"
-    ],
+    "*": ["id", "class", "lang", "style", "title", "width", "height", "name", "placeholder", "required", "value"],
     "table": [
         "summary",
         "align",
@@ -183,47 +170,15 @@ BLEACH_SAFE_HTML_ATTRIBUTES = {
         "alt",
         "referrerpolicy",
         "srcset",
-        "usemap"
-        "sizes",
+        "usemap" "sizes",
         "align",
         "border",
         "hspace",
         "vspace",
     ],
-    "a": [
-        "href",
-        "alt",
-        "download",
-        "hreflang",
-        "media",
-        "referrerpolicy",
-        "rel",
-        "target",
-        "type"
-    ],
-    "area": [
-        "alt",
-        "coords",
-        "download",
-        "href",
-        "hreflang",
-        "media",
-        "referrerpolicy",
-        "rel",
-        "shape",
-        "target",
-        "type"
-    ],
-    "textarea": [
-        "rows",
-        "cols",
-        "disabled",
-        "autofocus",
-        "form",
-        "maxlength",
-        "readonly",
-        "wrap"
-    ],
+    "a": ["href", "alt", "download", "hreflang", "media", "referrerpolicy", "rel", "target", "type"],
+    "area": ["alt", "coords", "download", "href", "hreflang", "media", "referrerpolicy", "rel", "shape", "target", "type"],
+    "textarea": ["rows", "cols", "disabled", "autofocus", "form", "maxlength", "readonly", "wrap"],
     "input": [
         "type",
         "accept",
@@ -250,111 +205,28 @@ BLEACH_SAFE_HTML_ATTRIBUTES = {
         "readonly",
         "size",
         "src",
-        "step"
+        "step",
     ],
-    "button": [
-        "autofocus",
-        "disabled",
-        "form",
-        "formaction",
-        "formenctype",
-        "formmethod",
-        "formnovalidate",
-        "formtarget",
-        "type"
-    ],
-    "bdo": [
-        "dir"
-    ],
-    "optgroup": [
-        "disable",
-        "label"
-    ],
-    "meter": [
-        "form",
-        "high",
-        "low",
-        "max",
-        "min",
-        "optimum"
-    ],
-    "base": [
-        "href",
-        "target"
-    ],
-    "del": [
-        "cite",
-        "datetime"
-    ],
-    "details": [
-        "open"
-    ],
-    "dialog": [
-        "open"
-    ],
-    "fieldset": [
-        "disabled",
-        "form"
-    ],
-    "form": [
-        "accept-charset",
-        "action",
-        "autocomplete",
-        "enctype",
-        "method",
-        "novalidate",
-        "rel",
-        "target"
-    ],
-    "ins": [
-        "cite",
-        "datetime"
-    ],
-    "label": [
-        "for",
-        "form"
-    ],
-    "ol": [
-        "reversed",
-        "start",
-        "type"
-    ],
-    "outgroup": [
-        "disabled",
-        "label"
-    ],
-    "option": [
-        "disabled",
-        "label",
-        "selected"
-    ],
-    "output": [
-        "for",
-        "form"
-    ],
-    "progress": [
-        "max"
-    ],
-    "q": [
-        "cite"
-    ],
-    "select": [
-        "autofocus",
-        "disabled",
-        "form",
-        "multiple",
-        "size"
-    ],
-    "source": [
-        "media",
-        "sizes",
-        "src",
-        "srcset",
-        "type"
-    ],
-    "style": [
-        "media",
-        "type"
-    ]
+    "button": ["autofocus", "disabled", "form", "formaction", "formenctype", "formmethod", "formnovalidate", "formtarget", "type"],
+    "bdo": ["dir"],
+    "optgroup": ["disable", "label"],
+    "meter": ["form", "high", "low", "max", "min", "optimum"],
+    "base": ["href", "target"],
+    "del": ["cite", "datetime"],
+    "details": ["open"],
+    "dialog": ["open"],
+    "fieldset": ["disabled", "form"],
+    "form": ["accept-charset", "action", "autocomplete", "enctype", "method", "novalidate", "rel", "target"],
+    "ins": ["cite", "datetime"],
+    "label": ["for", "form"],
+    "ol": ["reversed", "start", "type"],
+    "outgroup": ["disabled", "label"],
+    "option": ["disabled", "label", "selected"],
+    "output": ["for", "form"],
+    "progress": ["max"],
+    "q": ["cite"],
+    "select": ["autofocus", "disabled", "form", "multiple", "size"],
+    "source": ["media", "sizes", "src", "srcset", "type"],
+    "style": ["media", "type"],
 }
 SMTP_BLEACH_ALLOWED_PROTOCOLS = ["cid", "data", "tel", "sms", "geo", "webcal", "callto"]
