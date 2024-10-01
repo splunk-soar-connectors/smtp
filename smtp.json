@@ -5,7 +5,7 @@
     "publisher": "Splunk",
     "type": "email",
     "main_module": "smtp_connector.py",
-    "app_version": "3.2.1",
+    "app_version": "3.3.0",
     "utctime_updated": "2024-03-06T13:04:08.000000Z",
     "package_name": "phantom_smtp",
     "product_vendor": "Generic",
