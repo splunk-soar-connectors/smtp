@@ -2,11 +2,11 @@
 # SMTP
 
 Publisher: Splunk  
-Connector Version: 3.3.0  
+Connector Version: 3.3.1  
 Product Vendor: Generic  
 Product Name: SMTP  
 Product Version Supported (regex): ".\*"  
-Minimum Product Version: 6.2.1  
+Minimum Product Version: 6.2.2  
 
 This app provides the ability to send email using SMTP
 
