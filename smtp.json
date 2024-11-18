@@ -5,13 +5,13 @@
     "publisher": "Splunk",
     "type": "email",
     "main_module": "smtp_connector.py",
-    "app_version": "3.3.0",
-    "utctime_updated": "2024-03-06T13:04:08.000000Z",
+    "app_version": "3.3.1",
+    "utctime_updated": "2024-11-18T20:29:38.000000Z",
     "package_name": "phantom_smtp",
     "product_vendor": "Generic",
     "product_name": "SMTP",
     "product_version_regex": ".*",
-    "min_phantom_version": "6.2.1",
+    "min_phantom_version": "6.2.2",
     "rest_handler": "request_handler.handle_request",
     "license": "Copyright (c) 2016-2024 Splunk Inc.",
     "logo": "logo_splunk.svg",
@@ -698,25 +698,5 @@
                 "height": 5
             }
         }
-    ],
-    "pip39_dependencies": {
-        "wheel": [
-            {
-                "module": "bleach",
-                "input_file": "wheels/py3/bleach-6.0.0-py3-none-any.whl"
-            },
-            {
-                "module": "bleach_allowlist",
-                "input_file": "wheels/shared/bleach_allowlist-1.0.3-py2.py3-none-any.whl"
-            },
-            {
-                "module": "tinycss2",
-                "input_file": "wheels/py3/tinycss2-1.1.1-py3-none-any.whl"
-            },
-            {
-                "module": "webencodings",
-                "input_file": "wheels/shared/webencodings-0.5.1-py2.py3-none-any.whl"
-            }
-        ]
-    }
+    ]
 }
