@@ -2,11 +2,11 @@
 # SMTP
 
 Publisher: Splunk  
-Connector Version: 3.3.0  
+Connector Version: 3.3.1  
 Product Vendor: Generic  
 Product Name: SMTP  
 Product Version Supported (regex): ".\*"  
-Minimum Product Version: 6.2.1  
+Minimum Product Version: 6.3.0  
 
 This app provides the ability to send email using SMTP
 
@@ -257,15 +257,14 @@ This app provides the ability to send email using SMTP
         Recipients Test\\n\\nThis is test data.
 
 
-### Configuration Variables
-The below configuration variables are required for this Connector to operate.  These variables are specified when configuring a SMTP asset in SOAR.
+### Configuration variables
+This table lists the configuration variables required to operate SMTP. These variables are specified when configuring a SMTP asset in Splunk SOAR.
 
 VARIABLE | REQUIRED | TYPE | DESCRIPTION
 -------- | -------- | ---- | -----------
 **server** |  required  | string | Server IP/Hostname
 **port** |  optional  | numeric | Port
 **auth_type** |  optional  | string | Authentication type to use for connectivity
-**ph_0** |  optional  | ph | Place holder
 **username** |  optional  | string | Username (or email address)
 **password** |  optional  | password | Password (For Basic Auth)
 **client_id** |  optional  | string | OAuth Client ID (For OAuth)

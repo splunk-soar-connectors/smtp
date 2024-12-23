@@ -111,6 +111,7 @@ class SmtpConnector(BaseConnector):
                 return self.set_status(phantom.APP_ERROR, SMTP_DECRYPTION_ERROR)
 
         if phantom.is_fail(self._connect_to_server_helper(action_result)):
+            self.debug_print("OAuth authentication failed")
             return action_result.get_status()
 
         return phantom.APP_SUCCESS
@@ -173,12 +174,11 @@ class SmtpConnector(BaseConnector):
                     if auth_type == SMTP_PASSWORD_LESS_AUTH_TYPE:
                         if action_id != SMTP_TEST_CONNECTIVITY:
                             msg = "Authentication failed for connecting to server with {} types \
-                            of authentication.{}".format(
-                                SMTP_ALLOWED_AUTH_TYPES[1:], SMTP_FAILED_CONNECTIVITY_TEST
+                            of authentication. Message: {}.{}".format(
+                                SMTP_ALLOWED_AUTH_TYPES[1:], msg, SMTP_FAILED_CONNECTIVITY_TEST
                             )
                             return action_result.set_status(phantom.APP_ERROR, msg)
-                        else:
-                            return action_result.set_status(phantom.APP_ERROR)
+                        return action_result.set_status(phantom.APP_ERROR)
                 else:
                     return phantom.APP_SUCCESS
 
@@ -186,16 +186,16 @@ class SmtpConnector(BaseConnector):
         self.save_progress(SMTP_AUTH_MESSAGE.format(auth_type))  # nosemgrep
         auth = eval(f"self._with_{auth_type.lower()}_type(action_result)")
         if phantom.is_fail(auth):
+            self.debug_print(f"Authentication failed using {auth_type}")
             msg = action_result.get_message()
             if action_id != SMTP_TEST_CONNECTIVITY:
-                msg = "Authentication failed for connecting to server with {} \
-                    authentication.{}".format(
-                    auth_type, SMTP_FAILED_CONNECTIVITY_TEST
+                msg = "Authentication failed for connecting to server with {} authentication. Message: {}.{}".format(
+                    auth_type, msg, SMTP_FAILED_CONNECTIVITY_TEST
                 )
                 return action_result.set_status(phantom.APP_ERROR, msg)
-            else:
-                return action_result.set_status(phantom.APP_ERROR, msg)
+            return action_result.set_status(phantom.APP_ERROR, msg)
 
+        self.debug_print(f"Authentication succeeded using {auth_type}")
         return phantom.APP_SUCCESS
 
     def finalize(self):
@@ -211,7 +211,7 @@ class SmtpConnector(BaseConnector):
                         self._state["oauth_token"]["refresh_token"] = self._refresh_token
                     self._state[SMTP_STATE_IS_ENCRYPTED] = True
             except Exception as e:
-                self.debug_print("{}: {}".format(SMTP_ENCRYPTION_ERROR, self._get_error_message_from_exception(e)))
+                self.error_print("{}: {}".format(SMTP_ENCRYPTION_ERROR, self._get_error_message_from_exception(e)))
                 return self.set_status(phantom.APP_ERROR, SMTP_ENCRYPTION_ERROR)
 
         self.save_state(self._state)
@@ -388,7 +388,7 @@ class SmtpConnector(BaseConnector):
         return phantom.APP_SUCCESS, ""
 
     def _interactive_auth_refresh(self):
-
+        self.debug_print("Attempting to refresh OAuth token")
         config = self.get_config()
         client_id = config.get("client_id")
         client_secret = config.get("client_secret")
@@ -426,10 +426,11 @@ class SmtpConnector(BaseConnector):
             self._refresh_token = oauth_token.get("refresh_token")
 
         self._state["oauth_token"] = oauth_token
+        self.debug_print("OAuth token refresh succeeded")
         return phantom.APP_SUCCESS, ""
 
     def _set_interactive_auth(self, action_result):
-
+        self.debug_print("Setting interactive auth")
         config = self.get_config()
         client_id = config.get("client_id")
         client_secret = config.get("client_secret")
@@ -551,7 +552,6 @@ class SmtpConnector(BaseConnector):
         self._cleanup()
 
     def _connect_to_server(self, action_result, first_try=True):
-
         config = self.get_config()
         is_oauth = self._auth_mechanism == SMTP_OAUTH_AUTH_TYPE
 
@@ -590,11 +590,12 @@ class SmtpConnector(BaseConnector):
         self._smtp_conn.ehlo()
         # Login
         try:
+            self.debug_print("Attempting to login")
             if self._auth_mechanism == SMTP_OAUTH_AUTH_TYPE:
                 if config.get(phantom.APP_JSON_USERNAME) is None:
                     return action_result.set_status(
                         phantom.APP_ERROR,
-                        "A username must be specified to run test connectivity using OAuth. " "Please check your asset configuration.",
+                        "A username must be specified to run test connectivity using OAuth. Please check your asset configuration.",
                     )
                 auth_string = self._generate_oauth_string(config[phantom.APP_JSON_USERNAME], self._access_token)
                 # self._smtp_conn.ehlo(config.get("client_id"))
@@ -605,8 +606,12 @@ class SmtpConnector(BaseConnector):
             elif self._auth_mechanism == SMTP_PASSWORD_LESS_AUTH_TYPE:
                 self.debug_print(SMTP_MESSAGE_SKIP_AUTH_NO_USERNAME_PASSWORD)
                 response_code, response_message = (None, None)
+            else:
+                self.debug_print(f"Unsupported auth_mechanism: {self._auth_mechanism}")
+                return action_result.set_status(phantom.APP_ERROR, "Login failed due to an unsupported auth mechanism. This shouldn't happen.")
 
         except Exception as e:
+            self.debug_print(f"Exception occurred while attempting to login using OAuth. Details: {e}")
             # If token is expired, use the refresh token to re-new the access token
             error_text = self._get_error_message_from_exception(e)
             if first_try and is_oauth and "Invalid credentials" in error_text:
@@ -618,6 +623,7 @@ class SmtpConnector(BaseConnector):
             raise e
 
         if response_code is not None:
+            self.debug_print(f"Response to login attempt received. Response code: {response_code}")
             # 334 status code for smtp signifies that the requested security mechanism is accepted
             if response_code == 334:
                 decoded_bytes = base64.b64decode(response_message)
@@ -939,7 +945,7 @@ class SmtpConnector(BaseConnector):
 
     def _connect_to_server_helper(self, action_result):
         """Redirect the flow based on auth type"""
-
+        self.debug_print("Connecting to SMTP server")
         if self._auth_mechanism == SMTP_OAUTH_AUTH_TYPE:
             if self._refresh_token and self._access_token == "":
                 self.debug_print("Try to generate token from refresh token")
