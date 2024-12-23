@@ -2,7 +2,7 @@
 # SMTP
 
 Publisher: Splunk  
-Connector Version: 3.3.0  
+Connector Version: 3.3.1  
 Product Vendor: Generic  
 Product Name: SMTP  
 Product Version Supported (regex): ".\*"  
