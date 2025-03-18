@@ -1,6 +1,6 @@
 # File: smtp_consts.py
 #
-# Copyright (c) 2016-2024 Splunk Inc.
+# Copyright (c) 2016-2025 Splunk Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -65,7 +65,7 @@ SMTP_ERROR_TO_FROM_UNAVAILABLE = "Error: Failed to send the email. The {} is una
 SMTP_ERROR_CONNECTIVITY_TO_SERVER = "Error connecting to server"
 SMTP_ERROR_LOGGING_IN_TO_SERVER = "Error logging in to server"
 SMTP_REQUIRED_PARAM_AUTH = (
-    "One or more required parameters for {} authentication is missing." " The required parameters for {} authentication are: {}"
+    "One or more required parameters for {} authentication is missing. The required parameters for {} authentication are: {}"
 )
 SMTP_STATE_FILE_CORRUPT_ERROR = (
     "Error occurred while loading the state file due to its unexpected format. "
@@ -73,7 +73,7 @@ SMTP_STATE_FILE_CORRUPT_ERROR = (
 )
 
 SMTP_ASSET_CORRUPTED = (
-    "ERROR: The token present in the state file is corrupted. Deleting the token. " "Please test the connectivity to generate a new token"
+    "ERROR: The token present in the state file is corrupted. Deleting the token. Please test the connectivity to generate a new token"
 )
 
 # Constants relating to '_get_error_message_from_exception'
@@ -170,7 +170,7 @@ BLEACH_SAFE_HTML_ATTRIBUTES = {
         "alt",
         "referrerpolicy",
         "srcset",
-        "usemap" "sizes",
+        "usemapsizes",
         "align",
         "border",
         "hspace",
