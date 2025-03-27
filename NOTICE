@@ -1,4 +1,29 @@
 Splunk SOAR SMTP
-Copyright (c) 2016-2024 Splunk Inc.
+Copyright (c) 2016-2025 Splunk Inc.
 
-Third-party Software Attributions:
+Third Party Software Attributions:
+
+Name: bleach
+Version: 6.0.0
+Author:
+License: Apache Software License
+
+Name: bleach-allowlist
+Version: 1.0.3
+Author: Charlie DeTar
+License: BSD License
+
+Name: six
+Version: 1.17.0
+Author: Benjamin Peterson
+License: MIT
+
+Name: tinycss2
+Version: 1.1.1
+Author:
+License:
+
+Name: webencodings
+Version: 0.5.1
+Author: Geoffrey Sneddon
+License: BSD
