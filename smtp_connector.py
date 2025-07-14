@@ -838,7 +838,13 @@ class SmtpConnector(BaseConnector):
             outer["Subject"] = param[SMTP_JSON_SUBJECT]
             action_result.update_param({SMTP_JSON_SUBJECT: param[SMTP_JSON_SUBJECT]})
 
-        outer["From"] = email_from
+        if "From" in outer and param.get(SMTP_JSON_FROM):
+            del outer["From"]
+            outer["From"] = param[SMTP_JSON_FROM]
+        elif "From" in outer:
+            email_from = outer["From"]
+        else:
+            outer["From"] = email_from
         action_result.update_param({SMTP_JSON_FROM: outer["From"]})
 
         to_list = [x.strip() for x in to_comma_sep_list.split(",")]
@@ -1093,9 +1099,6 @@ class SmtpConnector(BaseConnector):
 
         root = MIMEMultipart("related")
 
-        root["from"] = email_from
-        root["to"] = ",".join(email_to)
-
         if email_cc:
             root["cc"] = ", ".join(email_cc)
             email_to.extend(email_cc)
@@ -1111,6 +1114,16 @@ class SmtpConnector(BaseConnector):
 
         if not email_text:
             email_text = self.html_to_text(email_html)
+
+        if "From" in root and param.get(SMTP_JSON_FROM):
+            del root["From"]
+            root["From"] = param[SMTP_JSON_FROM]
+        elif "From" in root:
+            email_from = root["From"]
+        else:
+            root["From"] = email_from
+
+        root["to"] = ",".join(email_to)
 
         msg = MIMEMultipart("alternative")
 

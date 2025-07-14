@@ -1,3 +1,2 @@
 **Unreleased**
-
-* chore(ci): update pre-commit config
+* Fixed issue with duplicate 'From' headers [PAPP-36208]
