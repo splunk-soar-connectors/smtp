@@ -1099,6 +1099,8 @@ class SmtpConnector(BaseConnector):
 
         root = MIMEMultipart("related")
 
+        root["to"] = ",".join(email_to)
+
         if email_cc:
             root["cc"] = ", ".join(email_cc)
             email_to.extend(email_cc)
@@ -1122,8 +1124,6 @@ class SmtpConnector(BaseConnector):
             email_from = root["From"]
         else:
             root["From"] = email_from
-
-        root["to"] = ",".join(email_to)
 
         msg = MIMEMultipart("alternative")
 
