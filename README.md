@@ -1,9 +1,9 @@
 # SMTP
 
-Publisher: Splunk \
-Connector Version: 3.3.1 \
-Product Vendor: Generic \
-Product Name: SMTP \
+Publisher: Splunk <br>
+Connector Version: 3.3.1 <br>
+Product Vendor: Generic <br>
+Product Name: SMTP <br>
 Minimum Product Version: 6.3.0
 
 This app provides the ability to send email using SMTP
@@ -217,16 +217,16 @@ VARIABLE | REQUIRED | TYPE | DESCRIPTION
 
 ### Supported Actions
 
-[test connectivity](#action-test-connectivity) - Validate the asset configuration for connectivity. This action logs into the device and sends a test email to check the connection and credentials \
-[send email](#action-send-email) - Sends an email \
-[send rawemail](#action-send-rawemail) - Takes a fully specified email and sends it unmodified to the smtp server. Sender and Recipient(s) will be extracted from message headers; Suggest using the standard email package to build message and export with the .as_string() method \
+[test connectivity](#action-test-connectivity) - Validate the asset configuration for connectivity. This action logs into the device and sends a test email to check the connection and credentials <br>
+[send email](#action-send-email) - Sends an email <br>
+[send rawemail](#action-send-rawemail) - Takes a fully specified email and sends it unmodified to the smtp server. Sender and Recipient(s) will be extracted from message headers; Suggest using the standard email package to build message and export with the .as_string() method <br>
 [send htmlemail](#action-send-htmlemail) - Sends a html email with optional text rendering. Attachments are allowed a Content-ID tag for reference within the html
 
 ## action: 'test connectivity'
 
 Validate the asset configuration for connectivity. This action logs into the device and sends a test email to check the connection and credentials
 
-Type: **test** \
+Type: **test** <br>
 Read only: **True**
 
 #### Action Parameters
@@ -241,7 +241,7 @@ No Output
 
 Sends an email
 
-Type: **generic** \
+Type: **generic** <br>
 Read only: **False**
 
 Some points to note: <ul> <li>Only files present in the <b>vault</b> can be attached to the email.</li> <li>To send HTML emails, specify a HTML formatted text (i.e. <html>....</html>) in the <b>body</b> parameter. The app sends a multipart email containing plain and html <i>Content-Type</i>.</li> <li>The <b>to</b> parameter supports comma separated email addresses.</li> <li>If the "Subject" is provided in the <b>subject</b> and the <b>headers</b> parameter, then the "Subject" provided in the <b>headers</b> parameter will be preferred and the action will run accordingly.</li> <li> In the playbooks, if you don't provide any value for 'from' field in actions, it will take value from the platform email setting. If in the email settings also it is empty, it will consider the username parameter provided in the asset configuration as the sender's email address</li> </ul>.
@@ -282,7 +282,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Takes a fully specified email and sends it unmodified to the smtp server. Sender and Recipient(s) will be extracted from message headers; Suggest using the standard email package to build message and export with the .as_string() method
 
-Type: **generic** \
+Type: **generic** <br>
 Read only: **False**
 
 #### Action Parameters
@@ -307,7 +307,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Sends a html email with optional text rendering. Attachments are allowed a Content-ID tag for reference within the html
 
-Type: **generic** \
+Type: **generic** <br>
 Read only: **False**
 
 If the <b>from</b> parameter is not provided, then the action will consider the <b>username</b> parameter provided in the asset configuration as the sender's email address.<br><br>If the "Subject" is provided in the <b>subject</b> and the <b>headers</b> parameter, then the "Subject" provided in the <b>headers</b> parameter will be preferred and the action will run accordingly.
