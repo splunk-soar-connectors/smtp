@@ -703,7 +703,7 @@
         "wheel": [
             {
                 "module": "bleach",
-                "input_file": "wheels/py3/bleach-6.0.0-py3-none-any.whl"
+                "input_file": "wheels/py3/bleach-6.2.0-py3-none-any.whl"
             },
             {
                 "module": "bleach_allowlist",
@@ -711,7 +711,27 @@
             },
             {
                 "module": "tinycss2",
-                "input_file": "wheels/py3/tinycss2-1.1.1-py3-none-any.whl"
+                "input_file": "wheels/py3/tinycss2-1.4.0-py3-none-any.whl"
+            },
+            {
+                "module": "webencodings",
+                "input_file": "wheels/shared/webencodings-0.5.1-py2.py3-none-any.whl"
+            }
+        ]
+    },
+    "pip313_dependencies": {
+        "wheel": [
+            {
+                "module": "bleach",
+                "input_file": "wheels/py3/bleach-6.2.0-py3-none-any.whl"
+            },
+            {
+                "module": "bleach_allowlist",
+                "input_file": "wheels/shared/bleach_allowlist-1.0.3-py2.py3-none-any.whl"
+            },
+            {
+                "module": "tinycss2",
+                "input_file": "wheels/py3/tinycss2-1.4.0-py3-none-any.whl"
             },
             {
                 "module": "webencodings",
