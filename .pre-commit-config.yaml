@@ -1,6 +1,10 @@
 # See https://pre-commit.com for more information
 # See https://pre-commit.com/hooks.html for more hooks
 
+# By default, run each hook only in the standard pre-commit stage
+default_install_hook_types: [pre-commit, commit-msg]
+default_stages: [pre-commit]
+
 # This is a template for connector pre-commit hooks
 repos:
   - repo: https://github.com/compilerla/conventional-pre-commit
@@ -23,7 +27,7 @@ repos:
       - id: check-json
       - id: check-yaml
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.12.12
+    rev: v0.13.0
     hooks:
       - id: ruff
         args: [ "--fix", "--unsafe-fixes"] # Allow unsafe fixes (ruff pretty strict about what it can fix)
@@ -33,6 +37,11 @@ repos:
     hooks:
       - id: djlint-reformat-django
       - id: djlint-django
+  - repo: https://github.com/phantomcyber/soar-app-linter
+    rev: 0.1.0
+    hooks:
+      - id: soar-app-linter
+        args: ["--single-repo", "--message-level", "error"]
   - repo: https://github.com/hukkin/mdformat
     rev: 0.7.22
     hooks:
