@@ -5,8 +5,8 @@
     "publisher": "Splunk",
     "type": "email",
     "main_module": "smtp_connector.py",
-    "app_version": "3.3.1",
-    "utctime_updated": "2024-12-23T12:25:48.000000Z",
+    "app_version": "3.3.2",
+    "utctime_updated": "2025-09-24T19:12:24.435843Z",
     "package_name": "phantom_smtp",
     "product_vendor": "Generic",
     "product_name": "SMTP",
@@ -16,7 +16,7 @@
     "license": "Copyright (c) 2016-2025 Splunk Inc.",
     "logo": "logo_splunk.svg",
     "logo_dark": "logo_splunk_dark.svg",
-    "python_version": "3",
+    "python_version": "3.9, 3.13",
     "fips_compliant": true,
     "latest_tested_versions": [
         "smtp.gmail.com, smtp.office365.com May 6, 2024"
@@ -703,7 +703,7 @@
         "wheel": [
             {
                 "module": "bleach",
-                "input_file": "wheels/py3/bleach-6.0.0-py3-none-any.whl"
+                "input_file": "wheels/py3/bleach-6.2.0-py3-none-any.whl"
             },
             {
                 "module": "bleach_allowlist",
@@ -711,7 +711,27 @@
             },
             {
                 "module": "tinycss2",
-                "input_file": "wheels/py3/tinycss2-1.1.1-py3-none-any.whl"
+                "input_file": "wheels/py3/tinycss2-1.4.0-py3-none-any.whl"
+            },
+            {
+                "module": "webencodings",
+                "input_file": "wheels/shared/webencodings-0.5.1-py2.py3-none-any.whl"
+            }
+        ]
+    },
+    "pip313_dependencies": {
+        "wheel": [
+            {
+                "module": "bleach",
+                "input_file": "wheels/py3/bleach-6.2.0-py3-none-any.whl"
+            },
+            {
+                "module": "bleach_allowlist",
+                "input_file": "wheels/shared/bleach_allowlist-1.0.3-py2.py3-none-any.whl"
+            },
+            {
+                "module": "tinycss2",
+                "input_file": "wheels/py3/tinycss2-1.4.0-py3-none-any.whl"
             },
             {
                 "module": "webencodings",
