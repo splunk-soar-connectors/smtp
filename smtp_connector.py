@@ -773,13 +773,64 @@ class SmtpConnector(BaseConnector):
             return True
         return False
 
+    def _clean_from_field(self, value: str) -> str:
+        """
+        Clean the `from` field values by extracting the display name and email
+        from strings containing `<mailto:...>`.
+
+        Problem Reference (PAPP-34182):
+        --------------------------------
+        Based on internal testing (see attached compatibility matrix):
+        - On Python 3.9.21(6.4.1 and above), inputs containing <mailto:...> failed to parse:
+                "JohnDoe<mailto:john@example.com>"
+                "John Doe<mailto:john@example.com>"
+        - On Python 3.9.9 (6.4.0) and below, the same inputs parsed successfully:
+                "JohnDoe<mailto:john@example.com>"
+                "John Doe<mailto:john@example.com>"
+        - Already-cleaned values without <mailto:...> work across all versions:
+                "John Doe <john@example.com>"
+                "JohnDoe <john@example.com>"
+                "John Doe john@example.com"
+                "JohnDoe john@example.com"
+
+        Compatibility Fix:
+        ------------------
+        To ensure consistent behavior for existing customer environments,
+        this function adds a backward-compatibility layer. It:
+        1. Detects values in the format "<mailto:...>"
+        2. Extracts the display name and email
+        3. Returns them as "name email"
+        4. Falls back safely to returning the original value if unmatched
+
+        Parameters
+        ----------
+        value : str
+            The raw `from` field string.
+
+        Returns
+        -------
+        str
+            Cleaned "name email" string if <mailto:...> is detected,
+            otherwise the input value unchanged.
+        """
+
+        # Regex to capture "Name<mailto:email>"
+        match = re.match(r"^(.*?)<mailto:(.*?)>$", value.strip())
+        if match:
+            name = match.group(1).strip()
+            email = match.group(2).strip()
+            return f"{name} {email}"
+
+        # Fallback: return the value unchanged if no <mailto:...> found
+        return value
+
     def _send_email(self, param, action_result):
         # username = self.get_config()[phantom.APP_JSON_USERNAME]
         config = self.get_config()
 
         # Derive 'from' email address
         sender_address = config.get("sender_address", config.get(phantom.APP_JSON_USERNAME))
-        email_from = param.get(SMTP_JSON_FROM, sender_address)
+        email_from = self._clean_from_field(param.get(SMTP_JSON_FROM, sender_address))
 
         encoding = config.get(SMTP_ENCODING, False)
         smtputf8 = config.get(SMTP_ALLOW_SMTPUTF8, False)
@@ -838,7 +889,13 @@ class SmtpConnector(BaseConnector):
             outer["Subject"] = param[SMTP_JSON_SUBJECT]
             action_result.update_param({SMTP_JSON_SUBJECT: param[SMTP_JSON_SUBJECT]})
 
-        outer["From"] = email_from
+        if "From" in outer and param.get(SMTP_JSON_FROM):
+            del outer["From"]
+            outer["From"] = self._clean_from_field(param[SMTP_JSON_FROM])
+        elif "From" in outer:
+            email_from = outer["From"]
+        else:
+            outer["From"] = email_from
         action_result.update_param({SMTP_JSON_FROM: outer["From"]})
 
         to_list = [x.strip() for x in to_comma_sep_list.split(",")]
@@ -998,7 +1055,7 @@ class SmtpConnector(BaseConnector):
 
         # Derive 'from' email address
         sender_address = config.get("sender_address", config.get(phantom.APP_JSON_USERNAME))
-        email_from = param.get(SMTP_JSON_FROM, sender_address)
+        email_from = self._clean_from_field(param.get(SMTP_JSON_FROM, sender_address))
 
         email_to = param["to"]
         email_cc = param.get("cc")
@@ -1093,7 +1150,6 @@ class SmtpConnector(BaseConnector):
 
         root = MIMEMultipart("related")
 
-        root["from"] = email_from
         root["to"] = ",".join(email_to)
 
         if email_cc:
@@ -1111,6 +1167,14 @@ class SmtpConnector(BaseConnector):
 
         if not email_text:
             email_text = self.html_to_text(email_html)
+
+        if "From" in root and param.get(SMTP_JSON_FROM):
+            del root["From"]
+            root["From"] = self._clean_from_field(param[SMTP_JSON_FROM])
+        elif "From" in root:
+            email_from = root["From"]
+        else:
+            root["From"] = email_from
 
         msg = MIMEMultipart("alternative")
 
