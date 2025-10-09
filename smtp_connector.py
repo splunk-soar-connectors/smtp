@@ -1078,14 +1078,16 @@ class SmtpConnector(BaseConnector):
         email_html = param["html_body"]
         email_text = param.get("text_body")
         attachment_json = param.get("attachment_json")
+        should_sanitize = param.get("should_sanitize_template", True)
 
-        email_html = bleach.clean(
-            text=email_html,
-            tags=self.SAFE_HTML_TAGS,
-            attributes=BLEACH_SAFE_HTML_ATTRIBUTES,
-            css_sanitizer=CSSSanitizer(allowed_css_properties=all_styles),
-            protocols=list(bleach.ALLOWED_PROTOCOLS) + SMTP_BLEACH_ALLOWED_PROTOCOLS,
-        )
+        if should_sanitize:
+            email_html = bleach.clean(
+                text=email_html,
+                tags=self.SAFE_HTML_TAGS,
+                attributes=BLEACH_SAFE_HTML_ATTRIBUTES,
+                css_sanitizer=CSSSanitizer(allowed_css_properties=all_styles),
+                protocols=list(bleach.ALLOWED_PROTOCOLS) + SMTP_BLEACH_ALLOWED_PROTOCOLS,
+            )
         email_html = unescape(email_html)
 
         encoding = config.get(SMTP_ENCODING, False)

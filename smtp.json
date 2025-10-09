@@ -518,6 +518,12 @@
                     "description": "Optional content-id for attachment, typically used in image link referrals",
                     "data_type": "string",
                     "order": 18
+                },
+                "should_sanitize_template": {
+                    "description": "Sanitize the HTML body using the Bleach library to remove unsafe tags and attributes",
+                    "data_type": "boolean",
+                    "order": 19,
+                    "default": true
                 }
             },
             "output": [
