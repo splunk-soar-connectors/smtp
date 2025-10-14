@@ -335,6 +335,7 @@ PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
 **content_id4** | optional | Optional content-id for attachment, typically used in image link referrals | string | |
 **attachment5** | optional | Vault id for attachment | string | |
 **content_id5** | optional | Optional content-id for attachment, typically used in image link referrals | string | |
+**should_sanitize_template** | optional | Sanitize the HTML body using the Bleach library to remove unsafe tags and attributes | |
 
 #### Action Output
 
@@ -360,6 +361,7 @@ action_result.parameter.html_body | string | | <html><h2>HTML heading</h2><body>
 action_result.parameter.subject | string | | Test |
 action_result.parameter.text_body | string | | This is text body. |
 action_result.parameter.to | string | `email` | receiver@testdomain.com |
+action_result.parameter.should_sanitize_template | boolean | | |
 action_result.data | string | | |
 action_result.summary | string | | |
 action_result.message | string | | Email sent |
