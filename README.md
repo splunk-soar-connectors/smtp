@@ -335,7 +335,7 @@ PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
 **content_id4** | optional | Optional content-id for attachment, typically used in image link referrals | string | |
 **attachment5** | optional | Vault id for attachment | string | |
 **content_id5** | optional | Optional content-id for attachment, typically used in image link referrals | string | |
-**should_sanitize_template** | optional | Sanitize the HTML body using the Bleach library to remove unsafe tags and attributes | |
+**should_sanitize_template** | optional | Sanitize the HTML body using the Bleach library to remove unsafe tags and attributes | boolean | |
 
 #### Action Output
 
