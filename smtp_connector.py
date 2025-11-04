@@ -22,7 +22,7 @@ import re
 import smtplib
 import sys
 import time
-from email import encoders, message_from_file, message_from_string, message_from_bytes
+from email import encoders, message_from_bytes, message_from_string
 from email.mime.base import MIMEBase
 from email.mime.image import MIMEImage
 from email.mime.message import MIMEMessage
