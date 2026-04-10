@@ -361,18 +361,18 @@ action_result.parameter.html_body | string | | <html><h2>HTML heading</h2><body>
 action_result.parameter.subject | string | | Test |
 action_result.parameter.text_body | string | | This is text body. |
 action_result.parameter.to | string | `email` | receiver@testdomain.com |
-action_result.parameter.should_sanitize_template | boolean | | |
 action_result.data | string | | |
 action_result.summary | string | | |
 action_result.message | string | | Email sent |
 summary.total_objects | numeric | | 1 |
 summary.total_objects_successful | numeric | | 1 |
+action_result.parameter.should_sanitize_template | boolean | | |
 
 ______________________________________________________________________
 
 Auto-generated Splunk SOAR Connector documentation.
 
-Copyright 2025 Splunk Inc.
+Copyright 2026 Splunk Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
