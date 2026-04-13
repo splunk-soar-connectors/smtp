@@ -335,6 +335,7 @@ PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
 **content_id4** | optional | Optional content-id for attachment, typically used in image link referrals | string | |
 **attachment5** | optional | Vault id for attachment | string | |
 **content_id5** | optional | Optional content-id for attachment, typically used in image link referrals | string | |
+**should_sanitize_template** | optional | Sanitize the HTML body using the Bleach library to remove unsafe tags and attributes | boolean | |
 
 #### Action Output
 
@@ -365,12 +366,13 @@ action_result.summary | string | | |
 action_result.message | string | | Email sent |
 summary.total_objects | numeric | | 1 |
 summary.total_objects_successful | numeric | | 1 |
+action_result.parameter.should_sanitize_template | boolean | | |
 
 ______________________________________________________________________
 
 Auto-generated Splunk SOAR Connector documentation.
 
-Copyright 2025 Splunk Inc.
+Copyright 2026 Splunk Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

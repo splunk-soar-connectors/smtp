@@ -13,7 +13,7 @@
     "product_version_regex": ".*",
     "min_phantom_version": "6.3.0",
     "rest_handler": "request_handler.handle_request",
-    "license": "Copyright (c) 2016-2025 Splunk Inc.",
+    "license": "Copyright (c) 2016-2026 Splunk Inc.",
     "logo": "logo_splunk.svg",
     "logo_dark": "logo_splunk_dark.svg",
     "python_version": "3.9, 3.13",
@@ -518,6 +518,12 @@
                     "description": "Optional content-id for attachment, typically used in image link referrals",
                     "data_type": "string",
                     "order": 18
+                },
+                "should_sanitize_template": {
+                    "description": "Sanitize the HTML body using the Bleach library to remove unsafe tags and attributes",
+                    "data_type": "boolean",
+                    "order": 19,
+                    "default": true
                 }
             },
             "output": [
@@ -688,6 +694,10 @@
                     "example_values": [
                         1
                     ]
+                },
+                {
+                    "data_path": "action_result.parameter.should_sanitize_template",
+                    "data_type": "boolean"
                 }
             ],
             "versions": "EQ(*)",
