@@ -158,13 +158,18 @@ class SmtpConnector(BaseConnector):
 
         self.debug_print("Determining auth type")
         auth_type = config.get("auth_type", SMTP_AUTOMATIC_AUTH_TYPE)
+        auth_handlers = {
+            SMTP_OAUTH_AUTH_TYPE: self._with_oauth_type,
+            SMTP_BASIC_AUTH_TYPE: self._with_basic_type,
+            SMTP_PASSWORD_LESS_AUTH_TYPE: self._with_passwordless_type,
+        }
 
         # Check all the auth type as per inputs given by user with flow of [Interactive -> Basic -> Password less]
         self.save_progress(f"You have selected {auth_type} Authentication")  # nosemgrep
         if auth_type == SMTP_AUTOMATIC_AUTH_TYPE:
             for auth_type in SMTP_ALLOWED_AUTH_TYPES[1:]:
                 self.save_progress(SMTP_AUTH_MESSAGE.format(auth_type))  # nosemgrep
-                auth = eval(f"self._with_{auth_type.lower()}_type(action_result)")
+                auth = auth_handlers[auth_type](action_result)
                 if phantom.is_fail(auth):
                     msg = action_result.get_message()
                     self.save_progress(SMTP_AUTH_FAILED_ACTION_MESSAGE.format(action_id, auth_type, msg))  # nosemgrep
@@ -178,8 +183,12 @@ class SmtpConnector(BaseConnector):
                     return phantom.APP_SUCCESS
 
         # Check specific auth type as per input given by user in auth_type parameter
+        auth_handler = auth_handlers.get(auth_type)
+        if auth_handler is None:
+            return action_result.set_status(phantom.APP_ERROR, f"Unsupported authentication type: {auth_type}")
+
         self.save_progress(SMTP_AUTH_MESSAGE.format(auth_type))  # nosemgrep
-        auth = eval(f"self._with_{auth_type.lower()}_type(action_result)")
+        auth = auth_handler(action_result)
         if phantom.is_fail(auth):
             self.debug_print(f"Authentication failed using {auth_type}")
             msg = action_result.get_message()

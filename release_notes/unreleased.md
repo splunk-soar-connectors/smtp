@@ -1,3 +1,3 @@
 **Unreleased**
 
-* Updated development tooling.
+* Restricted SMTP authentication dispatch to the supported authentication types.
