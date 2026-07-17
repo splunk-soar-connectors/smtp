@@ -20,6 +20,7 @@ import mimetypes
 import os
 import re
 import smtplib
+import ssl
 import sys
 import time
 from email import encoders, message_from_file, message_from_string
@@ -560,6 +561,10 @@ class SmtpConnector(BaseConnector):
 
         # Get the SSL config to use
         ssl_config = config.get(SMTP_JSON_SSL_CONFIG, SSL_CONFIG_STARTTLS)
+        tls_context = ssl.create_default_context()
+        if not config.get(SMTP_VERIFY_SERVER_CERT, True):
+            tls_context.check_hostname = False
+            tls_context.verify_mode = ssl.CERT_NONE
 
         # if it is SSL, (not None or StartTLS) then the function to call is different
         if ssl_config == SSL_CONFIG_SSL:
@@ -571,15 +576,17 @@ class SmtpConnector(BaseConnector):
             if phantom.is_fail(ret_val):
                 return action_result.set_status(phantom.APP_ERROR, port_data)
 
-            self._smtp_conn = func_to_use(server, str(port_data))
+            connection_kwargs = {"context": tls_context} if ssl_config == SSL_CONFIG_SSL else {}
+            self._smtp_conn = func_to_use(server, str(port_data), **connection_kwargs)
         else:
-            self._smtp_conn = func_to_use(server)
+            connection_kwargs = {"context": tls_context} if ssl_config == SSL_CONFIG_SSL else {}
+            self._smtp_conn = func_to_use(server, **connection_kwargs)
 
         self._smtp_conn.ehlo()
 
         # Use the StartTLS command if the config was set to StartTLS
-        if self._smtp_conn.has_extn("STARTTLS") and (ssl_config == SSL_CONFIG_STARTTLS):
-            self._smtp_conn.starttls()
+        if ssl_config == SSL_CONFIG_STARTTLS:
+            self._smtp_conn.starttls(context=tls_context)
 
         self._smtp_conn.ehlo()
         # Login

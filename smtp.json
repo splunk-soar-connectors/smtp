@@ -102,15 +102,21 @@
                 "StartTLS"
             ]
         },
-        "allow_smtputf8": {
+        "verify_server_cert": {
             "data_type": "boolean",
             "order": 13,
+            "description": "Verify the SMTP server TLS certificate",
+            "default": true
+        },
+        "allow_smtputf8": {
+            "data_type": "boolean",
+            "order": 14,
             "description": "Enable SMTPUTF8 support (Check this only if the SMTP server supports SMTPUTF8 option)",
             "default": true
         },
         "encoding": {
             "data_type": "boolean",
-            "order": 14,
+            "order": 15,
             "description": "Enable Unicode support",
             "default": true
         }
