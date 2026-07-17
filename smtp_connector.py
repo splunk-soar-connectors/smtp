@@ -667,6 +667,7 @@ class SmtpConnector(BaseConnector):
                 part_plain = MIMEText(text, "plain")
 
             outer.attach(part_plain)
+
         except Exception as e:
             self.debug_print(f"Error in converting html body to text {self._get_error_message_from_exception(e)}")
 
@@ -682,6 +683,20 @@ class SmtpConnector(BaseConnector):
             self.debug_print(f"Error while attaching html body to outer {self._get_error_message_from_exception(e)}")
 
         return phantom.APP_SUCCESS
+
+    def _set_refused_recipients_error(self, action_result, refused_recipients):
+        refused_details = {}
+        for recipient, (status_code, response) in refused_recipients.items():
+            if isinstance(response, bytes):
+                response = response.decode(errors="replace")
+            refused_details[recipient] = {"status_code": status_code, "response": str(response)}
+
+        action_result.add_data({"refused_recipients": refused_details})
+        action_result.update_summary({"refused_recipients": sorted(refused_details)})
+        return action_result.set_status(
+            phantom.APP_ERROR,
+            f"{SMTP_ERROR_SMTP_SEND_EMAIL}. Server refused the following recipients: {', '.join(sorted(refused_details))}",
+        )
 
     def _add_attachments(self, outer, attachments, action_result, message_encoding):
         if not attachments:
@@ -937,7 +952,9 @@ class SmtpConnector(BaseConnector):
             mail_options = list()
             if smtputf8:
                 mail_options.append("SMTPUTF8")
-            self._smtp_conn.sendmail(email_from, to_list, outer.as_string(), mail_options=mail_options)
+            refused_recipients = self._smtp_conn.sendmail(email_from, to_list, outer.as_string(), mail_options=mail_options)
+            if refused_recipients:
+                return self._set_refused_recipients_error(action_result, refused_recipients)
         except UnicodeEncodeError:
             return action_result.set_status(phantom.APP_ERROR, f"{SMTP_ERROR_SMTP_SEND_EMAIL}. {SMTP_ERROR_SMTPUTF8_CONFIG}")
         except Exception as e:
@@ -1267,7 +1284,9 @@ class SmtpConnector(BaseConnector):
             mail_options = list()
             if smtputf8:
                 mail_options.append("SMTPUTF8")
-            self._smtp_conn.sendmail(email_from, email_to, root.as_string(), mail_options=mail_options)
+            refused_recipients = self._smtp_conn.sendmail(email_from, email_to, root.as_string(), mail_options=mail_options)
+            if refused_recipients:
+                return self._set_refused_recipients_error(action_result, refused_recipients)
 
         except UnicodeEncodeError:
             return action_result.set_status(phantom.APP_ERROR, f"{SMTP_ERROR_SMTP_SEND_EMAIL}. {SMTP_ERROR_SMTPUTF8_CONFIG}")
@@ -1323,7 +1342,9 @@ class SmtpConnector(BaseConnector):
             if smtputf8:
                 mail_options.append("SMTPUTF8")
             self.debug_print("Making SMTP call")
-            self._smtp_conn.sendmail(email_from, email_to, msg.as_string(), mail_options=mail_options)
+            refused_recipients = self._smtp_conn.sendmail(email_from, email_to, msg.as_string(), mail_options=mail_options)
+            if refused_recipients:
+                return self._set_refused_recipients_error(action_result, refused_recipients)
 
         except UnicodeEncodeError:
             return action_result.set_status(phantom.APP_ERROR, f"{SMTP_ERROR_SMTP_SEND_EMAIL}. {SMTP_ERROR_SMTPUTF8_CONFIG}")

@@ -2,3 +2,4 @@
 
 * Restricted SMTP authentication dispatch to the supported authentication types.
 * Added certificate validation for SMTP TLS connections and made STARTTLS fail closed.
+* Reported partially refused email recipients as delivery errors.
