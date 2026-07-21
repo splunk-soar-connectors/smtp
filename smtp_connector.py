@@ -29,7 +29,6 @@ from email.mime.image import MIMEImage
 from email.mime.message import MIMEMessage
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from html import unescape
 
 import bleach
 import encryption_helper
@@ -1121,7 +1120,6 @@ class SmtpConnector(BaseConnector):
                 css_sanitizer=CSSSanitizer(allowed_css_properties=all_styles),
                 protocols=list(bleach.ALLOWED_PROTOCOLS) + SMTP_BLEACH_ALLOWED_PROTOCOLS,
             )
-        email_html = unescape(email_html)
 
         encoding = config.get(SMTP_ENCODING, False)
         smtputf8 = config.get(SMTP_ALLOW_SMTPUTF8, False)
