@@ -228,7 +228,7 @@ VARIABLE | REQUIRED | TYPE | DESCRIPTION
 Validate the asset configuration for connectivity. This action logs into the device and sends a test email to check the connection and credentials
 
 Type: **test** <br>
-Read only: **True**
+Read only: **False**
 
 #### Action Parameters
 
