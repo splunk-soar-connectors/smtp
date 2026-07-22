@@ -212,6 +212,7 @@ VARIABLE | REQUIRED | TYPE | DESCRIPTION
 **scopes** | optional | string | OAuth API Scope (space-separated)(For OAuth) |
 **sender_address** | optional | string | Sender Address |
 **ssl_config** | required | string | SSL Method |
+**verify_server_cert** | optional | boolean | Verify the SMTP server TLS certificate |
 **allow_smtputf8** | optional | boolean | Enable SMTPUTF8 support (Check this only if the SMTP server supports SMTPUTF8 option) |
 **encoding** | optional | boolean | Enable Unicode support |
 
@@ -227,7 +228,7 @@ VARIABLE | REQUIRED | TYPE | DESCRIPTION
 Validate the asset configuration for connectivity. This action logs into the device and sends a test email to check the connection and credentials
 
 Type: **test** <br>
-Read only: **True**
+Read only: **False**
 
 #### Action Parameters
 
