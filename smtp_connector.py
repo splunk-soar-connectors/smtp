@@ -52,7 +52,11 @@ class SmtpConnector(BaseConnector):
     ACTION_ID_SEND_RAW_EMAIL = "send_rawemail"
     ACTION_ID_SEND_HTML_EMAIL = "send_htmlemail"
 
-    SAFE_HTML_TAGS = list(set(all_tags) - set(generally_xss_unsafe))
+    # Bleach/html5lib treats document wrapper tags as structural context for HTML
+    # fragments and removes them from the sanitized output. Keep them allowed so
+    # existing full-document email templates do not render the wrappers as text,
+    # while unsafe tags such as script and iframe still remain escaped.
+    SAFE_HTML_TAGS = list((set(all_tags) - set(generally_xss_unsafe)) | {"html", "head", "body"})
 
     def __init__(self):
         # Call the BaseConnectors init first
