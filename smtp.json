@@ -751,7 +751,7 @@
             },
             {
                 "module": "webencodings",
-                "input_file": "wheels/shared/webencodings-0.5.1-py2.py3-none-any.whl"
+                "input_file": "wheels/py3/webencodings-0.6.1-py3-none-any.whl"
             }
         ]
     }
