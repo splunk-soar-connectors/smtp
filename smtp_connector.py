@@ -564,7 +564,7 @@ class SmtpConnector(BaseConnector):
 
         # Get the SSL config to use
         ssl_config = config.get(SMTP_JSON_SSL_CONFIG, SSL_CONFIG_STARTTLS)
-        tls_context = ssl.create_default_context()
+        tls_context = ssl.create_default_context(cafile=self.get_ca_bundle())
         if not config.get(SMTP_VERIFY_SERVER_CERT, True):
             tls_context.check_hostname = False
             tls_context.verify_mode = ssl.CERT_NONE
