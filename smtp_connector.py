@@ -54,9 +54,10 @@ class SmtpConnector(BaseConnector):
 
     # Bleach/html5lib treats document wrapper tags as structural context for HTML
     # fragments and removes them from the sanitized output. Keep them allowed so
-    # existing full-document email templates do not render the wrappers as text,
-    # while unsafe tags such as script and iframe still remain escaped.
-    SAFE_HTML_TAGS = list((set(all_tags) - set(generally_xss_unsafe)) | {"html", "head", "body"})
+    # existing full-document email templates do not render the wrappers as text.
+    # Outlook also emits <o:p> paragraph wrappers; allow this inert tag so Bleach
+    # does not escape it into visible text. Unsafe tags such as script remain escaped.
+    SAFE_HTML_TAGS = list((set(all_tags) - set(generally_xss_unsafe)) | {"html", "head", "body", "o:p"})
 
     def __init__(self):
         # Call the BaseConnectors init first
