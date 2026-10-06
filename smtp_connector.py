@@ -41,6 +41,9 @@ from bs4 import BeautifulSoup
 from phantom.action_result import ActionResult
 from phantom.base_connector import BaseConnector
 
+# These public exports come from the compiled _pytidyhtml5 extension.
+from pytidyhtml5 import OptionId, tidy_document  # pylint: disable=no-name-in-module
+
 from request_handler import RequestStateHandler, _get_dir_name_from_app_name
 from smtp_consts import *
 
@@ -55,7 +58,7 @@ class SmtpConnector(BaseConnector):
     # Bleach/html5lib treats document wrapper tags as structural context for HTML
     # fragments and removes them from the sanitized output. Keep them allowed so
     # existing full-document email templates do not render the wrappers as text,
-    # while unsafe tags such as script and iframe still remain escaped.
+    # while unsupported tags are stripped when sanitization is enabled.
     SAFE_HTML_TAGS = list((set(all_tags) - set(generally_xss_unsafe)) | {"html", "head", "body"})
 
     def __init__(self):
@@ -1117,13 +1120,31 @@ class SmtpConnector(BaseConnector):
         should_sanitize = param.get("should_sanitize_template", True)
 
         if should_sanitize:
-            email_html = bleach.clean(
-                text=email_html,
-                tags=self.SAFE_HTML_TAGS,
-                attributes=BLEACH_SAFE_HTML_ATTRIBUTES,
-                css_sanitizer=CSSSanitizer(allowed_css_properties=all_styles),
-                protocols=list(bleach.ALLOWED_PROTOCOLS) + SMTP_BLEACH_ALLOWED_PROTOCOLS,
-            )
+            try:
+                email_html = tidy_document(
+                    email_html,
+                    options={
+                        OptionId.word2000: True,
+                        OptionId.drop_prop_attrs: True,
+                        OptionId.html_out: True,
+                        OptionId.mark: False,
+                        OptionId.drop_empty_paras: False,
+                        OptionId.drop_empty_elems: False,
+                    },
+                    encoding="unicode",
+                    body_only=True,
+                    quiet=True,
+                )
+                email_html = bleach.clean(
+                    text=email_html,
+                    tags=self.SAFE_HTML_TAGS,
+                    attributes=BLEACH_SAFE_HTML_ATTRIBUTES,
+                    css_sanitizer=CSSSanitizer(allowed_css_properties=all_styles),
+                    protocols=list(bleach.ALLOWED_PROTOCOLS) + SMTP_BLEACH_ALLOWED_PROTOCOLS,
+                    strip=True,
+                )
+            except Exception:
+                return action_result.set_status(phantom.APP_ERROR, "Error: failed to sanitize HTML body")
 
         encoding = config.get(SMTP_ENCODING, False)
         smtputf8 = config.get(SMTP_ALLOW_SMTPUTF8, False)
