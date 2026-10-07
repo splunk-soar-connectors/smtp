@@ -152,6 +152,14 @@
 
 ## Actions Key Points
 
+- Send HTMLEmail
+
+  - **should sanitize template** (`should_sanitize_template`) defaults to true. When false, the supplied
+    HTML body is sent without sanitization; neither Tidy nor Bleach processes it.
+  - When true or omitted, Tidy normalizes the HTML and Microsoft Office markup, then Bleach strips unsupported
+    tags and attributes while retaining the supported HTML, CSS, and URL protocols. This can change
+    the body formatting. It does not convert arbitrary XML schemas into HTML.
+
 - Send Email
 
   - For email consisting of HTML body to be processed correctly as HTML, it must start with

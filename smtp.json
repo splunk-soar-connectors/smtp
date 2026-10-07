@@ -526,7 +526,7 @@
                     "order": 18
                 },
                 "should_sanitize_template": {
-                    "description": "Sanitize the HTML body using the Bleach library to remove unsafe tags and attributes",
+                    "description": "Normalize the HTML body using Tidy, then strip unsupported tags and attributes using Bleach",
                     "data_type": "boolean",
                     "order": 19,
                     "default": true
@@ -726,6 +726,10 @@
                 "input_file": "wheels/shared/bleach_allowlist-1.0.3-py2.py3-none-any.whl"
             },
             {
+                "module": "pytidyhtml5",
+                "input_file": "wheels/py39/pytidyhtml5-2024.10.24-cp39-cp39-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl"
+            },
+            {
                 "module": "tinycss2",
                 "input_file": "wheels/py3/tinycss2-1.4.0-py3-none-any.whl"
             },
@@ -744,6 +748,10 @@
             {
                 "module": "bleach_allowlist",
                 "input_file": "wheels/shared/bleach_allowlist-1.0.3-py2.py3-none-any.whl"
+            },
+            {
+                "module": "pytidyhtml5",
+                "input_file": "wheels/py313/pytidyhtml5-2024.10.24-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl"
             },
             {
                 "module": "tinycss2",
