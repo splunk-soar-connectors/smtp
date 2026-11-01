@@ -41,7 +41,7 @@ repos:
     rev: 0.1.0
     hooks:
       - id: soar-app-linter
-        args: ["--single-repo", "--message-level", "error"]
+        args: ["./", "--single-repo", "--message-level", "error"]
   - repo: https://github.com/hukkin/mdformat
     rev: 1.0.0
     hooks:

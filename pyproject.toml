@@ -1,7 +1,49 @@
-# Ruff linting
+[project]
+name = "smtp"
+version = "3.3.8"
+description = "This app provides the ability to send email using SMTP"
+license = "Copyright (c) 2016-2026 Splunk Inc."
+requires-python = ">=3.13, <3.14"
+dependencies = [
+    "splunk-soar-sdk>=7.0.3,<8",
+    "beautifulsoup4>=4.12,<5",
+    "bleach[css]>=6.4.0,<7",
+    "bleach-allowlist==1.0.3",
+    "pytidyhtml5==2024.10.24; sys_platform == 'linux'",
+]
+
+[tool.soar.app]
+main_module = "src.app:app"
+
+[dependency-groups]
+dev = [
+    "coverage>=7.6.7,<8",
+    "mypy>=1.2.0,<2",
+    "pre-commit>=4.2.0,<5",
+    "pytest>=7.4.2,<8",
+    "pytest-cov>=4.1,<7",
+    "pytest-mock>=3.14.0,<4",
+    "pytest-watch>=4.2.0,<5",
+    "ruff>=0.11.6,<1",
+]
+
+[[tool.uv.index]]
+url = "https://pypi.org/simple"
+
+[tool.uv]
+environments = [
+    "sys_platform == 'linux' and platform_machine == 'x86_64' and python_version == '3.13'",
+    "sys_platform == 'linux' and platform_machine == 'aarch64' and python_version == '3.13'",
+    "sys_platform == 'darwin' and platform_machine == 'x86_64' and python_version == '3.13'",
+    "sys_platform == 'darwin' and platform_machine == 'arm64' and python_version == '3.13'",
+]
+required-environments = [
+    "sys_platform == 'linux' and platform_machine == 'x86_64' and python_version == '3.13'",
+]
+
 [tool.ruff]
 line-length = 145
-target-version = "py39"
+target-version = "py313"
 
 [tool.ruff.lint]
 select = [ # Auto-fixable rules only

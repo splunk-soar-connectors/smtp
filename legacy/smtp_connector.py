@@ -43,7 +43,6 @@ from phantom.base_connector import BaseConnector
 
 # These public exports come from the compiled _pytidyhtml5 extension.
 from pytidyhtml5 import OptionId, tidy_document  # pylint: disable=no-name-in-module
-
 from request_handler import RequestStateHandler, _get_dir_name_from_app_name
 from smtp_consts import *
 

@@ -4,7 +4,7 @@ Publisher: Splunk <br>
 Connector Version: 3.3.8 <br>
 Product Vendor: Generic <br>
 Product Name: SMTP <br>
-Minimum Product Version: 6.3.0
+Minimum Product Version: 7.0.0
 
 This app provides the ability to send email using SMTP
 
@@ -226,25 +226,10 @@ VARIABLE | REQUIRED | TYPE | DESCRIPTION
 
 ### Supported Actions
 
-[test connectivity](#action-test-connectivity) - Validate the asset configuration for connectivity. This action logs into the device and sends a test email to check the connection and credentials <br>
 [send email](#action-send-email) - Sends an email <br>
+[send htmlemail](#action-send-htmlemail) - Sends a html email with optional text rendering. Attachments are allowed a Content-ID tag for reference within the html <br>
 [send rawemail](#action-send-rawemail) - Takes a fully specified email and sends it unmodified to the smtp server. Sender and Recipient(s) will be extracted from message headers; Suggest using the standard email package to build message and export with the .as_string() method <br>
-[send htmlemail](#action-send-htmlemail) - Sends a html email with optional text rendering. Attachments are allowed a Content-ID tag for reference within the html
-
-## action: 'test connectivity'
-
-Validate the asset configuration for connectivity. This action logs into the device and sends a test email to check the connection and credentials
-
-Type: **test** <br>
-Read only: **False**
-
-#### Action Parameters
-
-No parameters are required for this action
-
-#### Action Output
-
-No Output
+[test connectivity](#action-test-connectivity) - Validate the asset configuration for connectivity. This action logs into the device and sends a test email to check the connection and credentials
 
 ## action: 'send email'
 
@@ -272,43 +257,16 @@ PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
 
 DATA PATH | TYPE | CONTAINS | EXAMPLE VALUES
 --------- | ---- | -------- | --------------
-action_result.status | string | | success failed |
-action_result.parameter.attachments | string | `vault id` | ab2b2ccfba08ea538ef22f521caa01c3c2b17ccf |
-action_result.parameter.bcc | string | `email` | test1@testdomain.com |
-action_result.parameter.body | string | | Test body |
-action_result.parameter.cc | string | `email` | test2@testdomain.com |
-action_result.parameter.from | string | `email` | sender@testdomain.com |
-action_result.parameter.headers | string | | {"Subject": "Test1", "To": "test3@testdomain.com"} |
-action_result.parameter.subject | string | | Test |
-action_result.parameter.to | string | `email` | receiver@testdomain.com |
-action_result.data | string | | |
-action_result.summary | string | | |
-action_result.message | string | | Email sent |
-summary.total_objects | numeric | | 1 |
-summary.total_objects_successful | numeric | | 1 |
-
-## action: 'send rawemail'
-
-Takes a fully specified email and sends it unmodified to the smtp server. Sender and Recipient(s) will be extracted from message headers; Suggest using the standard email package to build message and export with the .as_string() method
-
-Type: **generic** <br>
-Read only: **False**
-
-#### Action Parameters
-
-PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
---------- | -------- | ----------- | ---- | --------
-**raw_email** | required | Fully specified email message including all headers | string | |
-
-#### Action Output
-
-DATA PATH | TYPE | CONTAINS | EXAMPLE VALUES
---------- | ---- | -------- | --------------
-action_result.status | string | | success failed |
-action_result.parameter.raw_email | string | | to: receiver@testdomain.com\\n from:sender@testdomain.com\\n subject: Test\\n\\nBody Text to: receiver@testdomain.com\\n from:sender@testdomain.com\\n Content-type: text/html\\nsubject: HTML Test\\n<html><body><h2>This is test</h2><br>This is unicode data.</body></html> to: receiver1@testdomain.com,receiver2@testdomain.com\\nfrom: sender@testdomain.com\\nsubject: CommaSeparated Recipients Test\\n\\nThis is test data. |
-action_result.data | string | | |
-action_result.summary | string | | |
-action_result.message | string | | Email sent |
+action_result.status | string | | success failure |
+action_result.message | string | | |
+action_result.parameter.from | string | `email` | |
+action_result.parameter.to | string | `email` | |
+action_result.parameter.cc | string | `email` | |
+action_result.parameter.bcc | string | `email` | |
+action_result.parameter.subject | string | | |
+action_result.parameter.body | string | | |
+action_result.parameter.attachments | string | `vault id` | |
+action_result.parameter.headers | string | | |
 summary.total_objects | numeric | | 1 |
 summary.total_objects_successful | numeric | | 1 |
 
@@ -350,32 +308,75 @@ PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
 
 DATA PATH | TYPE | CONTAINS | EXAMPLE VALUES
 --------- | ---- | -------- | --------------
-action_result.status | string | | success failed |
-action_result.parameter.attachment1 | string | | ab2b2ccfba08ea538ef22f521caa01c3c2b17ccf |
-action_result.parameter.attachment2 | string | | ab2e2ccfba08ea538ef22f529caa01c3c2b17ccf |
-action_result.parameter.attachment3 | string | | ab2e2ccfba08ea538ef22f529caa01c3c2b17ccf |
-action_result.parameter.attachment4 | string | | ab2e2ccfba08ea538ef22f529caa01c3c2b17ccf |
-action_result.parameter.attachment5 | string | | ab2e2ccfba08ea538ef22f529caa01c3c2b17ccf |
+action_result.status | string | | success failure |
+action_result.message | string | | |
+action_result.parameter.from | string | `email` | |
+action_result.parameter.to | string | `email` | |
+action_result.parameter.cc | string | `email` | |
+action_result.parameter.bcc | string | `email` | |
+action_result.parameter.subject | string | | |
+action_result.parameter.headers | string | | |
+action_result.parameter.html_body | string | | |
+action_result.parameter.text_body | string | | |
 action_result.parameter.attachment_json | string | | |
-action_result.parameter.bcc | string | `email` | test1@testdomain.com |
-action_result.parameter.cc | string | `email` | test2@testdomain.com |
+action_result.parameter.attachment1 | string | | |
 action_result.parameter.content_id1 | string | | |
+action_result.parameter.attachment2 | string | | |
 action_result.parameter.content_id2 | string | | |
+action_result.parameter.attachment3 | string | | |
 action_result.parameter.content_id3 | string | | |
+action_result.parameter.attachment4 | string | | |
 action_result.parameter.content_id4 | string | | |
+action_result.parameter.attachment5 | string | | |
 action_result.parameter.content_id5 | string | | |
-action_result.parameter.from | string | `email` | sender@testdomain.com |
-action_result.parameter.headers | string | | {"Subject": "Test1", "To": "test3@testdomain.com"} |
-action_result.parameter.html_body | string | | <html><h2>HTML heading</h2><body>HTML body.</body></html> |
-action_result.parameter.subject | string | | Test |
-action_result.parameter.text_body | string | | This is text body. |
-action_result.parameter.to | string | `email` | receiver@testdomain.com |
-action_result.data | string | | |
-action_result.summary | string | | |
-action_result.message | string | | Email sent |
+action_result.parameter.should_sanitize_template | boolean | | |
 summary.total_objects | numeric | | 1 |
 summary.total_objects_successful | numeric | | 1 |
-action_result.parameter.should_sanitize_template | boolean | | |
+
+## action: 'send rawemail'
+
+Takes a fully specified email and sends it unmodified to the smtp server. Sender and Recipient(s) will be extracted from message headers; Suggest using the standard email package to build message and export with the .as_string() method
+
+Type: **generic** <br>
+Read only: **False**
+
+#### Action Parameters
+
+PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
+--------- | -------- | ----------- | ---- | --------
+**raw_email** | required | Fully specified email message including all headers | string | |
+
+#### Action Output
+
+DATA PATH | TYPE | CONTAINS | EXAMPLE VALUES
+--------- | ---- | -------- | --------------
+action_result.status | string | | success failure |
+action_result.message | string | | |
+action_result.parameter.raw_email | string | | |
+summary.total_objects | numeric | | 1 |
+summary.total_objects_successful | numeric | | 1 |
+
+## action: 'test connectivity'
+
+Validate the asset configuration for connectivity. This action logs into the device and sends a test email to check the connection and credentials
+
+Type: **test** <br>
+Read only: **False**
+
+Basic test for app.
+
+#### Action Parameters
+
+No parameters are required for this action
+
+#### Action Output
+
+DATA PATH | TYPE | CONTAINS | EXAMPLE VALUES
+--------- | ---- | -------- | --------------
+action_result.status | string | | success failure |
+action_result.message | string | | |
+summary.total_objects | numeric | | 1 |
+summary.total_objects_successful | numeric | | 1 |
 
 ______________________________________________________________________
 
