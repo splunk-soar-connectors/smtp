@@ -29,6 +29,7 @@ from email.mime.image import MIMEImage
 from email.mime.message import MIMEMessage
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from html import unescape
 
 import bleach
 import encryption_helper
@@ -1145,6 +1146,10 @@ class SmtpConnector(BaseConnector):
                 )
             except Exception:
                 return action_result.set_status(phantom.APP_ERROR, "Error: failed to sanitize HTML body")
+        else:
+            # Decode character references only when sanitization is disabled.
+            # Unescaping sanitized output would undo Bleach's protection.
+            email_html = unescape(email_html)
 
         encoding = config.get(SMTP_ENCODING, False)
         smtputf8 = config.get(SMTP_ALLOW_SMTPUTF8, False)
