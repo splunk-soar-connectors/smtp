@@ -1147,7 +1147,7 @@ class SmtpConnector(BaseConnector):
             except Exception:
                 return action_result.set_status(phantom.APP_ERROR, "Error: failed to sanitize HTML body")
         else:
-            # Preserve 3.3.4 body handling only when sanitization is disabled.
+            # Decode character references only when sanitization is disabled.
             # Unescaping sanitized output would undo Bleach's protection.
             email_html = unescape(email_html)
 
