@@ -165,7 +165,9 @@ This app provides the ability to send email using SMTP
 - Send HTMLEmail
 
   - **should sanitize template** (`should_sanitize_template`) defaults to true. When false, the supplied
-    HTML body is sent without sanitization; neither Tidy nor Bleach processes it.
+    HTML body has HTML character references decoded once, matching version 3.3.4's
+    unsanitized behavior; neither Tidy nor Bleach processes it. Use this setting only
+    with trusted HTML content.
   - When true or omitted, Tidy normalizes the HTML and Microsoft Office markup, then Bleach strips unsupported
     tags and attributes while retaining the supported HTML, CSS, and URL protocols. This can change
     the body formatting. It does not convert arbitrary XML schemas into HTML.
