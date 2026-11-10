@@ -1,7 +1,7 @@
 # SMTP
 
 Publisher: Splunk <br>
-Connector Version: 3.3.8 <br>
+Connector Version: 3.3.9 <br>
 Product Vendor: Generic <br>
 Product Name: SMTP <br>
 Minimum Product Version: 6.3.0
